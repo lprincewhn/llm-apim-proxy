@@ -1,54 +1,45 @@
 # llm-apim-proxy
 
-Azure APIM LLM 代理验证项目：由 APIM 选择后端，执行器完整读取响应后再提交给下游。业务接口只尝试一次；跨后端切换采用 **APIM 日志 → Azure Monitor 告警 → Action Group → Logic App 健康探测 → APIM 路由更新**，配置传播后影响新请求，不重投正在执行的请求。
+**APIM 直连 Foundry，真实 Azure Monitor 告警驱动后续请求切换。** 不使用模型执行器，不在当前请求中重试或换后端。
 
-**当前是验证环境，不是生产就绪版本。** 模型及控制器 RBAC 阻塞均已解除。2026-09-15 09:17 UTC，已通过真实错误告警 → Action Group → Logic App 两次真实备用探测 → 路由更新 → 新请求在 Sweden 返回 200 的闭环演练。两个告警已启用；当前路由为 Sweden，East US 2 已被隔离且不会自动回切。演练使用受控请求预算超时，不是 Foundry 真实故障；时延告警未单独触发演练，Java/Search 全链路及 8s/15s 性能目标尚未验收。详见 [闭环记录](deployment/monitoring/drill-20260915.md)。
+业务：`客户端 → APIM → Foundry`
 
-## 代码与文档
+控制：`APIM GatewayLogs → Azure Monitor → Action Group → Logic App 直接探测备用 Foundry → ETag 更新 APIM 路由 → 新请求转向备用`
 
-| 路径 | 内容 |
+完整说明见 [中文方案](docs/monitoring-failover.zh-CN.md)、[部署手册](deployment/README.md)及[控制器操作手册](deployment/monitoring/README.md)。
+
+对外使用 **网关根路径通配反向代理**：GET／POST／PUT／PATCH／DELETE／HEAD／OPTIONS 的任意路径直接转发，不再逐个登记接口或限定 `/openai/deployments/...`。普通请求只替换目标主机，路径、业务查询参数、body 和 SSE 响应透传。客户端用 `api-key` 头携带 APIM 订阅密钥。
+
+当前上游仍是已有 Foundry 资源。路径能透传不等于上游实现该 API，也不代表 Azure／OpenAI／Anthropic 协议自动互转；`/v1/messages` 等不受上游支持的路径会返回上游错误。所有路径统一走当前主上游，没有部署名映射或 embedding 固定后端特例。East US 2 和 Sweden 的聊天部署名统一为 `gpt-5.1`，URL 或 body 均使用这个实际部署名。
+
+## 组件
+
+| 路径 | 用途 |
 |---|---|
-| `deployment/executor/` | Python/aiohttp 完整响应执行器、Dockerfile、故障注入与单元测试 |
-| `deployment/configure_apim.py` | APIM API、预算、路由、订阅与诊断配置 |
-| `deployment/use_monitoring_routing.py` | 原地关闭 `/llm` 请求内重试，不重置路由或密钥 |
-| `deployment/monitoring/` | 告警、Action Group、Logic App 控制器及专用授权说明 |
-| `deployment/deploy_executor.py` | 验证环境 Container App 初始部署 |
-| `deployment/config.json`、`deployment/azure.py` | MCAPS 验证环境资源标识与 Azure 管理助手 |
-| `deployment/routing.py` | 早期参考健康状态机；实际控制器见 `deployment/monitoring/` |
-| `deployment/validate*.py` | Azure 在线验证脚本，需授权 |
-| `deployment/*results.json` | 2026-09-15 的结果快照，包含失败项 |
-| `deployment/grant-required-roles.sh` | 由授权管理员执行的资源级 RBAC 命令 |
-| [部署交接说明](deployment/README.md) | 资源、接口、费用、限制和安全清理范围 |
-| [设计方案](docs/design.zh-CN.md) | 时延预算、路由、监控和实施方案 |
-| [部署结果快照](docs/deployment-report-2026-09-15.zh-CN.md) | 当时的实际部署结果和阻塞 |
+| `deployment/configure_apim.py`、`llm-policy.xml` | APIM 命名后端、托管身份、单次转发策略、GatewayLogs |
+| `deployment/backends.py`、`config.json` | 校验两个上游地址；部署名仅供健康探测、日志归因和连通性调用，不用于 APIM 改写 |
+| `deployment/monitoring/` | 告警、Action Group、Logic App、授权、操作命令及测试 |
+| `deployment/grant-model-roles.sh` | APIM／Logic App 共享模型调用身份的资源级授权 |
+| `deployment/smoke.py` | 非敏感短提示词的真实 APIM 连通性检查，不改路由 |
+| `deployment/azure.py` | 显式选择 MCAPS 的 Azure 管理辅助 |
 
-## 本地测试
+原 `id-svhwb107-exec` 托管身份保留并复用于 APIM 和 Logic App，复用两个当前上游的模型权限；**保留名称不代表保留执行器服务**。Logic App 的系统身份只用于 APIM 路由管理，两种用途分开。
 
-使用 Python 3.12，在仓库根目录执行；不需要 Azure 凭据，也不会调用真实模型：
+## 离线测试
+
+Python 3.12，无第三方依赖、不调用 Azure：
 
 ```bash
-python3 -m venv .venv
-.venv/bin/python -m pip install -r deployment/executor/requirements.txt
-(
-  cd deployment/executor
-  ../../.venv/bin/python -m unittest discover -s tests -v
-)
-(
-  cd deployment
-  ../.venv/bin/python -m unittest test_routing -v
-)
+(cd deployment && python3 -m unittest test_monitoring_policy -v)
+python3 -m unittest discover -s deployment/monitoring -p 'test_*.py' -v
 ```
 
-执行器配置与启动方式见 [executor README](deployment/executor/README.md)。默认不启用故障接口；Azure 验证环境显式启用了独立、鉴权保护的合成故障入口。
+`python3 deployment/smoke.py` 是在线检查，会产生真实模型请求和费用，需 Azure CLI 登录权限。
 
-## Azure 操作边界
+## 运行边界
 
-部署脚本包含现有 MCAPS 实验资源的非秘密标识，**不是任意订阅的一键初始化模板**。先阅读部署交接说明，再执行任何写操作。
+APIM 使用 120 秒等待响应头的转发超时，不再读取自定义业务毫秒预算；它不能承诺完整 body 的严格截止时间。移除执行器后不再提供其完整 JSON 缓冲、2MiB 限制、5500ms 总读取／1200ms 空闲控制。调用方仍需业务总截止时间。Logic App HTTP 探测也不具有该执行器预算。
 
-- `configure_apim.py` 会重置实验路由至 East US 2 主后端。
-- `deploy_executor.py` 会生成新的执行器密钥和只读镜像凭据；不能将它视为无副作用的重复发布命令。
-- `validate_extended.py` 会临时修改实验路由并恢复，不得对生产资源直接运行。
-- 不提交 Azure/GitHub token、订阅调用密钥、模型 API key 或本地认证目录；实际凭据只在内存或 Azure secret 中处理。
-- 不通过关闭 Foundry 本地认证限制来绕过缺失的 RBAC。
+仓库针对 MCAPS Developer 实验环境，不是通用 IaC 或生产 SLA。日志使用 Foundry 精确 endpoint／部署路径归属后端，不是纯模型推理监控。两次短探测不能证明备用持续容量。
 
-本仓库私有，包含指定验证环境的部署上下文。`docs/` 设计和结果文档以及既有 JSON 是历史快照；原方案中的请求内补救已从业务 API 移除，仅保留在隔离的 `/validation` 演示接口。不能把该演示成功视为告警控制器成功或真实模型性能达标。
+09:17 UTC 的[历史闭环](deployment/monitoring/drill-20260915.md)经过旧执行器，不能作为直连后的闭环证明。直连迁移结果见[迁移记录](deployment/monitoring/direct-migration-20260915.md)。当前路由沿用 Sweden 主、East US 2 隔离；不自动回切，不自动恢复被隔离备用。

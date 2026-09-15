@@ -9,9 +9,6 @@ SUB = "10564893-ecc3-4a6d-b505-53bcbe89dd8e"
 RG = "rg-svhwb107-apim-lab"
 ROOT = f"/subscriptions/{SUB}/resourceGroups/{RG}"
 APIM = f"{ROOT}/providers/Microsoft.ApiManagement/service/apim-svhwb107-0915"
-ACR = f"{ROOT}/providers/Microsoft.ContainerRegistry/registries/acrsvhwb1070915"
-APP = f"{ROOT}/providers/Microsoft.App/containerApps/exec-svhwb107"
-MI = f"{ROOT}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-svhwb107-exec"
 TOKEN = None
 
 
@@ -45,15 +42,3 @@ def arm(method, path, body=None, version="2024-05-01", headers=None):
     except urllib.error.HTTPError as exc:
         # Management error bodies can echo supplied secret properties.
         raise RuntimeError(f"ARM {method} {path}: HTTP {exc.code}") from None
-
-
-def foundry_key(name):
-    path = f"/subscriptions/{SUB}/resourceGroups/jump-server_group/providers/Microsoft.CognitiveServices/accounts/{name}"
-    return arm("POST", path + "/listKeys", {}, "2024-10-01")["key1"]
-
-
-def container_secrets():
-    return {
-        item["name"]: item["value"]
-        for item in arm("POST", APP + "/listSecrets", {}, "2024-03-01")["value"]
-    }
