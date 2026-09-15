@@ -1,0 +1,29 @@
+{
+  "subscription": "10564893-ecc3-4a6d-b505-53bcbe89dd8e",
+  "resourceGroup": "rg-svhwb107-apim-lab",
+  "apim": "apim-svhwb107-0915",
+  "location": "eastus2",
+  "backends": {
+    "eastus2": {
+      "endpoint": "https://svhw-openai-eastus2.openai.azure.com",
+      "deployment": "gpt-5.1",
+      "kind": "chat"
+    },
+    "sweden": {
+      "endpoint": "https://svhw2-swedencentral.openai.azure.com",
+      "deployment": "svhwb107-gpt51",
+      "kind": "chat"
+    },
+    "embedding": {
+      "endpoint": "https://svhw2-westus3.openai.azure.com",
+      "deployment": "text-embedding-3-small",
+      "kind": "embedding"
+    }
+  },
+  "budgetsMs": {
+    "intent": 5000,
+    "rewrite": 1200,
+    "generate": 4000,
+    "embedding": 500
+  }
+}
