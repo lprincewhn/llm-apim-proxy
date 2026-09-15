@@ -148,6 +148,16 @@ API key, authorization header or response body logging is required.
 
 ## Operations and evidence
 
+### Deployment-deletion drill, 2026-09-15
+
+The requested ongoing-traffic / delete-primary / observe-switch sequence ran
+at 12:44–12:55 UTC. ARM confirmed Sweden deployment deletion, but all 119
+post-delete requests still returned Sweden HTTP 200 during 10m05s. No automatic
+switch or data-plane failure was observed; **no failover time was measured**.
+See the [timeline and evidence](monitoring/deletion-drill-20260915.md).
+The original deployment and East US 2 quarantine were restored. Current route
+is Sweden-only, version 4; both alerts and automatic switching are enabled.
+
 ### Unified deployment names, 2026-09-15
 
 Both active Foundry accounts now expose `gpt-5.1`, model version `2025-11-13`.

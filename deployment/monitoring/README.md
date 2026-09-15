@@ -182,7 +182,12 @@ The [09:17 historical drill](drill-20260915.md) used the retired executor. It is
 not direct-topology acceptance. See [direct migration record](direct-migration-20260915.md)
 for the new APIM completions, direct workflow probes, real logs and retirement.
 
-Preserve `primary=sweden`, `enabled=[sweden]`, version 2 unless an operator
+The [deployment-deletion drill](deletion-drill-20260915.md) observed no automatic
+switch over 10m05s: all 119 post-delete calls still returned Sweden HTTP 200.
+ARM deletion succeeded but no data-plane fault was observed, so no failover time
+was measured. The original model and standby quarantine were restored.
+
+Preserve `primary=sweden`, `enabled=[sweden]`, version 4 unless an operator
 explicitly changes it. Neither a successful probe nor deployment clears quarantine.
 One short request or two probes do not prove N-1 capacity, production HA,
 the Java/Search chain or 8s/15s full-turn targets.
