@@ -1,0 +1,2112 @@
+{
+  "events": [
+    {
+      "event": "baseline_started",
+      "at": "2026-09-15T12:44:20.211780+00:00"
+    },
+    {
+      "event": "delete_submitted",
+      "at": "2026-09-15T12:44:45.514309+00:00"
+    },
+    {
+      "event": "delete_acknowledged",
+      "at": "2026-09-15T12:44:47.727170+00:00"
+    },
+    {
+      "event": "deployment_inventory",
+      "at": "2026-09-15T12:44:48.740731+00:00",
+      "deployment_present": false
+    },
+    {
+      "event": "observation_ended",
+      "at": "2026-09-15T12:54:50.799420+00:00",
+      "since_delete_seconds": 605.284,
+      "consecutive_backup_successes": 0
+    },
+    {
+      "event": "controller_disabled_for_recovery",
+      "at": "2026-09-15T12:54:58.315891+00:00"
+    },
+    {
+      "event": "active_runs_at_recovery",
+      "at": "2026-09-15T12:54:58.765436+00:00",
+      "run_ids": []
+    },
+    {
+      "event": "deployment_restoration_submitted",
+      "at": "2026-09-15T12:55:02.100994+00:00",
+      "provisioning_state": "Succeeded"
+    }
+  ],
+  "requests": [
+    {
+      "started_at": "2026-09-15T12:44:20.212821+00:00",
+      "phase": "baseline",
+      "client_request_id": "50f8f231-9ae6-4599-9c35-f027920f475b",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "15fc1110-a883-48ac-ba0c-ecffe971dfe5",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:44:23.094651+00:00",
+      "elapsed_ms": 2882
+    },
+    {
+      "started_at": "2026-09-15T12:44:25.213488+00:00",
+      "phase": "baseline",
+      "client_request_id": "f6995b08-d802-481e-a3dd-c293c5f47588",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "6597b40e-64b9-4bde-b7ca-fd8140439619",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:44:29.806506+00:00",
+      "elapsed_ms": 4593
+    },
+    {
+      "started_at": "2026-09-15T12:44:30.214221+00:00",
+      "phase": "baseline",
+      "client_request_id": "3e4ea615-fb06-41ff-b400-2a35c27e85f4",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "40f33c0f-1e0d-4d2f-8626-6a8fdd393156",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:44:32.618522+00:00",
+      "elapsed_ms": 2404
+    },
+    {
+      "started_at": "2026-09-15T12:44:35.215440+00:00",
+      "phase": "baseline",
+      "client_request_id": "beefd296-517b-4094-8833-4318de380a8f",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "5c421901-94fc-4920-b534-2d2e3e04762a",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:44:37.767182+00:00",
+      "elapsed_ms": 2552
+    },
+    {
+      "started_at": "2026-09-15T12:44:40.216014+00:00",
+      "phase": "baseline",
+      "client_request_id": "1f4c5978-fb2c-470b-9891-3a6d253edea7",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "75de44aa-0dd7-41b6-8cbc-ef605d178573",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:44:43.001978+00:00",
+      "elapsed_ms": 2786
+    },
+    {
+      "started_at": "2026-09-15T12:44:48.741467+00:00",
+      "phase": "fault",
+      "client_request_id": "bd4ffb77-c491-4674-bae7-b090432596c2",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "f0539b30-8189-40be-9b5a-b0e4a7415897",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:44:51.154611+00:00",
+      "elapsed_ms": 2413
+    },
+    {
+      "started_at": "2026-09-15T12:44:54.050984+00:00",
+      "phase": "fault",
+      "client_request_id": "aed2b428-9206-447a-84a5-65a02eb1e4d7",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "1f95cea1-4da2-489d-9a93-5cdcaf966b50",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:44:56.502909+00:00",
+      "elapsed_ms": 2452
+    },
+    {
+      "started_at": "2026-09-15T12:44:59.051904+00:00",
+      "phase": "fault",
+      "client_request_id": "bbffb3e6-d66a-433c-b27c-6a432b73d9b2",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "be77d2e1-11ce-4d41-869b-56b79b430713",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:45:01.782030+00:00",
+      "elapsed_ms": 2730
+    },
+    {
+      "started_at": "2026-09-15T12:45:04.052957+00:00",
+      "phase": "fault",
+      "client_request_id": "64c03ec3-eb8d-468f-8524-8d381ea2cfb2",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "eb8320bf-d93f-442f-90bc-7b1825336303",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:45:06.534248+00:00",
+      "elapsed_ms": 2481
+    },
+    {
+      "started_at": "2026-09-15T12:45:09.054311+00:00",
+      "phase": "fault",
+      "client_request_id": "c7dfb6d6-973b-4e20-8bce-6ae7398c123b",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "9ac0a778-d5cc-412f-8129-f70a3bf051e6",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:45:11.596896+00:00",
+      "elapsed_ms": 2543
+    },
+    {
+      "started_at": "2026-09-15T12:45:14.054852+00:00",
+      "phase": "fault",
+      "client_request_id": "3be906a4-83ed-425c-95de-a66cf34984e7",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "0b8b4e6d-bbbe-4d73-af1f-8666d207f434",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:45:16.562756+00:00",
+      "elapsed_ms": 2508
+    },
+    {
+      "started_at": "2026-09-15T12:45:19.055797+00:00",
+      "phase": "fault",
+      "client_request_id": "4467c9db-f2db-4fb9-b83a-b8d662062969",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "b6d2a277-e42f-4e23-a7a7-9f8ff1b1f3c0",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:45:21.415764+00:00",
+      "elapsed_ms": 2360
+    },
+    {
+      "started_at": "2026-09-15T12:45:24.056909+00:00",
+      "phase": "fault",
+      "client_request_id": "14f22b10-4082-45eb-832e-af2c914620cd",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "bb920efc-467b-41a9-ac72-5ff9b4c609fa",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:45:26.752830+00:00",
+      "elapsed_ms": 2696
+    },
+    {
+      "started_at": "2026-09-15T12:45:29.356205+00:00",
+      "phase": "fault",
+      "client_request_id": "6df7ebbc-de02-4734-9bd8-628d1dcc0525",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "01c7149b-144b-4f35-a4fc-bf4c1bafa904",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:45:32.184914+00:00",
+      "elapsed_ms": 2829
+    },
+    {
+      "started_at": "2026-09-15T12:45:34.356889+00:00",
+      "phase": "fault",
+      "client_request_id": "3958fb29-178a-4415-bac9-7e0a4b7b0af9",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "cfa090be-1750-4ba7-b257-1a42a63c8fed",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:45:37.650614+00:00",
+      "elapsed_ms": 3294
+    },
+    {
+      "started_at": "2026-09-15T12:45:39.357645+00:00",
+      "phase": "fault",
+      "client_request_id": "ce826551-bfdf-4270-8456-46dd4bc0429b",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "8e4242a2-a1a2-4fe9-bf7e-8dbacec5fbb5",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:45:42.416562+00:00",
+      "elapsed_ms": 3059
+    },
+    {
+      "started_at": "2026-09-15T12:45:44.358625+00:00",
+      "phase": "fault",
+      "client_request_id": "59f88039-045b-4f56-ad5f-516f40058002",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "83ed1a35-b393-4707-9d3a-b553160b52cc",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:45:47.766024+00:00",
+      "elapsed_ms": 3407
+    },
+    {
+      "started_at": "2026-09-15T12:45:49.360046+00:00",
+      "phase": "fault",
+      "client_request_id": "ec03f7a4-7d4f-42a2-ab5d-17c2d824a7d2",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "0bea8efa-ebf6-4e05-a95d-b9574741c091",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:45:51.769086+00:00",
+      "elapsed_ms": 2409
+    },
+    {
+      "started_at": "2026-09-15T12:45:54.361066+00:00",
+      "phase": "fault",
+      "client_request_id": "23a8fcfb-3067-4d7a-8448-b495ba34353f",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "dd497ad1-f7ae-4187-86d6-e8990cab18ce",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:45:57.872288+00:00",
+      "elapsed_ms": 3511
+    },
+    {
+      "started_at": "2026-09-15T12:45:59.708463+00:00",
+      "phase": "fault",
+      "client_request_id": "9b71c538-f031-44a1-accc-b1814e19275f",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "7736967d-80df-4d3e-84f3-b36cfc21e755",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:46:01.961608+00:00",
+      "elapsed_ms": 2253
+    },
+    {
+      "started_at": "2026-09-15T12:46:04.709874+00:00",
+      "phase": "fault",
+      "client_request_id": "57e5ccd5-d22b-4f50-ad82-26df517f4292",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "b636f183-b18e-48e5-b02a-f1f595fedf13",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:46:07.115901+00:00",
+      "elapsed_ms": 2406
+    },
+    {
+      "started_at": "2026-09-15T12:46:09.711218+00:00",
+      "phase": "fault",
+      "client_request_id": "f1288ccc-837c-43d3-89c6-9877b7d2d4a9",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "f6ce4371-0163-4c33-80dc-9166d4549672",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:46:12.393983+00:00",
+      "elapsed_ms": 2683
+    },
+    {
+      "started_at": "2026-09-15T12:46:14.712202+00:00",
+      "phase": "fault",
+      "client_request_id": "7a552149-7150-4a83-8dff-8161c522ff6b",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "69f10c06-8595-4980-b16c-fc79f6654ce5",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:46:17.650555+00:00",
+      "elapsed_ms": 2938
+    },
+    {
+      "started_at": "2026-09-15T12:46:19.713666+00:00",
+      "phase": "fault",
+      "client_request_id": "90b00bbc-b797-41fa-96d4-af3fe9475265",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "8b770c03-019e-429c-91cc-513ad0c60847",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:46:22.095251+00:00",
+      "elapsed_ms": 2382
+    },
+    {
+      "started_at": "2026-09-15T12:46:24.714324+00:00",
+      "phase": "fault",
+      "client_request_id": "9f76d5db-fe9d-40c9-8c75-0078a877d7b7",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "3f2e135a-0e37-4431-8841-1dfabc3d5893",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:46:27.160701+00:00",
+      "elapsed_ms": 2446
+    },
+    {
+      "started_at": "2026-09-15T12:46:29.715960+00:00",
+      "phase": "fault",
+      "client_request_id": "6e4fffcd-7a11-4927-87a2-121bf603f528",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "8d313da5-2b82-417b-a39e-ada9ad1507b8",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:46:32.128658+00:00",
+      "elapsed_ms": 2413
+    },
+    {
+      "started_at": "2026-09-15T12:46:35.003722+00:00",
+      "phase": "fault",
+      "client_request_id": "86e0fd46-7ce9-4f25-840d-9644901c92db",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "3352d813-af29-43ab-aca6-0cdc64c262ab",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:46:37.799843+00:00",
+      "elapsed_ms": 2796
+    },
+    {
+      "started_at": "2026-09-15T12:46:40.004990+00:00",
+      "phase": "fault",
+      "client_request_id": "93622a43-6276-474a-9336-a3e64fbd0d23",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "0323c872-4d98-427d-bf7f-09b094993774",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:46:42.647962+00:00",
+      "elapsed_ms": 2643
+    },
+    {
+      "started_at": "2026-09-15T12:46:45.006117+00:00",
+      "phase": "fault",
+      "client_request_id": "85045fe7-5008-4c97-a732-56dee939e312",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "ecb1d33d-dbf6-46ac-9f5c-092898c54fa9",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:46:48.041448+00:00",
+      "elapsed_ms": 3035
+    },
+    {
+      "started_at": "2026-09-15T12:46:50.007566+00:00",
+      "phase": "fault",
+      "client_request_id": "efc59c1d-ca0d-40b4-bc2d-01b0b3222567",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "86bc4dfd-133a-4e19-a1d8-1fa034c4b445",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:46:53.071122+00:00",
+      "elapsed_ms": 3064
+    },
+    {
+      "started_at": "2026-09-15T12:46:55.008530+00:00",
+      "phase": "fault",
+      "client_request_id": "d7ac7ea4-0f86-4842-b2fd-e320137fabea",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "a24cacd9-fb51-4050-b1aa-1b07d1d4a5d4",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:46:57.447543+00:00",
+      "elapsed_ms": 2439
+    },
+    {
+      "started_at": "2026-09-15T12:47:00.009823+00:00",
+      "phase": "fault",
+      "client_request_id": "3a5e53b9-30f4-4ae7-9715-01f6dbf35001",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "37b521fd-792b-491b-b99a-08ae2eb73524",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:47:02.314838+00:00",
+      "elapsed_ms": 2305
+    },
+    {
+      "started_at": "2026-09-15T12:47:05.011097+00:00",
+      "phase": "fault",
+      "client_request_id": "7cfb76aa-c859-477b-abe3-a66dcf964caf",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "c2b8a363-d072-4003-8ff5-d9a8befced1b",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:47:07.790018+00:00",
+      "elapsed_ms": 2779
+    },
+    {
+      "started_at": "2026-09-15T12:47:10.350496+00:00",
+      "phase": "fault",
+      "client_request_id": "210b784b-97a4-4335-b6aa-3a69cfdbb5c8",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "88922f30-e586-483d-92a5-d0ebca5b55d0",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:47:12.875352+00:00",
+      "elapsed_ms": 2525
+    },
+    {
+      "started_at": "2026-09-15T12:47:15.351522+00:00",
+      "phase": "fault",
+      "client_request_id": "95931309-e271-4fb2-8031-3c9ad47cd94b",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "bbb5be87-03cc-4d58-b553-4fd59f5061a5",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:47:17.680676+00:00",
+      "elapsed_ms": 2329
+    },
+    {
+      "started_at": "2026-09-15T12:47:20.353319+00:00",
+      "phase": "fault",
+      "client_request_id": "94418e50-68f7-435b-b09f-d117ded0c2cc",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "a3a562d0-4c78-4e52-9830-4cb3b42eee4a",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:47:22.817570+00:00",
+      "elapsed_ms": 2464
+    },
+    {
+      "started_at": "2026-09-15T12:47:25.354834+00:00",
+      "phase": "fault",
+      "client_request_id": "de4047c5-0148-4fe1-9023-a71c213e9cbc",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "8bbd9528-88fc-4395-ab72-cfd2381c4510",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:47:27.679909+00:00",
+      "elapsed_ms": 2325
+    },
+    {
+      "started_at": "2026-09-15T12:47:30.356291+00:00",
+      "phase": "fault",
+      "client_request_id": "bd79e663-c928-457d-84ed-a6f2d7b2e42a",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "b13736b5-819e-4102-9c28-09136e7ad7ec",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:47:32.863942+00:00",
+      "elapsed_ms": 2508
+    },
+    {
+      "started_at": "2026-09-15T12:47:35.357290+00:00",
+      "phase": "fault",
+      "client_request_id": "92f24658-c314-4a80-ad49-64179345342d",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "abeaf41e-bf56-41b9-9949-664d4f5b34a0",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:47:38.122738+00:00",
+      "elapsed_ms": 2765
+    },
+    {
+      "started_at": "2026-09-15T12:47:40.358996+00:00",
+      "phase": "fault",
+      "client_request_id": "6cf1edd9-caaf-4d33-8fb4-369fe5acfbe8",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "88323594-3e21-4c03-9a9c-0b2b0524c2d6",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:47:43.414460+00:00",
+      "elapsed_ms": 3055
+    },
+    {
+      "started_at": "2026-09-15T12:47:45.740642+00:00",
+      "phase": "fault",
+      "client_request_id": "3a13fdd7-89ba-4ea8-9a03-2b3e59833205",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "e74d6fcc-d1e4-405f-be1d-ce7a4c452772",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:47:48.617475+00:00",
+      "elapsed_ms": 2877
+    },
+    {
+      "started_at": "2026-09-15T12:47:50.742012+00:00",
+      "phase": "fault",
+      "client_request_id": "40611d4c-3686-48b0-9137-1d39fe7e02fa",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "f3cc2b65-aad8-45a9-b572-6cd8fc2f3802",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:47:53.100355+00:00",
+      "elapsed_ms": 2358
+    },
+    {
+      "started_at": "2026-09-15T12:47:55.743885+00:00",
+      "phase": "fault",
+      "client_request_id": "575c716c-d814-4d93-8c0d-9a5a60639e57",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "066d417e-f9d7-4ab0-8264-5d55defbe9f5",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:47:58.571942+00:00",
+      "elapsed_ms": 2828
+    },
+    {
+      "started_at": "2026-09-15T12:48:00.745353+00:00",
+      "phase": "fault",
+      "client_request_id": "3ee8f3a6-1117-4f97-97a6-f6df367de1df",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "de0110f6-7fe7-4b84-9b8e-8343fefc633a",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:48:03.539847+00:00",
+      "elapsed_ms": 2795
+    },
+    {
+      "started_at": "2026-09-15T12:48:05.746601+00:00",
+      "phase": "fault",
+      "client_request_id": "716f1188-6a99-44c7-b6b7-666434b1bf4a",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "083bd04e-ef7d-4627-9647-ab884229747a",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:48:08.116267+00:00",
+      "elapsed_ms": 2370
+    },
+    {
+      "started_at": "2026-09-15T12:48:10.747787+00:00",
+      "phase": "fault",
+      "client_request_id": "345b1516-c6f9-4dd5-b045-50b52f966fba",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "8556c5a6-869f-44b6-92ec-828de1638dda",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:48:13.333977+00:00",
+      "elapsed_ms": 2586
+    },
+    {
+      "started_at": "2026-09-15T12:48:15.749429+00:00",
+      "phase": "fault",
+      "client_request_id": "54b3e049-853a-4617-904e-d172102c4d68",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "2bd393d5-6b1a-4656-9c98-06998fa583c3",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:48:18.154193+00:00",
+      "elapsed_ms": 2405
+    },
+    {
+      "started_at": "2026-09-15T12:48:21.082925+00:00",
+      "phase": "fault",
+      "client_request_id": "536454c3-000d-41c5-9ae6-96a5b7d9626c",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "47b5d52d-5bdf-4dc6-b24c-09a3cb9c6288",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:48:23.454484+00:00",
+      "elapsed_ms": 2372
+    },
+    {
+      "started_at": "2026-09-15T12:48:26.083897+00:00",
+      "phase": "fault",
+      "client_request_id": "4468b504-805f-4b63-ae63-c76b0e28f006",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "3998b550-4904-4b42-9119-1086021ea490",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:48:28.474576+00:00",
+      "elapsed_ms": 2391
+    },
+    {
+      "started_at": "2026-09-15T12:48:31.085221+00:00",
+      "phase": "fault",
+      "client_request_id": "04a864bc-dc10-4b67-b1be-ad2f98afa5c2",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "840484a3-6a5f-4aa2-8003-40cd1922e6a7",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:48:33.719996+00:00",
+      "elapsed_ms": 2635
+    },
+    {
+      "started_at": "2026-09-15T12:48:36.086553+00:00",
+      "phase": "fault",
+      "client_request_id": "1f4835c5-4f84-401f-a637-37c2e43e7a11",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "a5099a3a-3eaf-4a0a-8793-f467ca93e5c3",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:48:38.627903+00:00",
+      "elapsed_ms": 2541
+    },
+    {
+      "started_at": "2026-09-15T12:48:41.088768+00:00",
+      "phase": "fault",
+      "client_request_id": "64675612-35bd-493c-bdb4-b5cb518e4c38",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "dc235dbf-b3f9-4d1d-98b5-fd0192d4d6ed",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:48:43.611011+00:00",
+      "elapsed_ms": 2522
+    },
+    {
+      "started_at": "2026-09-15T12:48:46.090675+00:00",
+      "phase": "fault",
+      "client_request_id": "03e58371-9e36-4b57-a29f-3ffac565aac8",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "f68d8f41-2c6f-4d74-8a60-257f2dbc0ce4",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:48:48.724981+00:00",
+      "elapsed_ms": 2634
+    },
+    {
+      "started_at": "2026-09-15T12:48:51.472519+00:00",
+      "phase": "fault",
+      "client_request_id": "219e7ab1-01f6-4f5e-9979-b5a962746c72",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "82b63413-94fe-4f55-a942-7223fe969a99",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:48:54.763210+00:00",
+      "elapsed_ms": 3291
+    },
+    {
+      "started_at": "2026-09-15T12:48:56.473675+00:00",
+      "phase": "fault",
+      "client_request_id": "6d67070a-de6f-4374-8193-9e81ee3e9040",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "5e7b55cb-3c1a-401c-b0d9-a960cc280aa7",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:48:58.830080+00:00",
+      "elapsed_ms": 2356
+    },
+    {
+      "started_at": "2026-09-15T12:49:01.475663+00:00",
+      "phase": "fault",
+      "client_request_id": "accd20a7-4276-4fc0-a422-0482b422f7a0",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "dcec15a3-3d3d-4a29-835c-abf2d26d7f74",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:49:04.007747+00:00",
+      "elapsed_ms": 2532
+    },
+    {
+      "started_at": "2026-09-15T12:49:06.477213+00:00",
+      "phase": "fault",
+      "client_request_id": "bd1635f8-d3b8-4df9-a253-4c049b62ccf0",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "01fb2cd8-06c8-4ad3-8198-f42087f05cdb",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:49:08.818653+00:00",
+      "elapsed_ms": 2341
+    },
+    {
+      "started_at": "2026-09-15T12:49:11.479344+00:00",
+      "phase": "fault",
+      "client_request_id": "fb420498-22b6-46b0-9c3b-4f6e9271a3d8",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "e7422afa-f90a-48ad-ae9c-7107e23c9194",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:49:14.331564+00:00",
+      "elapsed_ms": 2852
+    },
+    {
+      "started_at": "2026-09-15T12:49:16.481180+00:00",
+      "phase": "fault",
+      "client_request_id": "d282adb4-2abf-4320-9695-a168867cad83",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "4c4f3801-f0bd-4dd0-9b19-1cd51af8dc6d",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:49:19.127533+00:00",
+      "elapsed_ms": 2646
+    },
+    {
+      "started_at": "2026-09-15T12:49:21.801829+00:00",
+      "phase": "fault",
+      "client_request_id": "079fced4-d9bc-4b84-a59b-f9d8d71ac92d",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "3e832846-bd20-464a-8db1-0962e57ade16",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:49:24.323432+00:00",
+      "elapsed_ms": 2522
+    },
+    {
+      "started_at": "2026-09-15T12:49:26.804931+00:00",
+      "phase": "fault",
+      "client_request_id": "18e9396e-19d7-4cdd-9a57-56af98d12ab2",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "fe016b82-52ef-4d35-904e-ed18c73cbcf8",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:49:29.447408+00:00",
+      "elapsed_ms": 2643
+    },
+    {
+      "started_at": "2026-09-15T12:49:31.805971+00:00",
+      "phase": "fault",
+      "client_request_id": "12a64f93-0be3-4e65-b38e-e55d1ce9732d",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "ac45707c-83e0-4191-a290-32cf8245808a",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:49:34.241717+00:00",
+      "elapsed_ms": 2436
+    },
+    {
+      "started_at": "2026-09-15T12:49:36.807537+00:00",
+      "phase": "fault",
+      "client_request_id": "7804123d-703e-49b6-adfe-9ebb1ebfaa13",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "43aca484-91d5-471a-8ddd-5aa3cfba546f",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:49:39.771316+00:00",
+      "elapsed_ms": 2964
+    },
+    {
+      "started_at": "2026-09-15T12:49:41.809123+00:00",
+      "phase": "fault",
+      "client_request_id": "b5a0666d-7614-438b-8957-5c32cf692d39",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "c80b8d87-2545-4ff2-aa94-56042f0cea5c",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:49:44.239273+00:00",
+      "elapsed_ms": 2430
+    },
+    {
+      "started_at": "2026-09-15T12:49:46.815174+00:00",
+      "phase": "fault",
+      "client_request_id": "99da3c22-5731-4ae8-9050-c01c357c2cb2",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "3ae34289-33d6-4ee5-938b-45f41e2fa101",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:49:49.187909+00:00",
+      "elapsed_ms": 2373
+    },
+    {
+      "started_at": "2026-09-15T12:49:51.817750+00:00",
+      "phase": "fault",
+      "client_request_id": "2cb92939-28a1-4ca2-b8f1-6b6a7a854224",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "7be8d6d9-142b-4494-9888-35d6d6887f5f",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:49:54.112447+00:00",
+      "elapsed_ms": 2295
+    },
+    {
+      "started_at": "2026-09-15T12:49:57.280379+00:00",
+      "phase": "fault",
+      "client_request_id": "6c6591bc-72fc-4999-aa51-972933547bee",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "98285831-bada-4b3f-9b7e-2e88f206826f",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:49:59.643827+00:00",
+      "elapsed_ms": 2363
+    },
+    {
+      "started_at": "2026-09-15T12:50:02.282663+00:00",
+      "phase": "fault",
+      "client_request_id": "300c3010-bd11-4aa5-ad46-f0310b515570",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "062fb755-92a8-4520-90b4-328a0a863014",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:50:04.654708+00:00",
+      "elapsed_ms": 2372
+    },
+    {
+      "started_at": "2026-09-15T12:50:07.284628+00:00",
+      "phase": "fault",
+      "client_request_id": "f1acdec6-c965-4ec0-8674-1c9269faaa86",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "5f35a637-4c1d-40e3-81bc-8f31a5d50b9e",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:50:09.873571+00:00",
+      "elapsed_ms": 2589
+    },
+    {
+      "started_at": "2026-09-15T12:50:12.286197+00:00",
+      "phase": "fault",
+      "client_request_id": "588f136b-ed48-48a6-8d1a-6f12127363b0",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "4351b719-7c10-4729-b470-8e0b1c0c6eee",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:50:15.094072+00:00",
+      "elapsed_ms": 2808
+    },
+    {
+      "started_at": "2026-09-15T12:50:17.287697+00:00",
+      "phase": "fault",
+      "client_request_id": "4d5acc47-8e10-4ba5-b211-e00351801714",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "ff11133e-c980-4ede-8b38-bdaf96ae03b8",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:50:19.714946+00:00",
+      "elapsed_ms": 2427
+    },
+    {
+      "started_at": "2026-09-15T12:50:22.289711+00:00",
+      "phase": "fault",
+      "client_request_id": "ca88fae2-9d45-4520-9c7b-f7a6a3efdb4f",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "4303153c-df8a-48a9-9fdc-764cb3bae1a9",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:50:24.663473+00:00",
+      "elapsed_ms": 2374
+    },
+    {
+      "started_at": "2026-09-15T12:50:27.605501+00:00",
+      "phase": "fault",
+      "client_request_id": "7e5d3a49-1afd-477c-b5bb-b6a3960220d1",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "7d172ed1-e328-4182-baa9-3b966f7bc74a",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:50:30.277724+00:00",
+      "elapsed_ms": 2672
+    },
+    {
+      "started_at": "2026-09-15T12:50:32.607694+00:00",
+      "phase": "fault",
+      "client_request_id": "7e7dd328-3984-416c-a091-a0ab85925ff2",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "6fe2dd0e-6bf8-40f2-bca2-601611210635",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:50:35.123787+00:00",
+      "elapsed_ms": 2516
+    },
+    {
+      "started_at": "2026-09-15T12:50:37.609768+00:00",
+      "phase": "fault",
+      "client_request_id": "40f3de00-849e-4155-94d5-d87f5e310f9b",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "bf3966b0-efbf-40c7-8ad3-644ef7e99a1a",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:50:39.869654+00:00",
+      "elapsed_ms": 2260
+    },
+    {
+      "started_at": "2026-09-15T12:50:42.611582+00:00",
+      "phase": "fault",
+      "client_request_id": "7667e2bc-275d-4187-823a-1c9ee68610af",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "f80a1dae-9f02-4aaf-aa16-0feeea7c2a98",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:50:44.916446+00:00",
+      "elapsed_ms": 2305
+    },
+    {
+      "started_at": "2026-09-15T12:50:47.613425+00:00",
+      "phase": "fault",
+      "client_request_id": "c180bde6-4fec-4977-8ac8-c57cdcb69aff",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "6a6d45f6-7062-426b-8f6c-7787ec13e251",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:50:50.106525+00:00",
+      "elapsed_ms": 2493
+    },
+    {
+      "started_at": "2026-09-15T12:50:52.615357+00:00",
+      "phase": "fault",
+      "client_request_id": "1857fcbd-a584-45bf-9c29-9b1c83a4a2b8",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "9ffe12ca-79be-4204-96f7-eaa7f621cab1",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:50:55.106654+00:00",
+      "elapsed_ms": 2491
+    },
+    {
+      "started_at": "2026-09-15T12:50:57.930043+00:00",
+      "phase": "fault",
+      "client_request_id": "40702979-4caa-466e-a0e8-577203956ee2",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "fdbcc921-5df2-4e56-8f9c-b65468079a2f",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:51:00.263200+00:00",
+      "elapsed_ms": 2333
+    },
+    {
+      "started_at": "2026-09-15T12:51:02.932215+00:00",
+      "phase": "fault",
+      "client_request_id": "eebfaa3c-52a1-494b-b523-b8c4384b25f0",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "55427881-77b9-47e4-8ee1-3d0e03acaffc",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:51:05.288120+00:00",
+      "elapsed_ms": 2356
+    },
+    {
+      "started_at": "2026-09-15T12:51:07.934021+00:00",
+      "phase": "fault",
+      "client_request_id": "36390035-4ba4-4629-9cc1-135692baf915",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "6ca55d2e-fd53-4dfd-9ed9-ceccf6fd5aea",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:51:10.444628+00:00",
+      "elapsed_ms": 2511
+    },
+    {
+      "started_at": "2026-09-15T12:51:12.939013+00:00",
+      "phase": "fault",
+      "client_request_id": "f7bef83f-d14a-4004-829a-94daa1e238a7",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "5ac691ed-6a5b-4935-a5f3-534d6e08270b",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:51:15.527231+00:00",
+      "elapsed_ms": 2588
+    },
+    {
+      "started_at": "2026-09-15T12:51:17.941407+00:00",
+      "phase": "fault",
+      "client_request_id": "441d3425-6b6f-49a1-9312-ef0933d6ad0e",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "ab8634cb-0ec9-423c-a3ad-98822f801277",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:51:20.285398+00:00",
+      "elapsed_ms": 2344
+    },
+    {
+      "started_at": "2026-09-15T12:51:22.943670+00:00",
+      "phase": "fault",
+      "client_request_id": "f7f41f6b-1234-43af-adbc-db9be832bfbc",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "258f9c1e-e96d-4091-ab9a-9eec69b3b082",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:51:25.740997+00:00",
+      "elapsed_ms": 2797
+    },
+    {
+      "started_at": "2026-09-15T12:51:28.292914+00:00",
+      "phase": "fault",
+      "client_request_id": "3a584fd3-4ee6-4a6d-8e9f-f06896d0054a",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "7978ffc6-420f-474b-8fad-3a692d0f1dde",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:51:30.712369+00:00",
+      "elapsed_ms": 2419
+    },
+    {
+      "started_at": "2026-09-15T12:51:33.295275+00:00",
+      "phase": "fault",
+      "client_request_id": "9109f257-23d9-4a56-b226-c3482f6d27dc",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "05f7d80a-fe4f-439b-a8de-37afdff5d375",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:51:36.416496+00:00",
+      "elapsed_ms": 3121
+    },
+    {
+      "started_at": "2026-09-15T12:51:38.297946+00:00",
+      "phase": "fault",
+      "client_request_id": "b5e99786-1965-47ab-a697-8dcb5a6b3a7d",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "8b571aeb-4c1f-48d6-acdf-e9323976efb6",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:51:41.079204+00:00",
+      "elapsed_ms": 2781
+    },
+    {
+      "started_at": "2026-09-15T12:51:43.300084+00:00",
+      "phase": "fault",
+      "client_request_id": "a7b7db09-88d7-4e01-a9b1-d9bd98fb73e6",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "68bee961-059c-44a1-9c4e-f96488796d02",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:51:45.762741+00:00",
+      "elapsed_ms": 2463
+    },
+    {
+      "started_at": "2026-09-15T12:51:48.301805+00:00",
+      "phase": "fault",
+      "client_request_id": "d36f38d4-7e71-4f02-86c9-07cf53b53e74",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "3b7b37f2-dcec-479e-8564-ef22d2150227",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:51:50.673724+00:00",
+      "elapsed_ms": 2372
+    },
+    {
+      "started_at": "2026-09-15T12:51:53.303675+00:00",
+      "phase": "fault",
+      "client_request_id": "c943602c-b9d5-4678-9124-81a17621b639",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "2e3752de-37fc-4990-89e5-744316e9ad37",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:51:55.737859+00:00",
+      "elapsed_ms": 2434
+    },
+    {
+      "started_at": "2026-09-15T12:51:58.306018+00:00",
+      "phase": "fault",
+      "client_request_id": "c37333ed-7313-40dc-8884-c202656eda70",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "86f51b71-53e9-4970-9b44-fe2c9be39220",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:52:01.153552+00:00",
+      "elapsed_ms": 2848
+    },
+    {
+      "started_at": "2026-09-15T12:52:03.608864+00:00",
+      "phase": "fault",
+      "client_request_id": "783b1269-c15a-4e64-b2f2-229cfe0393fc",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "0cc42d64-4d3c-4e3a-8c8b-b82757dde25b",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:52:06.071062+00:00",
+      "elapsed_ms": 2462
+    },
+    {
+      "started_at": "2026-09-15T12:52:08.611089+00:00",
+      "phase": "fault",
+      "client_request_id": "48f7aaf4-4ea8-4901-9317-3fa75bc894c9",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "2ebd6baf-da60-43de-b256-54a4ac21b0c2",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:52:11.131740+00:00",
+      "elapsed_ms": 2521
+    },
+    {
+      "started_at": "2026-09-15T12:52:13.613031+00:00",
+      "phase": "fault",
+      "client_request_id": "a103539a-5162-4c0b-bf1a-bcc42822c815",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "ffefc097-cb4d-4061-82a1-df5fca2e12a9",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:52:16.031111+00:00",
+      "elapsed_ms": 2418
+    },
+    {
+      "started_at": "2026-09-15T12:52:18.615526+00:00",
+      "phase": "fault",
+      "client_request_id": "571c35d0-bfe4-4974-a49b-2b7330463695",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "eaff9c1a-ae23-4b2f-95dd-1ec06c2f719b",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:52:20.989499+00:00",
+      "elapsed_ms": 2374
+    },
+    {
+      "started_at": "2026-09-15T12:52:23.617693+00:00",
+      "phase": "fault",
+      "client_request_id": "aed867f6-9eba-499e-8bcd-6bd6a9598f32",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "8b1596a4-4762-47f4-9f1d-7dac8f668df8",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:52:26.205968+00:00",
+      "elapsed_ms": 2588
+    },
+    {
+      "started_at": "2026-09-15T12:52:28.620347+00:00",
+      "phase": "fault",
+      "client_request_id": "610f59ed-6404-4bda-9f8f-486f7f67e9d9",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "510c6644-b43a-4ee3-95e2-c8c597ba00b7",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:52:30.904928+00:00",
+      "elapsed_ms": 2285
+    },
+    {
+      "started_at": "2026-09-15T12:52:33.622056+00:00",
+      "phase": "fault",
+      "client_request_id": "ca8e6769-8d83-4f82-bf95-c890b163cc3b",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "5715117f-86fb-4dd2-91fc-9ff5a8dc89d5",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:52:36.274871+00:00",
+      "elapsed_ms": 2653
+    },
+    {
+      "started_at": "2026-09-15T12:52:39.406754+00:00",
+      "phase": "fault",
+      "client_request_id": "b47e543f-b765-4338-a33b-0f71e735919e",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "e94fd842-c6d3-48c7-81b4-c987c8595a8c",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:52:41.831555+00:00",
+      "elapsed_ms": 2425
+    },
+    {
+      "started_at": "2026-09-15T12:52:44.409078+00:00",
+      "phase": "fault",
+      "client_request_id": "f94d32c9-4eb1-43af-a2b1-898452529736",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "e7143771-93ae-4a5f-a9cc-114cddf05ff4",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:52:47.011027+00:00",
+      "elapsed_ms": 2602
+    },
+    {
+      "started_at": "2026-09-15T12:52:49.411257+00:00",
+      "phase": "fault",
+      "client_request_id": "9eef5df6-7351-4d63-b009-6faebd972eef",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "ea02780d-a072-421e-853f-f22cdf29479e",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:52:52.099708+00:00",
+      "elapsed_ms": 2688
+    },
+    {
+      "started_at": "2026-09-15T12:52:54.414119+00:00",
+      "phase": "fault",
+      "client_request_id": "afea62d0-53af-42d4-ad1f-89d0d4d03aae",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "fa7d4bb6-faa6-40ff-887b-cb763789bc04",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:52:58.734032+00:00",
+      "elapsed_ms": 4320
+    },
+    {
+      "started_at": "2026-09-15T12:52:59.416551+00:00",
+      "phase": "fault",
+      "client_request_id": "17190a10-ddfd-4d7a-a581-b07183afe6a4",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "64765936-b4f4-484a-bf2e-a506e979e763",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:53:02.027019+00:00",
+      "elapsed_ms": 2610
+    },
+    {
+      "started_at": "2026-09-15T12:53:04.419459+00:00",
+      "phase": "fault",
+      "client_request_id": "f3d6c826-25ab-4463-9cf8-a01b4af81d48",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "55e5318a-52a4-496e-bf31-c6831ee003f4",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:53:06.903895+00:00",
+      "elapsed_ms": 2484
+    },
+    {
+      "started_at": "2026-09-15T12:53:09.422073+00:00",
+      "phase": "fault",
+      "client_request_id": "ce8b61d6-6333-4d7d-94f5-685522141d62",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "1a15447d-28cb-4659-bd81-e58bd704cd1d",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:53:11.918555+00:00",
+      "elapsed_ms": 2497
+    },
+    {
+      "started_at": "2026-09-15T12:53:14.741962+00:00",
+      "phase": "fault",
+      "client_request_id": "1c52810b-02aa-49e5-90fa-40afc1500a98",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "a9d4f3e5-a369-4998-a53b-7274d6216aac",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:53:17.502086+00:00",
+      "elapsed_ms": 2760
+    },
+    {
+      "started_at": "2026-09-15T12:53:19.744725+00:00",
+      "phase": "fault",
+      "client_request_id": "5cabf797-d612-411f-9c7f-86f471022d22",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "403db668-9086-419b-8e32-64b2356cbded",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:53:22.202568+00:00",
+      "elapsed_ms": 2458
+    },
+    {
+      "started_at": "2026-09-15T12:53:24.747000+00:00",
+      "phase": "fault",
+      "client_request_id": "3755cf70-734d-4d1e-b24d-b388f77d5d23",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "ce2c6fdd-0b85-4276-80fe-56771a15686d",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:53:27.462752+00:00",
+      "elapsed_ms": 2716
+    },
+    {
+      "started_at": "2026-09-15T12:53:29.749218+00:00",
+      "phase": "fault",
+      "client_request_id": "07a34cc3-facf-44a9-985c-a98fb5db5883",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "bd3ec16c-951e-421d-8741-11e8697e3def",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:53:32.363508+00:00",
+      "elapsed_ms": 2614
+    },
+    {
+      "started_at": "2026-09-15T12:53:34.755199+00:00",
+      "phase": "fault",
+      "client_request_id": "10bbcc55-4512-43f5-afd2-eb9e27cc9d3a",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "4fe5aad5-8351-4d99-981b-eac775f52648",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:53:37.785523+00:00",
+      "elapsed_ms": 3030
+    },
+    {
+      "started_at": "2026-09-15T12:53:39.757714+00:00",
+      "phase": "fault",
+      "client_request_id": "487740cd-9896-4a33-80ff-8337779fb93e",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "278a81f5-de2a-428c-938c-fe801cf69bde",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:53:42.557878+00:00",
+      "elapsed_ms": 2800
+    },
+    {
+      "started_at": "2026-09-15T12:53:45.091388+00:00",
+      "phase": "fault",
+      "client_request_id": "127f9d8a-942f-4558-80ec-3599db8986ba",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "4efe6c53-ab71-4a2c-88fb-27616a492df5",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:53:48.235812+00:00",
+      "elapsed_ms": 3144
+    },
+    {
+      "started_at": "2026-09-15T12:53:50.094229+00:00",
+      "phase": "fault",
+      "client_request_id": "546f4920-8d54-40fa-a60c-a2dc494815bd",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "d17198f3-de89-4d3a-9e56-007a141aba14",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:53:52.896589+00:00",
+      "elapsed_ms": 2802
+    },
+    {
+      "started_at": "2026-09-15T12:53:55.097353+00:00",
+      "phase": "fault",
+      "client_request_id": "fbc68913-6dd6-4b8c-bf66-c208b0c1bedc",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "199826d3-a6a9-4270-b040-8eec45313865",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:53:57.309399+00:00",
+      "elapsed_ms": 2212
+    },
+    {
+      "started_at": "2026-09-15T12:54:00.100002+00:00",
+      "phase": "fault",
+      "client_request_id": "31d98fdc-09d3-49fe-bfb4-e93ac7710116",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "9e72ac59-1400-4c3d-ab6f-659d7f09e79c",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:54:02.503662+00:00",
+      "elapsed_ms": 2404
+    },
+    {
+      "started_at": "2026-09-15T12:54:05.101928+00:00",
+      "phase": "fault",
+      "client_request_id": "38278689-964b-41c6-88fd-31773dab36df",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "47cc5c57-a5a3-421e-8dd0-fc717eb36e1f",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:54:07.732872+00:00",
+      "elapsed_ms": 2631
+    },
+    {
+      "started_at": "2026-09-15T12:54:10.104262+00:00",
+      "phase": "fault",
+      "client_request_id": "a2bab810-7ff8-4f31-bf3e-903f4355c8e6",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "ecd6f988-51eb-48b0-ba94-3315ec864d9e",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:54:12.615997+00:00",
+      "elapsed_ms": 2512
+    },
+    {
+      "started_at": "2026-09-15T12:54:15.106726+00:00",
+      "phase": "fault",
+      "client_request_id": "291a7224-4ea6-4eb5-8c31-a2e6a094bcac",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "399b66ac-c5b6-42ef-ae94-76a348c0521b",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:54:17.549981+00:00",
+      "elapsed_ms": 2443
+    },
+    {
+      "started_at": "2026-09-15T12:54:20.436481+00:00",
+      "phase": "fault",
+      "client_request_id": "88aec5ac-8ca2-4c1d-840c-6e656f7d08c4",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "55722b08-f9fd-4a08-9481-732e012df602",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:54:23.816902+00:00",
+      "elapsed_ms": 3380
+    },
+    {
+      "started_at": "2026-09-15T12:54:25.439297+00:00",
+      "phase": "fault",
+      "client_request_id": "9bcd090e-c66c-428c-a9f6-34325bc09c27",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "212b90ef-393a-4864-ac8b-68713906a5e6",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:54:28.522507+00:00",
+      "elapsed_ms": 3083
+    },
+    {
+      "started_at": "2026-09-15T12:54:30.441875+00:00",
+      "phase": "fault",
+      "client_request_id": "fd2ae822-3c6f-422b-a56a-d4801375da3f",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "5911561e-f8f2-4432-99bb-7010b7843943",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:54:33.093365+00:00",
+      "elapsed_ms": 2652
+    },
+    {
+      "started_at": "2026-09-15T12:54:35.443773+00:00",
+      "phase": "fault",
+      "client_request_id": "325bc98c-6df7-4829-ba6d-33c2e4eae694",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "7a9f21cb-6a53-42a6-8823-471306565570",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:54:37.661341+00:00",
+      "elapsed_ms": 2218
+    },
+    {
+      "started_at": "2026-09-15T12:54:40.445803+00:00",
+      "phase": "fault",
+      "client_request_id": "5c875043-fa9f-423b-8189-c0b30dc837eb",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "de6b129b-2912-456e-9e74-26f5d2a515f4",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:54:43.554370+00:00",
+      "elapsed_ms": 3109
+    },
+    {
+      "started_at": "2026-09-15T12:54:45.449199+00:00",
+      "phase": "fault",
+      "client_request_id": "c625024f-6341-43d1-b9a1-9f6b3f0fbdd9",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "request_id": "a398d985-365d-4dbb-ab10-9f29c17f52cb",
+      "error_code": null,
+      "ok": true,
+      "completed_at": "2026-09-15T12:54:48.712070+00:00",
+      "elapsed_ms": 3263
+    }
+  ],
+  "route_observations": [
+    {
+      "at": "2026-09-15T12:44:51.462997+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 3,
+        "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+        "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+      }
+    },
+    {
+      "at": "2026-09-15T12:45:27.051310+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 3,
+        "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+        "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+      }
+    },
+    {
+      "at": "2026-09-15T12:45:58.218308+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 3,
+        "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+        "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+      }
+    },
+    {
+      "at": "2026-09-15T12:46:32.415545+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 3,
+        "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+        "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+      }
+    },
+    {
+      "at": "2026-09-15T12:47:08.128072+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 3,
+        "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+        "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+      }
+    },
+    {
+      "at": "2026-09-15T12:47:43.793915+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 3,
+        "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+        "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+      }
+    },
+    {
+      "at": "2026-09-15T12:48:18.486426+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 3,
+        "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+        "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+      }
+    },
+    {
+      "at": "2026-09-15T12:48:49.104942+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 3,
+        "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+        "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+      }
+    },
+    {
+      "at": "2026-09-15T12:49:19.446338+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 3,
+        "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+        "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+      }
+    },
+    {
+      "at": "2026-09-15T12:49:54.573652+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 3,
+        "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+        "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+      }
+    },
+    {
+      "at": "2026-09-15T12:50:24.977427+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 3,
+        "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+        "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+      }
+    },
+    {
+      "at": "2026-09-15T12:50:55.419083+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 3,
+        "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+        "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+      }
+    },
+    {
+      "at": "2026-09-15T12:51:26.087604+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 3,
+        "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+        "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+      }
+    },
+    {
+      "at": "2026-09-15T12:52:01.454784+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 3,
+        "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+        "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+      }
+    },
+    {
+      "at": "2026-09-15T12:52:37.057117+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 3,
+        "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+        "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+      }
+    },
+    {
+      "at": "2026-09-15T12:53:12.236510+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 3,
+        "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+        "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+      }
+    },
+    {
+      "at": "2026-09-15T12:53:42.889094+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 3,
+        "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+        "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+      }
+    },
+    {
+      "at": "2026-09-15T12:54:17.877026+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 3,
+        "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+        "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+      }
+    },
+    {
+      "at": "2026-09-15T12:54:49.059559+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 3,
+        "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+        "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+      }
+    }
+  ],
+  "initial_route": {
+    "primary": "sweden",
+    "enabled": [
+      "sweden",
+      "eastus2"
+    ],
+    "version": 3,
+    "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+    "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+  },
+  "existing_run_ids": [
+    "08584121306400790212945948778CU05",
+    "08584121306947036004790208446CU32",
+    "08584121307942072755840216567CU35",
+    "08584121308045608537011891018CU42",
+    "08584121315744907698029855624CU44",
+    "08584121316262889883172939423CU08",
+    "08584121316398648696959292119CU15",
+    "08584121321001264721224949538CU00",
+    "08584121330157544471243293264CU13",
+    "08584121342016356741430252673CU37",
+    "08584121383436341571981890615CU40",
+    "08584121390352212657342186270CU38",
+    "08584121390480780969766123359CU12",
+    "08584121390579026625540510577CU36",
+    "08584121421884374060538798899CU09",
+    "08584121430318812745692113026CU01",
+    "08584121431977829117197716545CU34",
+    "08584121432218714293683100546CU07",
+    "08584121432615754645664044576CU06",
+    "08584121435153607872931604082CU32",
+    "08584121435723728868258891973CU42",
+    "08584121436710629255686979683CU36"
+  ],
+  "alert_rules": {
+    "llm-backend-latency": {
+      "createdWithApiVersion": "2023-12-01",
+      "displayName": "llm-backend-latency",
+      "description": "Five-minute per-backend APIM latency; managed-identity failover only.",
+      "severity": 2,
+      "enabled": true,
+      "evaluationFrequency": "PT1M",
+      "scopes": [
+        "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.OperationalInsights/workspaces/law-svhwb107-0915"
+      ],
+      "windowSize": "PT5M",
+      "criteria": {
+        "allOf": [
+          {
+            "query": "ApiManagementGatewayLogs\n| where TimeGenerated >= ago(5m)\n| where _ResourceId =~ '/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.ApiManagement/service/apim-svhwb107-0915' and ApiId == 'llm'\n| where Method == 'POST'\n| extend BackendRequestUrl = tostring(split(tostring(BackendUrl), \"?\")[0])\n| extend Backend = case(BackendRequestUrl == 'https://svhw-openai-eastus2.openai.azure.com/openai/deployments/gpt-5.1/chat/completions', 'eastus2', BackendRequestUrl == 'https://svhw-openai-eastus2.openai.azure.com/openai/v1/chat/completions', 'eastus2', BackendRequestUrl == 'https://svhw-openai-eastus2.openai.azure.com/openai/v1/responses', 'eastus2', BackendRequestUrl == 'https://svhw2-swedencentral.openai.azure.com/openai/deployments/gpt-5.1/chat/completions', 'sweden', BackendRequestUrl == 'https://svhw2-swedencentral.openai.azure.com/openai/v1/chat/completions', 'sweden', BackendRequestUrl == 'https://svhw2-swedencentral.openai.azure.com/openai/v1/responses', 'sweden', '')\n| where Backend in ('eastus2', 'sweden')\n| extend GatewayStatus = coalesce(toint(ResponseCode), 0),\n    BackendStatus = coalesce(toint(BackendResponseCode), 0)\n| where GatewayStatus !in (401, 403) and BackendStatus !in (401, 403)\n| summarize Samples = count(), AverageBackendMs = avg(todouble(BackendTime)),\n    ErrorCount = countif(GatewayStatus == 429 or GatewayStatus between (500 .. 599)\n        or BackendStatus == 429 or BackendStatus between (500 .. 599))\n    by Backend\n| extend ErrorRatePct = 100.0 * ErrorCount / Samples\n| extend ViolationCount = iff(Samples >= 5 and AverageBackendMs >= 3200, 1, 0)\n| project Backend, ViolationCount",
+            "timeAggregation": "Maximum",
+            "metricMeasureColumn": "ViolationCount",
+            "dimensions": [
+              {
+                "name": "Backend",
+                "operator": "Include",
+                "values": [
+                  "eastus2",
+                  "sweden"
+                ]
+              }
+            ],
+            "operator": "GreaterThan",
+            "threshold": 0.0,
+            "failingPeriods": {
+              "numberOfEvaluationPeriods": 1,
+              "minFailingPeriodsToAlert": 1
+            }
+          }
+        ]
+      },
+      "autoMitigate": true,
+      "actions": {
+        "actionGroups": [
+          "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/actionGroups/llm-monitored-failover"
+        ]
+      },
+      "skipQueryValidation": false
+    },
+    "llm-backend-errors": {
+      "createdWithApiVersion": "2023-12-01",
+      "displayName": "llm-backend-errors",
+      "description": "Five-minute per-backend APIM errors; managed-identity failover only.",
+      "severity": 2,
+      "enabled": true,
+      "evaluationFrequency": "PT1M",
+      "scopes": [
+        "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.OperationalInsights/workspaces/law-svhwb107-0915"
+      ],
+      "windowSize": "PT5M",
+      "criteria": {
+        "allOf": [
+          {
+            "query": "ApiManagementGatewayLogs\n| where TimeGenerated >= ago(5m)\n| where _ResourceId =~ '/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.ApiManagement/service/apim-svhwb107-0915' and ApiId == 'llm'\n| where Method == 'POST'\n| extend BackendRequestUrl = tostring(split(tostring(BackendUrl), \"?\")[0])\n| extend Backend = case(BackendRequestUrl == 'https://svhw-openai-eastus2.openai.azure.com/openai/deployments/gpt-5.1/chat/completions', 'eastus2', BackendRequestUrl == 'https://svhw-openai-eastus2.openai.azure.com/openai/v1/chat/completions', 'eastus2', BackendRequestUrl == 'https://svhw-openai-eastus2.openai.azure.com/openai/v1/responses', 'eastus2', BackendRequestUrl == 'https://svhw2-swedencentral.openai.azure.com/openai/deployments/gpt-5.1/chat/completions', 'sweden', BackendRequestUrl == 'https://svhw2-swedencentral.openai.azure.com/openai/v1/chat/completions', 'sweden', BackendRequestUrl == 'https://svhw2-swedencentral.openai.azure.com/openai/v1/responses', 'sweden', '')\n| where Backend in ('eastus2', 'sweden')\n| extend GatewayStatus = coalesce(toint(ResponseCode), 0),\n    BackendStatus = coalesce(toint(BackendResponseCode), 0)\n| where GatewayStatus !in (401, 403) and BackendStatus !in (401, 403)\n| summarize Samples = count(), AverageBackendMs = avg(todouble(BackendTime)),\n    ErrorCount = countif(GatewayStatus == 429 or GatewayStatus between (500 .. 599)\n        or BackendStatus == 429 or BackendStatus between (500 .. 599))\n    by Backend\n| extend ErrorRatePct = 100.0 * ErrorCount / Samples\n| extend ViolationCount = iff(Samples >= 5 and ErrorRatePct >= 20.0, 1, 0)\n| project Backend, ViolationCount",
+            "timeAggregation": "Maximum",
+            "metricMeasureColumn": "ViolationCount",
+            "dimensions": [
+              {
+                "name": "Backend",
+                "operator": "Include",
+                "values": [
+                  "eastus2",
+                  "sweden"
+                ]
+              }
+            ],
+            "operator": "GreaterThan",
+            "threshold": 0.0,
+            "failingPeriods": {
+              "numberOfEvaluationPeriods": 1,
+              "minFailingPeriodsToAlert": 1
+            }
+          }
+        ]
+      },
+      "autoMitigate": true,
+      "actions": {
+        "actionGroups": [
+          "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/actionGroups/llm-monitored-failover"
+        ]
+      },
+      "skipQueryValidation": false
+    }
+  },
+  "deployment_restore_configuration": {
+    "sku": {
+      "name": "GlobalStandard",
+      "capacity": 10
+    },
+    "properties": {
+      "model": {
+        "format": "OpenAI",
+        "name": "gpt-5.1",
+        "version": "2025-11-13"
+      },
+      "raiPolicyName": "Microsoft.DefaultV2",
+      "versionUpgradeOption": "OnceNewDefaultVersionAvailable"
+    }
+  },
+  "route_at_recovery": {
+    "primary": "sweden",
+    "enabled": [
+      "sweden",
+      "eastus2"
+    ],
+    "version": 3,
+    "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+    "reason": "Operator enabled healthy eastus2 standby for deployment-deletion drill"
+  },
+  "final_route": {
+    "primary": "sweden",
+    "enabled": [
+      "sweden"
+    ],
+    "version": 4,
+    "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+    "reason": "Deletion drill ended without automatic switch; restored prior eastus2 quarantine"
+  },
+  "final_switch_enabled": true,
+  "alert_criteria_unchanged": true,
+  "model_restored": true,
+  "activity_log": [
+    {
+      "correlation": "315b9090-ddfe-42da-ab11-49d390419df5",
+      "operation": "Microsoft.CognitiveServices/accounts/deployments/write",
+      "status": "Started",
+      "time": "2026-09-15T12:54:58.8004356Z"
+    },
+    {
+      "correlation": "562d0535-da14-4437-868e-764aaa7b8d6c",
+      "operation": "Microsoft.CognitiveServices/accounts/deployments/delete",
+      "status": "Succeeded",
+      "time": "2026-09-15T12:44:47.6977668Z"
+    },
+    {
+      "correlation": "562d0535-da14-4437-868e-764aaa7b8d6c",
+      "operation": "Microsoft.CognitiveServices/accounts/deployments/delete",
+      "status": "Started",
+      "time": "2026-09-15T12:44:45.5414935Z"
+    }
+  ],
+  "gateway_log_query": "ApiManagementGatewayLogs | where TimeGenerated between(datetime(2026-09-15T12:44:45Z)..datetime(2026-09-15T12:54:51Z)) | where ApiId == 'llm' and Method == 'POST' | where BackendUrl contains 'svhw2-swedencentral.openai.azure.com/openai/deployments/gpt-5.1/chat/completions' | summarize Samples=count(), AverageBackendMs=avg(BackendTime), MinBackendMs=min(BackendTime), MaxBackendMs=max(BackendTime), First=min(TimeGenerated), Last=max(TimeGenerated) by ResponseCode, BackendResponseCode, BackendUrl",
+  "gateway_log_summary": [
+    {
+      "AverageBackendMs": "1658.420168067227",
+      "BackendResponseCode": "200",
+      "BackendUrl": "https://svhw2-swedencentral.openai.azure.com/openai/deployments/gpt-5.1/chat/completions?api-version=2024-10-21",
+      "First": "2026-09-15T12:44:49.5419337Z",
+      "Last": "2026-09-15T12:54:46.9778702Z",
+      "MaxBackendMs": "2604",
+      "MinBackendMs": "1306",
+      "ResponseCode": "200",
+      "Samples": "119",
+      "TableName": "PrimaryResult"
+    }
+  ],
+  "workflow_runs_during_fault": [],
+  "conclusion": {
+    "observation_seconds": 605.284,
+    "baseline_requests": 5,
+    "post_delete_requests": 119,
+    "successful_sweden_requests": 119,
+    "successful_eastus2_requests": 0,
+    "observed_data_plane_failure": false,
+    "automatic_switch_observed": false,
+    "failure_to_switch_seconds": null,
+    "scope": "No failover timing obtained: management deletion did not cause a data-plane failure in the observation window."
+  }
+}
