@@ -4,10 +4,12 @@ import argparse
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-from azure import APIM, APP, ROOT, arm, container_secrets
+from azure import APIM, ROOT, arm
+from backends import API_VERSION, MODEL_IDENTITY_CLIENT_ID, MODEL_IDENTITY_ID, load_backends
 
 
 def build_policy():
+    backends = load_backends()
     policy = ET.Element("policies")
     inbound = ET.SubElement(policy, "inbound")
     ET.SubElement(inbound, "base")
@@ -22,10 +24,12 @@ def build_policy():
     bad_model = ET.SubElement(choose, "when", {
         "condition": '@{ var body = context.Request.Body.As<JObject>(preserveContent: true); '
         'var model = (string)body["model"]; var expected = context.Operation.Id == "embedding" '
-        '? "text-embedding-3-small" : "gpt-5.1"; return model != null && model != expected; }',
+        '? "text-embedding-3-small" : "gpt-5.1"; return (model != null && model != expected) '
+        '|| (body["stream"] != null && body["stream"].Type != JTokenType.Null '
+        '&& (body["stream"].Type != JTokenType.Boolean || (bool)body["stream"])); }',
     })
     response = ET.SubElement(bad_model, "return-response")
-    ET.SubElement(response, "set-status", {"code": "400", "reason": "Unsupported model"})
+    ET.SubElement(response, "set-status", {"code": "400", "reason": "Unsupported model or streaming"})
     ET.SubElement(inbound, "set-body").text = (
         '@{ var body = context.Request.Body.As<JObject>(); body.Remove("model"); return body.ToString(); }'
     )
@@ -53,21 +57,32 @@ def build_policy():
         'if ((string)context.Variables["purpose"] == "embedding") { return "embedding"; } '
         'return (string)JObject.Parse((string)context.Variables["route"])["primary"]; }',
     })
-    ET.SubElement(inbound, "set-backend-service", {"base-url": "{{executor-base}}"})
-    ET.SubElement(inbound, "rewrite-uri", {
-        "template": '@("/execute/" + (string)context.Variables["selected"])',
-        "copy-unmatched-params": "false",
-    })
-    for name, value in (
-        ("X-Executor-Key", "{{executor-key}}"),
-        ("X-Budget-Ms", '@(Math.Max(1, (int)context.Variables["budget"] - (int)(DateTime.UtcNow - context.Timestamp).TotalMilliseconds - 250).ToString())'),
-        ("X-Idle-Ms", "1200"),
-        ("X-Request-Id", "@(context.RequestId.ToString())"),
+    targets = ET.SubElement(inbound, "choose")
+    for name, backend_config in backends.items():
+        target = ET.SubElement(targets, "when", {
+            "condition": f'@((string)context.Variables["selected"] == "{name}")',
+        })
+        ET.SubElement(target, "set-backend-service", {"backend-id": "llm-" + name})
+        operation = "embeddings" if backend_config["kind"] == "embedding" else "chat/completions"
+        ET.SubElement(target, "rewrite-uri", {
+            "template": "/openai/deployments/" + backend_config["deployment"] + "/" + operation,
+            "copy-unmatched-params": "false",
+        })
+    invalid = ET.SubElement(targets, "otherwise")
+    invalid_response = ET.SubElement(invalid, "return-response")
+    ET.SubElement(invalid_response, "set-status", {"code": "503", "reason": "Unknown route backend"})
+    query = ET.SubElement(inbound, "set-query-parameter", {"name": "api-version", "exists-action": "override"})
+    ET.SubElement(query, "value").text = API_VERSION
+    for name in (
+        "Ocp-Apim-Subscription-Key", "Authorization", "api-key", "X-Executor-Key",
+        "X-Budget-Ms", "X-Idle-Ms", "X-Remaining-Budget-Ms",
     ):
-        header = ET.SubElement(inbound, "set-header", {"name": name, "exists-action": "override"})
-        ET.SubElement(header, "value").text = value
-    for name in ("Ocp-Apim-Subscription-Key", "Authorization", "api-key"):
         ET.SubElement(inbound, "set-header", {"name": name, "exists-action": "delete"})
+    ET.SubElement(inbound, "authentication-managed-identity", {
+        "resource": "https://cognitiveservices.azure.com",
+        "client-id": MODEL_IDENTITY_CLIENT_ID,
+        "ignore-error": "false",
+    })
     backend = ET.SubElement(policy, "backend")
     ET.SubElement(backend, "forward-request", {
         "timeout": '@(Math.Max(1, (int)Math.Ceiling(((int)context.Variables["budget"] - (DateTime.UtcNow - context.Timestamp).TotalMilliseconds) / 1000.0)))',
@@ -109,17 +124,19 @@ def configure(*, initialize_route=False):
     else:
         # Fail if the prerequisite is missing; never silently reset a live quarantine.
         arm("GET", APIM + "/namedValues/chat-route")
-    app = arm("GET", APP, version="2024-03-01")
-    host = app["properties"]["configuration"]["ingress"]["fqdn"]
-    put("/namedValues/executor-key", {
-        "displayName": "executor-key", "secret": True,
-        "value": container_secrets()["executor-key"],
-    })
-    put("/namedValues/executor-base", {
-        "displayName": "executor-base", "secret": False, "value": "https://" + host,
-    })
+    service = arm("GET", APIM)
+    identity = service.get("identity") or {}
+    identities = {resource_id: {} for resource_id in identity.get("userAssignedIdentities", {})}
+    identities[MODEL_IDENTITY_ID] = {}
+    identity_type = "SystemAssigned, UserAssigned" if "SystemAssigned" in identity.get("type", "") else "UserAssigned"
+    arm("PATCH", APIM, {"identity": {"type": identity_type, "userAssignedIdentities": identities}})
+    for name, backend in load_backends().items():
+        put("/backends/llm-" + name, {
+            "protocol": "http", "url": backend["endpoint"].rstrip("/"),
+            "description": "Direct Foundry " + name,
+        })
     put("/apis/llm", {
-        "displayName": "SVHWB107 single-attempt LLM",
+        "displayName": "SVHWB107 direct Foundry",
         "path": "llm", "protocols": ["https"], "subscriptionRequired": True,
     })
     for purpose in ("intent", "rewrite", "generate", "embedding"):
@@ -154,10 +171,10 @@ def configure(*, initialize_route=False):
         },
         "backend": {
             "request": {"headers": [], "body": {"bytes": 0}},
-            "response": {"headers": ["x-executor-error", "x-executor-attempt-id"], "body": {"bytes": 0}},
+            "response": {"headers": ["x-request-id", "apim-request-id"], "body": {"bytes": 0}},
         },
     })
-    print("Single-attempt business API and Azure Monitor diagnostics configured.")
+    print("Direct Foundry business API, model identity and Azure Monitor diagnostics configured.")
 
 
 if __name__ == "__main__":

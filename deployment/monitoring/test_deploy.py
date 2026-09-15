@@ -87,7 +87,7 @@ class WdlFixture:
             "value": json.dumps(self.route),
         }
         self.parameters = {
-            "executorKey": "fixture-secret", "executorBaseUri": "https://executor.example",
+            "backendUrls": deploy.backend_urls(),
             "workspaceId": deploy.WORKSPACE, "switchEnabled": switch,
         }
         healthy = {"choices": [{"message": {"content": "OK"}, "finish_reason": "stop"}]}
@@ -95,6 +95,7 @@ class WdlFixture:
         self.responses = {}
         self.visited = []
         self.writes = []
+        self.probe_requests = []
         self.conflict = False
         self.deny_read = False
         self.deny_write = False
@@ -225,6 +226,11 @@ class WdlFixture:
                 if inputs["uri"].startswith("https://management.azure.com"):
                     if inputs["uri"] != deploy.route_uri():
                         raise ValueError("Unexpected management resource")
+                    if inputs["authentication"] != {
+                        "type": "ManagedServiceIdentity",
+                        "audience": "https://management.azure.com/",
+                    }:
+                        raise ValueError("ARM must use the system identity")
                     if inputs["method"] == "GET":
                         if self.deny_read:
                             raise ValueError("403")
@@ -241,6 +247,15 @@ class WdlFixture:
                         self.properties = inputs["body"]["properties"]
                         self.responses[name] = {"statusCode": 200}
                 else:
+                    if inputs["uri"] not in deploy.backend_urls().values():
+                        raise ValueError("Unexpected model resource")
+                    if inputs["authentication"] != {
+                        "type": "ManagedServiceIdentity",
+                        "audience": "https://cognitiveservices.azure.com",
+                        "identity": deploy.MODEL_IDENTITY_ID,
+                    }:
+                        raise ValueError("Model must use the shared user identity")
+                    self.probe_requests.append(inputs)
                     if self.expire_on_probe:
                         self.now += timedelta(minutes=6)
                     status, body = self.probes.pop(0)
@@ -278,6 +293,10 @@ class WorkflowTests(unittest.TestCase):
                 self.assertEqual(fixture.properties["tags"], ["keep"])
                 self.assertEqual(fixture.visited.count("Probe_one"), 1)
                 self.assertEqual(fixture.visited.count("Probe_two"), 1)
+                self.assertEqual(
+                    [request["uri"] for request in fixture.probe_requests],
+                    [deploy.backend_urls()[backup]] * 2,
+                )
 
     def test_reject_untrusted_alert_contracts_before_arm_read(self):
         mutations = [
@@ -343,6 +362,8 @@ class WorkflowTests(unittest.TestCase):
 
     def test_real_gpt_contract_and_status_twice(self):
         bad = [
+            (401, {}),
+            (403, {}),
             (500, {}),
             (429, {}),
             (202, {}),
@@ -402,14 +423,79 @@ class WorkflowTests(unittest.TestCase):
         fixture.deny_write = True
         self.assertEqual(fixture.run(), "Failed")
 
+    def test_maintenance_probes_both_targets_without_reading_or_changing_quarantine(self):
+        for backend in deploy.BACKENDS:
+            fixture = WdlFixture(
+                payload={
+                    "schemaId": "monitoring.healthCheck.v1", "backend": backend,
+                    "backendUrls": {backend: "https://attacker.example"},
+                },
+                route={"primary": "sweden", "enabled": ["sweden"], "version": 2},
+                switch=False,
+            )
+            before = copy.deepcopy(fixture.properties)
+            self.assertEqual(fixture.run(), "Succeeded")
+            self.assertEqual(fixture.properties, before)
+            self.assertFalse(fixture.writes)
+            self.assertEqual(
+                [request["uri"] for request in fixture.probe_requests],
+                [deploy.backend_urls()[backend]] * 2,
+            )
+            for name in ("Read_route", "Read_access_route", "Read_committed_route",
+                         "Write_route", "Verify_access_write", "Probe_one", "Probe_two"):
+                self.assertNotIn(name, fixture.visited)
+
+    def test_maintenance_rejects_invalid_targets_and_enabled_switch_before_probes(self):
+        for backend, switch in (
+            ("embedding", False), ("https://attacker.example", False),
+            (None, False), ("eastus2", True),
+        ):
+            fixture = WdlFixture(
+                payload={"schemaId": "monitoring.healthCheck.v1", "backend": backend},
+                switch=switch,
+            )
+            self.assertEqual(fixture.run(), "Failed")
+            self.assertFalse(fixture.probe_requests)
+            self.assertFalse(fixture.writes)
+            self.assertNotIn("Read_route", fixture.visited)
+
+    def test_maintenance_requires_two_real_ok_stop_responses(self):
+        for position in (0, 1):
+            for response in (
+                (401, {}), (403, {}), (429, {}), (500, {}), (202, {}),
+                (200, {"choices": [{"message": {"content": "OK"}, "finish_reason": "length"}]}),
+                (200, {"choices": [{"message": {"content": "NOT OK"}, "finish_reason": "stop"}]}),
+            ):
+                fixture = WdlFixture(
+                    payload={"schemaId": "monitoring.healthCheck.v1", "backend": "eastus2"},
+                    switch=False,
+                )
+                fixture.probes[position] = response
+                self.assertEqual(fixture.run(), "Failed")
+                self.assertFalse(fixture.writes)
+                self.assertNotIn("Read_route", fixture.visited)
+                if position == 0:
+                    self.assertNotIn("Health_probe_two", fixture.visited)
+
 
 class TemplateTests(unittest.TestCase):
-    def test_disabled_deployment_and_secure_parameters(self):
+    def test_disabled_deployment_no_secrets_and_shared_model_identity(self):
         template = deploy.deployment_template()
         json.dumps(template)
         workflow, group, *rules = template["resources"]
-        self.assertEqual(template["parameters"]["executorKey"]["type"], "secureString")
-        self.assertEqual(workflow["identity"], {"type": "SystemAssigned"})
+        self.assertEqual(template["parameters"], {})
+        self.assertEqual(workflow["identity"], {
+            "type": "SystemAssigned, UserAssigned",
+            "userAssignedIdentities": {deploy.MODEL_IDENTITY_ID: {}},
+        })
+        self.assertEqual(
+            workflow["properties"]["parameters"]["backendUrls"]["value"],
+            deploy.backend_urls(),
+        )
+        self.assertEqual(
+            workflow["properties"]["definition"]["parameters"]["backendUrls"],
+            {"type": "Object", "defaultValue": deploy.backend_urls()},
+        )
         self.assertIs(workflow["properties"]["parameters"]["switchEnabled"]["value"], False)
         self.assertEqual(template["outputs"], {})
         self.assertEqual(len(rules), 2)
@@ -427,6 +513,12 @@ class TemplateTests(unittest.TestCase):
         self.assertTrue(receiver["callbackUrl"].startswith("[listCallbackUrl("))
         self.assertNotIn("roleAssignments", json.dumps(template))
         self.assertNotIn("clientSecret", json.dumps(template))
+        for obsolete in ("executorKey", "executorBaseUri", "/execute/", "X-Budget-Ms",
+                         "X-Idle-Ms", "secureString", "SecureString", "azurecontainerapps.io"):
+            self.assertNotIn(obsolete, json.dumps(template))
+        source = Path(deploy.__file__).read_text()
+        for obsolete in ("container_secrets", "executorKey", "executorBaseUri", "APP"):
+            self.assertNotIn(obsolete, source)
 
     def test_query_is_filtered_dimensioned_and_sample_gated(self):
         for kind in ("latency", "errors"):
@@ -440,10 +532,56 @@ class TemplateTests(unittest.TestCase):
             self.assertNotIn("percentile", query)
         self.assertIn("AverageBackendMs >= 3200", deploy.alert_query("latency"))
         self.assertIn("ErrorRatePct >= 20.0", deploy.alert_query("errors"))
-        self.assertIn("toint(ResponseCode) == 429", deploy.alert_query("errors"))
+        self.assertIn("toint(ResponseCode)", deploy.alert_query("errors"))
+        self.assertIn("toint(BackendResponseCode)", deploy.alert_query("errors"))
+        self.assertIn("GatewayStatus == 429", deploy.alert_query("errors"))
+        self.assertIn("BackendStatus == 429", deploy.alert_query("errors"))
         self.assertIn("between (500 .. 599)", deploy.alert_query("errors"))
+        for kind in ("latency", "errors"):
+            query = deploy.alert_query(kind)
+            self.assertIn("GatewayStatus !in (401, 403) and BackendStatus !in (401, 403)", query)
+            self.assertLess(query.index("!in (401, 403)"), query.index("| summarize"))
         with self.assertRaises(ValueError):
             deploy.alert_query("bad")
+
+    def test_query_matches_exact_direct_origin_and_deployment_without_query(self):
+        for kind in ("latency", "errors"):
+            query = deploy.alert_query(kind)
+            self.assertIn('tostring(split(tostring(BackendUrl), "?")[0])', query)
+            matches = re.findall(r"BackendRequestUrl == '([^']+)', '([^']+)'", query)
+            self.assertEqual(dict(matches), {
+                url.split("?", 1)[0]: name for name, url in deploy.backend_urls().items()
+            })
+            self.assertNotIn("/execute/", query)
+            self.assertNotIn("extract(", query)
+            self.assertNotIn("BackendId", query)
+            for name, url in deploy.backend_urls().items():
+                def classify(request_url):
+                    return dict(matches).get(request_url.split("?", 1)[0], "")
+
+                origin, path = url.split("/openai/", 1)
+                self.assertEqual(classify(url), name)
+                self.assertEqual(classify(url.split("?", 1)[0] + "?api-version=other"), name)
+                for untrusted in (
+                    origin + "/execute/" + name,
+                    "https://old.azurecontainerapps.io/execute/" + name,
+                    origin + ".attacker.example/openai/" + path,
+                    "https://attacker.example/openai/" + path,
+                    origin + "/openai/deployments/other/chat/completions",
+                    url.split("?", 1)[0] + "/extra",
+                    url.replace("https://", "http://"),
+                ):
+                    self.assertEqual(classify(untrusted), "")
+
+    def test_callback_cannot_override_trusted_probe_urls(self):
+        fixture = WdlFixture()
+        fixture.payload["backendUrls"] = {"sweden": "https://attacker.example"}
+        fixture.payload["url"] = "https://attacker.example"
+        self.assertEqual(fixture.run(), "Succeeded")
+        self.assertEqual(
+            [request["uri"] for request in fixture.probe_requests],
+            [deploy.backend_urls()["sweden"]] * 2,
+        )
 
     def test_http_security_identity_no_retries_and_nesting_limit(self):
         definition = deploy.workflow_definition()
@@ -465,14 +603,24 @@ class TemplateTests(unittest.TestCase):
                     self.assertEqual(action["operationOptions"], "DisableAsyncPattern")
                     if inputs["uri"].startswith("https://management.azure.com"):
                         self.assertEqual(inputs["uri"], deploy.route_uri())
-                        self.assertEqual(inputs["authentication"]["type"], "ManagedServiceIdentity")
+                        self.assertEqual(inputs["authentication"], {
+                            "type": "ManagedServiceIdentity",
+                            "audience": "https://management.azure.com/",
+                        })
                         if inputs["method"] == "PUT":
                             self.assertIn("If-Match", inputs["headers"])
                     else:
-                        self.assertIn("/execute/", inputs["uri"])
-                        self.assertNotIn("health", inputs["uri"])
-                        self.assertEqual(inputs["headers"]["X-Budget-Ms"], "5500")
-                        self.assertEqual(inputs["headers"]["X-Idle-Ms"], "1200")
+                        selected = "body('Parse_health_check')['backend']" if name.startswith("Health_") \
+                            else "outputs('Backup')"
+                        self.assertEqual(inputs["uri"], f"@parameters('backendUrls')[{selected}]")
+                        self.assertEqual(inputs["authentication"], {
+                            "type": "ManagedServiceIdentity",
+                            "audience": "https://cognitiveservices.azure.com",
+                            "identity": deploy.MODEL_IDENTITY_ID,
+                        })
+                        self.assertEqual(inputs["headers"], {"Content-Type": "application/json"})
+                        self.assertIn("120 seconds", action["description"])
+                        self.assertIn("no custom total/idle deadline", action["description"])
                         self.assertEqual(inputs["body"]["max_completion_tokens"], 32)
                         self.assertEqual(inputs["body"]["reasoning_effort"], "none")
                 if kind == "If":
@@ -482,18 +630,25 @@ class TemplateTests(unittest.TestCase):
         visit(definition["actions"])
 
     def test_import_and_template_command_do_not_call_azure(self):
-        with patch.object(deploy, "arm") as arm_mock, patch.object(deploy, "container_secrets") as keys:
+        with patch.object(deploy, "arm") as arm_mock:
             with patch("sys.argv", ["deploy.py", "template"]), patch("sys.stdout", new_callable=io.StringIO):
                 self.assertEqual(deploy.main(), 0)
             arm_mock.assert_not_called()
-            keys.assert_not_called()
 
-    def test_switch_mode_preserves_all_parameters_and_rehydrates_secure_key(self):
+    def test_switch_mode_preserves_all_parameters_and_assigned_identities(self):
         initial = {
             "location": "eastus2",
+            "identity": {
+                "type": "SystemAssigned, UserAssigned",
+                "principalId": "f11678b8-01cb-4b24-a17f-584925f02b65",
+                "tenantId": "fixture-tenant",
+                "userAssignedIdentities": {
+                    deploy.MODEL_IDENTITY_ID: {"principalId": "model-principal", "clientId": "model-client"},
+                    "/fixture/other-identity": {"principalId": "other-principal", "clientId": "other-client"},
+                },
+            },
             "properties": {"definition": deploy.workflow_definition(), "state": "Enabled", "parameters": {
-                "executorBaseUri": {"value": "https://example.azurecontainerapps.io"},
-                "executorKey": {"value": None},
+                "backendUrls": {"value": deploy.backend_urls()},
                 "workspaceId": {"value": deploy.WORKSPACE},
                 "switchEnabled": {"value": False},
                 "other": {"value": "preserved"},
@@ -502,15 +657,23 @@ class TemplateTests(unittest.TestCase):
         final = copy.deepcopy(initial)
         final["properties"]["parameters"]["switchEnabled"]["value"] = True
         with patch.object(deploy, "arm", side_effect=[initial, {}, final]) as mocked:
-            with patch.object(deploy, "container_secrets", return_value={"executor-key": "fixture-key"}):
-                deploy.switch_mode(True)
+            deploy.switch_mode(True)
         parameters = mocked.call_args_list[1].args[2]["properties"]["parameters"]
         self.assertEqual(mocked.call_args_list[1].args[0], "PUT")
         self.assertEqual(
             mocked.call_args_list[1].args[2]["properties"]["definition"],
             initial["properties"]["definition"],
         )
-        self.assertEqual(parameters["executorKey"]["value"], "fixture-key")
+        self.assertEqual(mocked.call_args_list[1].args[2]["identity"], {
+            "type": "SystemAssigned, UserAssigned",
+            "userAssignedIdentities": {
+                deploy.MODEL_IDENTITY_ID: {}, "/fixture/other-identity": {},
+            },
+        })
+        self.assertEqual(
+            parameters["backendUrls"]["value"], deploy.backend_urls(),
+        )
+        self.assertIs(initial["properties"]["parameters"]["switchEnabled"]["value"], False)
         self.assertEqual(parameters["other"]["value"], "preserved")
         self.assertEqual(parameters["workspaceId"]["value"], deploy.WORKSPACE)
 
@@ -527,11 +690,65 @@ class TemplateTests(unittest.TestCase):
             mode.assert_not_called()
             arm_mock.assert_not_called()
 
+    def test_maintenance_command_requires_disabled_alerts_and_switch_without_updates(self):
+        with patch.object(deploy, "arm") as mocked:
+            with self.assertRaises(ValueError):
+                deploy.health_check("embedding")
+            mocked.assert_not_called()
+        with patch.object(deploy, "require_disabled_alerts", side_effect=RuntimeError("Enabled")), \
+                patch.object(deploy, "arm") as mocked, patch.object(deploy, "invoke_and_wait") as invoke:
+            with self.assertRaises(RuntimeError):
+                deploy.health_check("eastus2")
+            mocked.assert_not_called()
+            invoke.assert_not_called()
+        with patch.object(deploy, "require_disabled_alerts"), \
+                patch.object(deploy, "arm", return_value={
+                    "properties": {"parameters": {"switchEnabled": {"value": True}}},
+                }) as mocked, patch.object(deploy, "invoke_and_wait") as invoke:
+            with self.assertRaises(RuntimeError):
+                deploy.health_check("eastus2")
+            self.assertEqual(mocked.call_count, 1)
+            self.assertEqual(mocked.call_args.args[0], "GET")
+            invoke.assert_not_called()
+
+    def test_maintenance_command_verifies_probe_statuses_and_no_route_execution(self):
+        safe_workflow = {"properties": {"parameters": {"switchEnabled": {"value": False}}}}
+        successful = {
+            name: "Succeeded" for name in (
+                "Health_probe_one", "Validate_health_probe_one",
+                "Health_probe_two", "Validate_health_probe_two",
+            )
+        }
+        for override in ({}, {"Validate_health_probe_two": "Skipped"}, {"Read_route": "Succeeded"},
+                         {"Write_route": "Succeeded"}, {"Verify_access_write": "Succeeded"}):
+            with patch.object(deploy, "require_disabled_alerts"), \
+                    patch.object(deploy, "arm", return_value=safe_workflow) as mocked, \
+                    patch.object(deploy, "invoke_and_wait", return_value=("Succeeded", "health-run")) as invoke, \
+                    patch.object(deploy, "inspect_run", return_value=("Succeeded", {**successful, **override})), \
+                    patch("sys.stdout", new_callable=io.StringIO):
+                if override:
+                    with self.assertRaises(RuntimeError):
+                        deploy.health_check("eastus2")
+                else:
+                    self.assertEqual(deploy.health_check("eastus2"), "health-run")
+                invoke.assert_called_once_with(
+                    {"schemaId": "monitoring.healthCheck.v1", "backend": "eastus2"}, return_run=True,
+                )
+                self.assertEqual(mocked.call_count, 1)
+                self.assertEqual(mocked.call_args.args[0], "GET")
+
+    def test_maintenance_cli_requires_explicit_backend(self):
+        with patch("sys.argv", ["deploy.py", "health-check"]), \
+                patch.object(deploy, "arm") as mocked, patch("sys.stderr", new_callable=io.StringIO):
+            self.assertEqual(deploy.main(), 1)
+            mocked.assert_not_called()
+        with patch("sys.argv", ["deploy.py", "health-check", "--backend", "sweden"]), \
+                patch.object(deploy, "health_check") as health:
+            self.assertEqual(deploy.main(), 0)
+            health.assert_called_once_with("sweden")
+
     def test_validate_precedes_deployment_and_disabled_default(self):
         responses = [
-            {"properties": {"configuration": {"ingress": {
-                "fqdn": "fixture.azurecontainerapps.io",
-            }}}},
             {},
             {},
             {"properties": {"provisioningState": "Succeeded"}},
@@ -540,13 +757,13 @@ class TemplateTests(unittest.TestCase):
             {"properties": {"enabled": False}},
         ]
         with patch.object(deploy, "arm", side_effect=responses) as mocked, \
-                patch.object(deploy, "container_secrets", return_value={"executor-key": "fixture-key"}), \
                 patch("sys.stdout", new_callable=io.StringIO) as output:
             deploy.deploy()
         calls = mocked.call_args_list
-        self.assertTrue(calls[1].args[1].endswith("/validate"))
-        self.assertEqual(calls[2].args[0], "PUT")
-        self.assertNotIn("fixture-key", output.getvalue())
+        self.assertTrue(calls[0].args[1].endswith("/validate"))
+        self.assertEqual(calls[1].args[0], "PUT")
+        self.assertEqual(calls[1].args[2]["properties"]["parameters"], {})
+        self.assertFalse(any("/containerApps/" in call.args[1] for call in calls))
         self.assertIn("DISABLED", output.getvalue())
 
     def test_grant_script_is_explicit_narrow_and_not_called_by_deployer(self):
@@ -560,7 +777,8 @@ class TemplateTests(unittest.TestCase):
 
     def test_ignored_smoke_requires_observed_noop_and_no_arm_or_probe_actions(self):
         safe_workflow = {"properties": {"parameters": {"switchEnabled": {"value": False}}}}
-        for unexpected in (None, "Write_route", "Read_access_route", "Probe_one"):
+        for unexpected in (None, "Write_route", "Read_access_route", "Probe_one",
+                           "Health_probe_one", "Health_probe_two"):
             states = {"ResolvedNoOp": "Succeeded"}
             if unexpected:
                 states[unexpected] = "Succeeded"

@@ -1,7 +1,7 @@
 """Generate/deploy the disabled, managed-identity monitoring controller.
 
 Importing this module performs no Azure calls. Commands never print ARM bodies,
-callback URLs, executor keys, access tokens, or workflow action inputs/outputs.
+callback URLs, access tokens, or workflow action inputs/outputs.
 """
 
 import argparse
@@ -18,7 +18,8 @@ import urllib.request
 import uuid
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from azure import APIM, APP, ROOT, arm, container_secrets  # noqa: E402
+from azure import APIM, ROOT, arm  # noqa: E402
+from backends import MODEL_IDENTITY_ID, backend_url, load_backends  # noqa: E402
 
 
 LOCATION = "eastus2"
@@ -103,21 +104,31 @@ def route_uri():
     return "https://management.azure.com" + ROUTE + "?api-version=2024-05-01"
 
 
-def probe(previous=None):
-    return http(
-        "POST", "@concat(parameters('executorBaseUri'), '/execute/', outputs('Backup'))",
+def probe(previous=None, *, backend="outputs('Backup')"):
+    action = http(
+        "POST", f"@parameters('backendUrls')[{backend}]",
         previous=previous,
-        headers={
-            "Content-Type": "application/json",
-            "X-Executor-Key": "@parameters('executorKey')",
-            "X-Budget-Ms": "5500",
-            "X-Idle-Ms": "1200",
-        },
+        headers={"Content-Type": "application/json"},
         body={
             "messages": [{"role": "user", "content": "Reply only OK"}],
             "max_completion_tokens": 32, "reasoning_effort": "none", "stream": False,
         },
     )
+    action["inputs"]["authentication"] = {
+        "type": "ManagedServiceIdentity",
+        "audience": "https://cognitiveservices.azure.com",
+        "identity": MODEL_IDENTITY_ID,
+    }
+    action["description"] = (
+        "Direct Foundry probe: synchronous HTTP platform limit is 120 seconds per call; "
+        "no custom total/idle deadline or eight-second guarantee."
+    )
+    return action
+
+
+def backend_urls():
+    configured = load_backends()
+    return {name: backend_url(configured[name]) for name in BACKENDS}
 
 
 def probe_schema():
@@ -278,6 +289,43 @@ def access_check_actions():
     }
 
 
+def health_check_actions():
+    """Maintenance-only model checks, independent of route eligibility/quarantine."""
+    selected = "body('Parse_health_check')['backend']"
+    return {
+        "Parse_health_check": parse("@triggerBody()", {
+            "type": "object", "required": ["schemaId", "backend"],
+            "properties": {
+                "schemaId": {"type": "string", "enum": ["monitoring.healthCheck.v1"]},
+                "backend": {"type": "string", "enum": list(BACKENDS)},
+            },
+        }),
+        "Health_check_probe_only": guard(
+            "@equals(parameters('switchEnabled'), false)", {},
+            previous="Parse_health_check", code="HealthCheckRequiresProbeOnly",
+            message="Maintenance health checks require switchEnabled=false.",
+        ),
+        "Health_probe_one": probe(previous="Health_check_probe_only", backend=selected),
+        "Health_probe_one_status": guard(
+            "@equals(outputs('Health_probe_one')['statusCode'], 200)", {},
+            previous="Health_probe_one", code="HealthProbeOneFailed",
+            message="First maintenance GPT probe did not return HTTP 200.",
+        ),
+        "Validate_health_probe_one": parse(
+            "@body('Health_probe_one')", probe_schema(), previous="Health_probe_one_status",
+        ),
+        "Health_probe_two": probe(previous="Validate_health_probe_one", backend=selected),
+        "Health_probe_two_status": guard(
+            "@equals(outputs('Health_probe_two')['statusCode'], 200)", {},
+            previous="Health_probe_two", code="HealthProbeTwoFailed",
+            message="Second maintenance GPT probe did not return HTTP 200.",
+        ),
+        "Validate_health_probe_two": parse(
+            "@body('Health_probe_two')", probe_schema(), previous="Health_probe_two_status",
+        ),
+    }
+
+
 def failover_actions():
     # Flat guards avoid Consumption's eight-level action-nesting limit.
     essentials = "body('Parse_alert')['data']['essentials']"
@@ -386,8 +434,7 @@ def workflow_definition():
                    "schemas/2016-06-01/workflowdefinition.json#",
         "contentVersion": "1.0.0.0",
         "parameters": {
-            "executorKey": {"type": "SecureString"},
-            "executorBaseUri": {"type": "String"},
+            "backendUrls": {"type": "Object", "defaultValue": backend_urls()},
             "workspaceId": {"type": "String"},
             "switchEnabled": {"type": "Bool", "defaultValue": False},
         },
@@ -406,7 +453,15 @@ def workflow_definition():
                 "type": "If",
                 "expression": "@equals(triggerBody()?['schemaId'], 'monitoring.accessCheck.v1')",
                 "actions": access_check_actions(),
-                "else": {"actions": failover_actions()},
+                "else": {"actions": {
+                    "Health_check_or_alert": {
+                        "type": "If",
+                        "expression": "@equals(triggerBody()?['schemaId'], 'monitoring.healthCheck.v1')",
+                        "actions": health_check_actions(),
+                        "else": {"actions": failover_actions()},
+                        "runAfter": {},
+                    },
+                }},
                 "runAfter": {},
             },
         },
@@ -418,14 +473,24 @@ def alert_query(kind):
     if kind not in ("latency", "errors"):
         raise ValueError("Unknown alert kind")
     violation = "AverageBackendMs >= 3200" if kind == "latency" else "ErrorRatePct >= 20.0"
+    urls = backend_urls()
+    classification = ", ".join(
+        f"BackendRequestUrl == '{urls[name].split('?', 1)[0]}', '{name}'"
+        for name in BACKENDS
+    )
     return "\n".join([
         "ApiManagementGatewayLogs",
         "| where TimeGenerated >= ago(5m)",
         f"| where _ResourceId =~ '{APIM}' and ApiId == 'llm'",
-        r'| extend Backend = extract(@"/execute/(eastus2|sweden)(?:[/?#]|$)", 1, tostring(BackendUrl))',
+        '| extend BackendRequestUrl = tostring(split(tostring(BackendUrl), "?")[0])',
+        f"| extend Backend = case({classification}, '')",
         "| where Backend in ('eastus2', 'sweden')",
+        "| extend GatewayStatus = coalesce(toint(ResponseCode), 0),",
+        "    BackendStatus = coalesce(toint(BackendResponseCode), 0)",
+        "| where GatewayStatus !in (401, 403) and BackendStatus !in (401, 403)",
         "| summarize Samples = count(), AverageBackendMs = avg(todouble(BackendTime)),",
-        "    ErrorCount = countif(toint(ResponseCode) == 429 or toint(ResponseCode) between (500 .. 599))",
+        "    ErrorCount = countif(GatewayStatus == 429 or GatewayStatus between (500 .. 599)",
+        "        or BackendStatus == 429 or BackendStatus between (500 .. 599))",
         "    by Backend",
         "| extend ErrorRatePct = 100.0 * ErrorCount / Samples",
         f"| extend ViolationCount = iff(Samples >= 5 and {violation}, 1, 0)",
@@ -464,12 +529,14 @@ def deployment_template():
     workflow_resource = {
         "type": "Microsoft.Logic/workflows", "apiVersion": LOGIC_API,
         "name": WORKFLOW_NAME, "location": LOCATION,
-        "identity": {"type": "SystemAssigned"},
+        "identity": {
+            "type": "SystemAssigned, UserAssigned",
+            "userAssignedIdentities": {MODEL_IDENTITY_ID: {}},
+        },
         "properties": {
             "state": "Enabled", "definition": workflow_definition(),
             "parameters": {
-                "executorKey": {"value": "[parameters('executorKey')]"},
-                "executorBaseUri": {"value": "[parameters('executorBaseUri')]"},
+                "backendUrls": {"value": backend_urls()},
                 "workspaceId": {"value": WORKSPACE},
                 "switchEnabled": {"value": False},
             },
@@ -499,29 +566,16 @@ def deployment_template():
     return {
         "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
         "contentVersion": "1.0.0.0",
-        "parameters": {
-            "executorKey": {"type": "secureString"},
-            "executorBaseUri": {"type": "string"},
-        },
+        "parameters": {},
         "resources": [workflow_resource, group, *rules], "outputs": {},
     }
 
 
 def deploy():
-    app = arm("GET", APP, version="2024-03-01")
-    fqdn = app["properties"]["configuration"]["ingress"]["fqdn"]
-    if not fqdn or "/" in fqdn or not fqdn.endswith(".azurecontainerapps.io"):
-        raise ValueError("Unexpected executor ingress host")
-    key = container_secrets()["executor-key"]
-    if not key:
-        raise ValueError("Executor key is missing")
     body = {
         "properties": {
             "mode": "Incremental", "template": deployment_template(),
-            "parameters": {
-                "executorKey": {"value": key},
-                "executorBaseUri": {"value": "https://" + fqdn},
-            },
+            "parameters": {},
         },
     }
     deployment_id = ROOT + "/providers/Microsoft.Resources/deployments/llm-monitoring"
@@ -658,6 +712,7 @@ def ignored_smoke():
     forbidden = (
         "Read_route", "Read_access_route", "Read_committed_route",
         "Write_route", "Verify_access_write", "Probe_one", "Probe_two",
+        "Health_probe_one", "Health_probe_two",
     )
     if any(states.get(name, "Skipped") != "Skipped" for name in forbidden):
         raise RuntimeError("Unexpected ARM or probe action execution; inspect controller before proceeding.")
@@ -677,16 +732,49 @@ def verify_access():
     print("MI GET and ETag-guarded unchanged-value PUT verified. This is NOT a GPT health check.")
 
 
+def health_check(backend):
+    if backend not in BACKENDS:
+        raise ValueError("Health checks accept only eastus2 or sweden.")
+    require_disabled_alerts()
+    workflow = arm("GET", WORKFLOW, version=LOGIC_API)
+    if workflow["properties"]["parameters"]["switchEnabled"]["value"] is not False:
+        raise RuntimeError("Health checks require switchEnabled=false; disable the controller first.")
+    outcome, run_id = invoke_and_wait(
+        {"schemaId": "monitoring.healthCheck.v1", "backend": backend}, return_run=True,
+    )
+    actual, states = inspect_run(run_id)
+    expected = (
+        "Health_probe_one", "Validate_health_probe_one",
+        "Health_probe_two", "Validate_health_probe_two",
+    )
+    forbidden = (
+        "Read_route", "Read_access_route", "Read_committed_route",
+        "Write_route", "Verify_access_write", "Probe_one", "Probe_two",
+    )
+    if outcome != "Succeeded" or actual != "Succeeded" \
+            or any(states.get(name) != "Succeeded" for name in expected):
+        raise RuntimeError("Both real maintenance probes were not verified; route remains unchanged.")
+    if any(states.get(name, "Skipped") != "Skipped" for name in forbidden):
+        raise RuntimeError("Unexpected route or failover action; inspect controller before proceeding.")
+    print(backend + ": two direct GPT probes returned HTTP 200, OK, stop using the shared user identity.")
+    print("No route reads/writes or backup re-enablement; quarantine is unchanged.")
+    return run_id
+
+
 def switch_mode(enabled):
-    # Logic Apps rejects PATCH of properties. PUT preserves the deployed
-    # definition and rehydrates the secure parameter only in memory.
+    # Logic Apps rejects PATCH of properties. Retain every assigned identity,
+    # omitting ARM's read-only principal/client IDs from the PUT body.
     workflow = arm("GET", WORKFLOW, version=LOGIC_API)
     parameters = copy.deepcopy(workflow["properties"]["parameters"])
-    parameters["executorKey"] = {"value": container_secrets()["executor-key"]}
     parameters["switchEnabled"] = {"value": enabled}
+    identity = {"type": workflow["identity"]["type"]}
+    if "userAssignedIdentities" in workflow["identity"]:
+        identity["userAssignedIdentities"] = {
+            resource_id: {} for resource_id in workflow["identity"]["userAssignedIdentities"]
+        }
     arm("PUT", WORKFLOW, {
         "location": workflow["location"],
-        "identity": {"type": "SystemAssigned"},
+        "identity": identity,
         "tags": workflow.get("tags", {}),
         "properties": {
             "definition": workflow["properties"]["definition"],
@@ -726,10 +814,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=(
         "template", "deploy", "status", "verify-access", "enable-alerts", "disable", "probe-only",
-        "smoke-ignored", "inspect-run",
+        "smoke-ignored", "inspect-run", "health-check",
     ))
     parser.add_argument("--run-id", help="Workflow run ID for safe action-status inspection")
     parser.add_argument("--event-file", type=Path, help="Common-schema Fired event for probe-only")
+    parser.add_argument("--backend", choices=BACKENDS,
+                        help="Maintenance health-check target; does not alter route/quarantine")
     parser.add_argument("--confirm-log-schema", action="store_true",
                         help="Actual APIM log fields, BackendUrl, units and alert payload checked")
     args = parser.parse_args()
@@ -748,6 +838,10 @@ def main():
             inspect_run(args.run_id)
         elif args.command == "verify-access":
             verify_access()
+        elif args.command == "health-check":
+            if not args.backend:
+                raise ValueError("--backend is required")
+            health_check(args.backend)
         elif args.command == "disable":
             disable()
         elif args.command == "enable-alerts":

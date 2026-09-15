@@ -1,44 +1,41 @@
 # llm-apim-proxy
 
-**真实 Azure Monitor 告警驱动 APIM 后续请求切换**，不是请求内重试。
+**APIM 直连 Foundry，真实 Azure Monitor 告警驱动后续请求切换。** 不使用模型执行器，不在当前请求中重试或换后端。
 
-APIM 记录后端时延／错误，Azure Monitor 告警经 Action Group 调用 Logic App；控制器确认备用模型健康后，通过 APIM 管理 API 更新路由。配置传播至网关后，**新请求**才转向备用后端。当前失败请求不会自动重投，也不会自动回切。
+业务：`客户端 → APIM → Foundry`
 
-## 方案与运行状态
+控制：`APIM GatewayLogs → Azure Monitor → Action Group → Logic App 直接探测备用 Foundry → ETag 更新 APIM 路由 → 新请求转向备用`
 
-完整设计见 [告警驱动切换方案](docs/monitoring-failover.zh-CN.md)，部署与运维见 [部署说明](deployment/README.md) 和 [控制器操作手册](deployment/monitoring/README.md)。
+完整说明见 [中文方案](docs/monitoring-failover.zh-CN.md)、[部署手册](deployment/README.md)及[控制器操作手册](deployment/monitoring/README.md)。
 
-2026-09-15 09:17 UTC，实验环境已完成真实错误告警 → 两次真实 Sweden GPT 探测 → ETag 路由更新 → 新请求 Sweden `200 / OK` 的闭环。[演练记录](deployment/monitoring/drill-20260915.md)及[原始脱敏结果](deployment/monitoring/drill-20260915.json)保留在仓库。
-
-演练结束时：两个告警启用，`switchEnabled=true`；`primary=sweden`、`enabled=[sweden]`、`version=2`。East US 2 因演练被隔离，需人工确认健康后重新启用，**当前没有已启用备用**。这是时间点记录，不代替在线状态查询。
-
-## 仓库范围
+## 组件
 
 | 路径 | 用途 |
 |---|---|
-| `deployment/monitoring/` | 告警、Action Group、Logic App、管理权限脚本、控制器测试及真实闭环记录 |
-| `deployment/configure_apim.py`、`llm-policy.xml` | 只转发一次的业务 API 和不记录正文的诊断配置 |
-| `deployment/executor/` | APIM 调用和控制器探测实际依赖的模型执行器；不选备用、不改路由、不重试 |
-| `deployment/deploy_executor.py`、`config.json`、`azure.py` | 实验执行器部署、后端白名单及 Azure 管理辅助 |
-| `deployment/grant-required-roles.sh` | 执行器访问三个现有模型资源的最小范围授权 |
-| `docs/monitoring-failover.zh-CN.md` | 当前唯一主方案 |
+| `deployment/configure_apim.py`、`llm-policy.xml` | APIM 命名后端、托管身份、单次转发策略、GatewayLogs |
+| `deployment/backends.py`、`config.json` | 校验并共享 Foundry endpoint／部署映射，供 APIM、探测和 KQL 使用 |
+| `deployment/monitoring/` | 告警、Action Group、Logic App、授权、操作命令及测试 |
+| `deployment/grant-model-roles.sh` | APIM／Logic App 共享模型调用身份的资源级授权 |
+| `deployment/smoke.py` | 非敏感短提示词的真实 APIM 连通性检查，不改路由 |
+| `deployment/azure.py` | 显式选择 MCAPS 的 Azure 管理辅助 |
 
-旧的请求内补救演示、独立模拟路由状态机、手动切路验证脚本及过时报告已移除。合成上游只作为执行器的**本地测试夹具**保留，不作为线上服务能力或闭环证据。`lab-validation` 是为兼容已部署调用方保留的 APIM 订阅 ID，不是演示 API。
+原 `id-svhwb107-exec` 托管身份保留并复用于 APIM 和 Logic App，已有三个模型资源的调用权限；**保留名称不代表保留执行器服务**。Logic App 的系统身份只用于 APIM 路由管理，两种用途分开。
 
-## 本地验证
+## 离线测试
 
-Python 3.12，在仓库根目录：
+Python 3.12，无第三方依赖、不调用 Azure：
 
 ```bash
-python3 -m venv .venv
-.venv/bin/python -m pip install -r deployment/executor/requirements.txt
-(cd deployment/executor && ../../.venv/bin/python -m unittest discover -s tests -v)
-(cd deployment && ../.venv/bin/python -m unittest test_monitoring_policy -v)
+(cd deployment && python3 -m unittest test_monitoring_policy -v)
 python3 -m unittest discover -s deployment/monitoring -p 'test_*.py' -v
 ```
 
-这些命令不调用 Azure 或真实模型。部署脚本会改变云端资源，必须先读操作手册；凭据、回调 URL 和本地认证目录不得提交。
+`python3 deployment/smoke.py` 是在线检查，会产生真实模型请求和费用，需 Azure CLI 登录权限。
 
-## 边界
+## 运行边界
 
-本仓库针对 MCAPS Developer 规格实验环境，不是通用一键 IaC 或生产可用性承诺。已通过的是**受控超时引发的真实错误告警闭环**，不是自然发生的 Foundry 区域故障。时延告警独立触发、备用持续容量、Java/Search 整体业务链及 8s/15s 性能目标均未验收。
+APIM 的转发超时不能承诺完整 body 的严格截止时间，且毫秒预算会向上取整为秒；移除执行器后不再提供其完整 JSON 缓冲、2MiB 限制、5500ms 总读取／1200ms 空闲控制。调用方仍需业务总截止时间。Logic App HTTP 探测也不具有该执行器预算。
+
+仓库针对 MCAPS Developer 实验环境，不是通用 IaC 或生产 SLA。日志使用 Foundry 精确 endpoint／部署路径归属后端，不是纯模型推理监控。两次短探测不能证明备用持续容量。
+
+09:17 UTC 的[历史闭环](deployment/monitoring/drill-20260915.md)经过旧执行器，不能作为直连后的闭环证明。直连迁移结果见[迁移记录](deployment/monitoring/direct-migration-20260915.md)。当前路由沿用 Sweden 主、East US 2 隔离；不自动回切，不自动恢复被隔离备用。
