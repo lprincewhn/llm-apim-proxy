@@ -11,7 +11,7 @@
     },
     "sweden": {
       "endpoint": "https://svhw2-swedencentral.openai.azure.com",
-      "deployment": "svhwb107-gpt51",
+      "deployment": "gpt-5.1",
       "kind": "chat"
     }
   }

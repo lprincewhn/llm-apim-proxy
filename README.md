@@ -10,7 +10,7 @@
 
 对外使用 **网关根路径通配反向代理**：GET／POST／PUT／PATCH／DELETE／HEAD／OPTIONS 的任意路径直接转发，不再逐个登记接口或限定 `/openai/deployments/...`。普通请求只替换目标主机，路径、业务查询参数、body 和 SSE 响应透传。客户端用 `api-key` 头携带 APIM 订阅密钥。
 
-当前上游仍是已有 Foundry 资源。路径能透传不等于上游实现该 API，也不代表 Azure／OpenAI／Anthropic 协议自动互转；`/v1/messages` 等不受上游支持的路径会返回上游错误。所有路径统一走当前主上游，没有部署名映射或 embedding 固定后端特例。当前 Sweden 的实际聊天部署名为 `svhwb107-gpt51`，调用方必须在 URL 或 body 中使用上游支持的名称。
+当前上游仍是已有 Foundry 资源。路径能透传不等于上游实现该 API，也不代表 Azure／OpenAI／Anthropic 协议自动互转；`/v1/messages` 等不受上游支持的路径会返回上游错误。所有路径统一走当前主上游，没有部署名映射或 embedding 固定后端特例。East US 2 和 Sweden 的聊天部署名统一为 `gpt-5.1`，URL 或 body 均使用这个实际部署名。
 
 ## 组件
 

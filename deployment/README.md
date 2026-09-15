@@ -26,7 +26,7 @@ requests select the UAMI resource ID and Cognitive Services audience. ARM route
 requests use the workflow's system identity and ARM audience.
 
 `config.json` contains only East US 2 and Sweden origins. Their deployment names
-(`gpt-5.1` and `svhwb107-gpt51`) are used by direct health probes, log attribution
+(`gpt-5.1` in both regions) are used by direct health probes, log attribution
 and smoke requests, never APIM rewrites. Named APIM backends are `llm-eastus2`
 and `llm-sweden`. The shared `backends.py` validates the origins and probe names.
 
@@ -98,7 +98,7 @@ The current Azure-specific deployment helper deliberately retains its origin
 allowlist. No external providers or credentials were provisioned in this change.
 
 Both URL deployment names and body `model` must already name a deployment available
-at the current upstream (Sweden: `svhwb107-gpt51`). There are no aliases or
+at the current upstream (`gpt-5.1` in both regions). There are no aliases or
 embedding routing exceptions. Safe cross-region failover requires compatible deployment
 names/models on both sides. Stateful files/jobs/response IDs are not replicated
 between regions; forwarding arbitrary APIs does not make them region-portable.
@@ -122,7 +122,7 @@ With an APIM key entered interactively, a native request is:
   printf '\n'
   printf 'api-key: %s\n' "$APIM_KEY" |
     curl --silent --show-error --include --max-time 130 \
-      'https://apim-svhwb107-0915.azure-api.net/openai/deployments/svhwb107-gpt51/chat/completions?api-version=2024-10-21' \
+      'https://apim-svhwb107-0915.azure-api.net/openai/deployments/gpt-5.1/chat/completions?api-version=2024-10-21' \
       --header @- --header 'Content-Type: application/json' \
       --data-raw '{"messages":[{"role":"user","content":"Reply only OK"}],"max_completion_tokens":32,"reasoning_effort":"none","stream":false}'
 )
@@ -130,16 +130,16 @@ With an APIM key entered interactively, a native request is:
 
 For SSE, use `stream:true` and curl `--no-buffer`. With the `AzureOpenAI` SDK,
 set `azure_endpoint` to the gateway root above, `api_key` to the APIM subscription
-key, `api_version` to your supported version, and `model` to `svhwb107-gpt51`.
+key, `api_version` to your supported version, and `model` to `gpt-5.1`.
 The SDK still uses native deployment paths; no custom business API is needed.
 
 The standard OpenAI SDK can use
 `base_url=https://apim-svhwb107-0915.azure-api.net/openai/v1/`,
 `default_headers={"api-key": APIM_SUBSCRIPTION_KEY}`, and
-`model="svhwb107-gpt51"` for the current Sweden upstream. Its Bearer Authorization
+`model="gpt-5.1"` for either upstream. Its Bearer Authorization
 is not the gateway credential: `api-key` is required and backend auth uses MI.
 For curl, replace the native URL above with `/openai/v1/chat/completions` and
-include `"model":"svhwb107-gpt51"` in the original JSON body. No api-version is
+include `"model":"gpt-5.1"` in the original JSON body. No api-version is
 required by that upstream v1 API.
 
 All attempts are single requests. Timeout/error responses do not reroute themselves.
@@ -148,7 +148,33 @@ API key, authorization header or response body logging is required.
 
 ## Operations and evidence
 
+### Unified deployment names, 2026-09-15
+
+Both active Foundry accounts now expose `gpt-5.1`, model version `2025-11-13`.
+East US 2 reuses its existing GlobalStandard deployment (capacity 150); there
+were no `svhwb*` deployments in that account. Sweden's replacement was created
+alongside `svhwb107-gpt51` with the same GlobalStandard capacity 10,
+`Microsoft.DefaultV2` content policy and `OnceNewDefaultVersionAvailable`
+upgrade setting. The old Sweden deployment was deleted only after the new one
+served direct identity probes and APIM requests. Other models/accounts and
+existing RBAC were not changed.
+
+The config, live Logic App probe URLs and both log-alert queries now use
+`gpt-5.1`. The seven wildcard APIM operations remain unchanged: this is a
+Foundry deployment migration, not restoration of an alias or path rewrite.
+Clients must replace any remaining `svhwb107-gpt51` URL or body model value
+with `gpt-5.1`; the old deployment no longer exists.
+
+At 12:28 UTC native chat, SSE, v1 chat and Responses all succeeded through
+Sweden using `gpt-5.1`. Each backend passed two direct UAMI health probes.
+Both alerts and `switchEnabled=true` were restored after access run
+`08584121315744907698029855624CU44`. The route remains Sweden-only, version 2;
+East US 2 was not re-enabled, and this was not a new failover drill.
+
 ### Pure wildcard cleanup, 2026-09-15
+
+Historical 12:16 observations below precede the deployment-name unification.
+Current client examples above use `gpt-5.1` in both regions.
 
 Removed all three `Azure OpenAI ...` operations and their creation code, request
 deployment rewrites, embedding selection branch, `llm-embedding` backend and
@@ -168,9 +194,9 @@ returned backend 404/400. All seven HTTP methods on a nonexistent nested path
 returned backend 404 and one attempt. No real upstream files/jobs were modified.
 
 The previously aliased `gpt-5.1` deployment path and the former dedicated embedding
-path now both go unchanged to Sweden and return backend `404 DeploymentNotFound`.
+path both went unchanged to Sweden and returned backend `404 DeploymentNotFound`.
 This is the intentional removal of routing exceptions, not an APIM route miss.
-Current client examples use the actual `svhwb107-gpt51` deployment instead.
+At that time clients had to use the actual `svhwb107-gpt51` deployment instead.
 GatewayLogs record all these calls through `proxy-post` / other wildcard IDs.
 An additional deployment did not recreate the retired operations/backend.
 Both alert rules and `switchEnabled` were restored; access run
