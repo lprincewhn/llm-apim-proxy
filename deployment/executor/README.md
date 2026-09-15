@@ -1,5 +1,13 @@
 # Buffered Azure OpenAI executor
 
+This runtime is required by both APIM `/llm` requests and the Logic App's
+real-model probes. It executes **one bounded attempt** against the caller's
+selected, configured backend. It is not the failover controller and does not
+retry, probe alternatives, change routing state, or switch an in-flight request.
+The separate control plane is **APIM logs → Azure Monitor alert → Action Group
+→ Logic App → real-model standby probes → routing update**; only future APIM
+requests use the updated route. A successful probe is not itself a route change.
+
 Python 3.11+; the supplied container uses `python:3.12-slim`, runs as a non-root
 user, exposes port 8000 and starts `python app.py`. Build with this directory
 as the context: `docker build -t buffered-executor .`. `.dockerignore` excludes
@@ -13,9 +21,7 @@ Minimum replicas avoids scale-to-zero cold starts but incurs running cost;
 configure an explicit maximum replica count and resource limits for the lab.
 Provisioning, ACR publishing and deployment are handled separately.
 
-For non-container hosting, install `requirements.txt` and run `python app.py`.
-App Service ZIP deployment remains supported by placing the three Python
-modules and `requirements.txt` at the ZIP root and enabling dependency build.
+For local hosting, install `requirements.txt` and run `python app.py`.
 
 Required application settings:
 
@@ -25,7 +31,7 @@ Required application settings:
   `{"chat-primary":{"endpoint":"https://YOUR-RESOURCE.openai.azure.com","deployment":"YOUR-DEPLOYMENT","kind":"chat"}}`.
   Kinds are `chat` and `embedding`. Only Azure HTTPS origins are accepted;
   paths, user info, query strings and arbitrary caller routing are forbidden.
-  A single backend is valid; this service does not assume three real endpoints
+  At least one backend is required. A single backend is valid; this service does not assume three real endpoints
   or create model deployments. Configure only confirmed authorized deployments.
 - Optional per-backend `api_key_env`: the **name** of an environment variable
   containing that resource's Azure OpenAI API key. Store the value as a
@@ -44,15 +50,14 @@ Required application settings:
   For Container Apps, attach that same user-assigned identity and set its
   **client ID** here, not the resource ID or principal/object ID.
 - `PORT`: default `8000`.
-- `ENABLE_FAULTS`: default `false`; enable only in the authorized test environment.
 
 The deployment owner's confirmed lab map uses **managed identity only**.
 All entries deliberately omit `api_key_env`. The existing eastus2 resource has
 local authentication disabled; do not change that security setting or attempt
-key authentication there. Live Foundry invocation remains blocked until the
-resource owner grants the attached user-assigned identity resource-scoped
-**Cognitive Services OpenAI User** access. Deterministic loopback faults remain
-available without these grants when explicitly enabled for the lab.
+key authentication there. Managed identity must have resource-scoped
+**Cognitive Services OpenAI User** access for each configured resource.
+The map defines available targets, not routing eligibility or the active
+primary; those belong to the separate controller's routing state.
 
 ```json
 {
@@ -93,6 +98,9 @@ clamped to 1–5500 ms; this is a per-read body idle limit, not an additional
 overall deadline. Invalid timeout headers return 400. Request and response
 bodies are bounded to 2 MiB; only 16 requests run simultaneously (excess: fast
 503). Compressed bodies are rejected, and requests cancel on client disconnect.
+These budgets bound a single attempt's full response-body processing, not the
+Azure Monitor alert delay or the end-to-end failover time. A timeout returns an
+error for this request; it does not allocate time for a retry or a standby call.
 
 No downstream response is prepared until the complete upstream body is received
 and validated as JSON. Valid JSON preserves the upstream status, including
@@ -105,25 +113,28 @@ logs contain generated attempt ID, configured backend ID, status, elapsed time
 and phase. JSON parsing is bounded synchronous work; elapsed time is checked
 after it, so this is an application deadline, not a hard real-time guarantee.
 
-## Deterministic faults and tests (no Foundry calls)
+## Local regression tests (no Azure calls)
 
-With faults enabled, authenticated `POST /fault/{scenario}` uses **the same
-buffered HTTP reader and deadline** against a separate ephemeral loopback-only
-HTTP server. The loopback listener additionally uses an independent random
-internal key, never the executor key or an Azure token. No managed identity
-token is requested for faults. Supported scenarios:
+The production runtime exposes only `GET /health` and authenticated
+`POST /execute/{backendId}`. There is no `/fault/{scenario}` route, fault-mode
+configuration, or runtime loopback server. Removed demo endpoints return 404
+when authenticated (unauthenticated requests still return 401).
 
-`success`, `body-stall`, `drip`, `delayed-headers`, `truncated`, `oversized`,
-`status400`, `status401`, `status403`, `status429`, `status500`, `status503`.
+`tests/faults.py` is a test-only synthetic upstream, started independently by
+the test suite on loopback. Tests inject local backend objects and a fake
+credential into the app; production environment validation still requires
+trusted Azure HTTPS endpoints. Neither the Dockerfile nor its allowlisted
+build context includes tests or fixtures.
 
-Success emits two chunks 75 ms apart; body-stall sends headers and an initial
-JSON fragment before stalling 10 seconds; drip sends a byte every 25 ms for
-10 seconds; delayed-headers waits 10 seconds. Short budgets/idle headers make
-tests fast. `truncated` sends a completed HTTP body containing unfinished JSON.
-Synthetic failure statuses have valid JSON and `retry-after: 2`.
+Regression coverage exercises the real `/execute` path and buffered reader:
+complete-body-before-headers, stalled/dripping bodies, delayed headers,
+invalid/truncated JSON, body limits, upstream status preservation, authentication,
+managed identity/API-key selection, cancellation, capacity and no retries.
+These tests validate executor behavior, not the cloud alert-to-routing loop.
 
-Run from this directory:
+Run from the repository root using the existing environment:
 
 ```sh
-python -m unittest discover -s tests -v
+cd deployment/executor
+../../.venv/bin/python -m unittest discover -s tests -v
 ```

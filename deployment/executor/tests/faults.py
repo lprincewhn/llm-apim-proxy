@@ -1,7 +1,6 @@
-"""Synthetic HTTP peer, bound only to loopback, never to the public listener."""
+"""Test-only synthetic Azure OpenAI peer, started independently by tests."""
 
 import asyncio
-import secrets
 
 from aiohttp import web
 
@@ -14,11 +13,8 @@ SCENARIOS = frozenset({
 })
 
 
-def synthetic_app(key: str) -> web.Application:
+def synthetic_app() -> web.Application:
     async def respond(request: web.Request):
-        supplied = request.headers.get("X-Synthetic-Key", "")
-        if not secrets.compare_digest(supplied.encode("utf-8", "surrogateescape"), key.encode()):
-            return web.Response(status=404)
         scenario = request.match_info["scenario"]
         if scenario not in SCENARIOS:
             return web.Response(status=404)
@@ -60,7 +56,7 @@ def synthetic_app(key: str) -> web.Application:
                 await response.write(b'"ok"}')
             await response.write_eof()
         except ConnectionResetError:
-            # Expected when the public request deadline closes this connection.
+            # Expected when the executor deadline closes this connection.
             pass
         return response
 
@@ -69,5 +65,5 @@ def synthetic_app(key: str) -> web.Application:
         "auto_decompress": False,
         "lingering_time": 0,
     })
-    app.router.add_post("/synthetic/{scenario}", respond)
+    app.router.add_post("/openai/deployments/{scenario}/chat/completions", respond)
     return app

@@ -31,7 +31,6 @@ from executor import (
     deadline_check,
     validate_payload,
 )
-from faults import SCENARIOS, synthetic_app
 
 LOG = logging.getLogger("executor")
 
@@ -42,8 +41,6 @@ class Runtime:
     credential: object = None
     session: aiohttp.ClientSession | None = None
     active: int = 0
-    fault_origin: str | None = None
-    fault_key: str | None = None
 
 
 RUNTIME = web.AppKey("runtime", Runtime)
@@ -180,22 +177,6 @@ async def execute(request: web.Request):
     return committed_response(result, attempt)
 
 
-async def fault(request: web.Request):
-    runtime = request.app[RUNTIME]
-    scenario = request.match_info["scenario"]
-    if not runtime.settings.enable_faults or scenario not in SCENARIOS:
-        raise ExecutorFailure(404, "unknown_fault")
-    attempt = request[ATTEMPT]
-    attempt.backend = f"fault:{scenario}"
-    await request_body(request)
-    result = await buffered_post(
-        runtime.session, f"{runtime.fault_origin}/synthetic/{scenario}", b"{}",
-        {"X-Synthetic-Key": runtime.fault_key},
-        request[IDLE], attempt,
-    )
-    return committed_response(result, attempt)
-
-
 async def health(request: web.Request):
     return web.json_response({"status": "ok"})
 
@@ -219,25 +200,7 @@ async def lifecycle(app: web.Application):
             cookie_jar=aiohttp.DummyCookieJar(),
         ) as session:
             runtime.session = session
-            runner = None
-            try:
-                if runtime.settings.enable_faults:
-                    runtime.fault_key = secrets.token_hex(32)
-                    runner = web.AppRunner(
-                        synthetic_app(runtime.fault_key),
-                        access_log=None,
-                        handler_cancellation=True,
-                        shutdown_timeout=1,
-                    )
-                    await runner.setup()
-                    site = web.TCPSite(runner, "127.0.0.1", 0)
-                    await site.start()
-                    port = runner.addresses[0][1]
-                    runtime.fault_origin = f"http://127.0.0.1:{port}"
-                yield
-            finally:
-                if runner is not None:
-                    await runner.cleanup()
+            yield
 
 
 def create_app(settings: Settings | None = None, credential=None) -> web.Application:
@@ -254,7 +217,6 @@ def create_app(settings: Settings | None = None, credential=None) -> web.Applica
     app.cleanup_ctx.append(lifecycle)
     app.router.add_get("/health", health)
     app.router.add_post("/execute/{backend_id}", execute)
-    app.router.add_post("/fault/{scenario}", fault)
     return app
 
 

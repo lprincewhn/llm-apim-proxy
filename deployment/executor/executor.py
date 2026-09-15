@@ -63,7 +63,6 @@ class Backend:
 class Settings:
     executor_key: str = field(repr=False)
     backends: dict[str, Backend]
-    enable_faults: bool = False
     identity_client_id: str | None = None
 
     @classmethod
@@ -132,12 +131,9 @@ class Settings:
                 ):
                     raise ValueError(f"API key environment variable {api_key_env} is missing or invalid")
             backends[name] = Backend(endpoint.rstrip("/"), deployment, kind, api_key_env, api_key)
-        faults = env.get("ENABLE_FAULTS", "false").lower()
-        if faults not in ("true", "false"):
-            raise ValueError("ENABLE_FAULTS must be true or false")
-        if not backends and faults != "true":
-            raise ValueError("At least one backend is required when faults are disabled")
-        return cls(key, backends, faults == "true", env.get("AZURE_CLIENT_ID") or None)
+        if not backends:
+            raise ValueError("At least one backend is required")
+        return cls(key, backends, env.get("AZURE_CLIENT_ID") or None)
 
 
 @dataclass

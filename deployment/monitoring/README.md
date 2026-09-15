@@ -1,6 +1,8 @@
 # Azure Monitor–driven APIM failover
 
-This controller is **off by default**. It is not a gateway retry policy:
+Fresh deployments start **off by default**; the existing lab was enabled after
+authorization and its successful drill. This is not a gateway retry policy.
+See the [current Chinese design](../../docs/monitoring-failover.zh-CN.md).
 
 1. APIM records one business attempt in `ApiManagementGatewayLogs`.
 2. Two Azure Monitor scheduled-query alerts evaluate each backend every minute,
@@ -35,46 +37,8 @@ Current route: `primary=sweden`, `enabled=[sweden]`; East US 2 is quarantined,
 not automatically recovered. See [drill evidence](drill-20260915.md).
 Fresh deployments still start disabled and require the safeguards below.
 
-Only `deployment/monitoring/` is owned by this implementation. The executor,
-APIM policy, diagnostics configuration, and initial route remain prerequisites.
+The executor, APIM policy, diagnostics configuration, and initial route remain prerequisites.
 No additional Python packages are needed.
-
-## Historical initial deployment checkpoint — 2026-09-15
-
-Before the administrator grant, ARM deployment `llm-monitoring` succeeded. Read-back confirmed the Logic App
-is enabled with `switchEnabled=false`, and **both alerts are disabled**. Its
-system-assigned identity principal is
-`f11678b8-01cb-4b24-a17f-584925f02b65`.
-
-APIM log ingestion was confirmed: `ApiId='llm'`, executor paths in `BackendUrl`,
-numeric millisecond `BackendTime`, `ResponseCode`, and `BackendResponseCode`.
-Scheduled-query creation passed query validation. This does not verify actual
-common-alert payload delivery or real alert-to-GPT-to-ARM switching.
-
-The Contributor deployment identity cannot perform
-`Microsoft.Authorization/*/Write`. **No role grant or live switching run was
-performed at that checkpoint.** The later grant and drill supersede this state.
-For a fresh deployment, an RBAC administrator can use the script below or this concrete
-single-resource command:
-
-```bash
-az role assignment create \
-  --subscription 10564893-ecc3-4a6d-b505-53bcbe89dd8e \
-  --assignee-object-id f11678b8-01cb-4b24-a17f-584925f02b65 \
-  --assignee-principal-type ServicePrincipal \
-  --role 312a565d-c81f-4fd8-895a-4e21e48d571c \
-  --scope '/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.ApiManagement/service/apim-svhwb107-0915/namedValues/chat-route' \
-  --only-show-errors -o none
-```
-
-After the grant, perform the explicit MI verification and probe-only checks
-below; do not enable alerts merely because the assignment command succeeded.
-
-Before the grant, the ignored-Resolved smoke run
-`08584121435153607872931604082CU32` completed **Cancelled**, with
-`ResolvedNoOp: Succeeded`; all workflow ARM read/write and model probe actions
-were **Skipped**. This verifies the no-op branch without requiring MI access or
-changing the route. It is not live failover validation.
 
 ## Safety contract
 
@@ -301,7 +265,8 @@ It does not silently retarget or initialize the APIM route.
   conflicts, permission denial, and safe deployment/activation gates.
 - Tests are **not** the Azure workflow engine or live KQL validation. Cloud ARM
   template validation, actual payload shape, role propagation, and a real
-  alert-to-workflow run remain deployment acceptance checks.
+  alert-to-workflow run are required for each new deployment; the existing lab's
+  successful error-alert drill is recorded separately.
 - Log ingestion plus a five-minute window / one-minute evaluation is
   **control-plane reaction time**, not request-level 8s/15s latency acceptance.
   Five samples is a configurable design threshold in `alert_query`, not evidence

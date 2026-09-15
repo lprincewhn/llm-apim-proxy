@@ -43,7 +43,6 @@ body = {
                     {"name": "AZURE_CLIENT_ID", "value": "3dfb189c-3492-4eb9-80f8-4bc97213bf76"},
                     {"name": "EXECUTOR_KEY", "secretRef": "executor-key"},
                     {"name": "BACKENDS_JSON", "value": json.dumps(config["backends"])},
-                    {"name": "ENABLE_FAULTS", "value": "true"},
                 ],
                 "resources": {"cpu": 0.5, "memory": "1Gi"},
             }],

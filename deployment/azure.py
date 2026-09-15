@@ -47,11 +47,6 @@ def arm(method, path, body=None, version="2024-05-01", headers=None):
         raise RuntimeError(f"ARM {method} {path}: HTTP {exc.code}") from None
 
 
-def foundry_key(name):
-    path = f"/subscriptions/{SUB}/resourceGroups/jump-server_group/providers/Microsoft.CognitiveServices/accounts/{name}"
-    return arm("POST", path + "/listKeys", {}, "2024-10-01")["key1"]
-
-
 def container_secrets():
     return {
         item["name"]: item["value"]

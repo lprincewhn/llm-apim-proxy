@@ -11,6 +11,7 @@ from aiohttp.test_utils import TestClient, TestServer
 from azure.core.exceptions import ClientAuthenticationError
 
 from app import RUNTIME, create_app
+from faults import SCENARIOS, synthetic_app
 from executor import (
     API_VERSION,
     MAX_BODY_BYTES,
@@ -58,11 +59,17 @@ class FakeCredential:
 class AppTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
         self.credential = FakeCredential()
+        self.upstream = TestServer(synthetic_app(), handler_cancellation=True)
+        await self.upstream.start_server()
+        self.addAsyncCleanup(self.upstream.close)
+        origin = str(self.upstream.make_url("/")).rstrip("/")
         self.app = create_app(
             Settings(KEY, {
                 "chat": BACKEND,
                 "embedding": Backend(BACKEND.endpoint, "embedding-deployment", "embedding"),
-            }, enable_faults=True),
+                **{f"test-{scenario}": Backend(origin, scenario, "chat")
+                   for scenario in SCENARIOS},
+            }),
             self.credential,
         )
         self.prepared = []
@@ -80,9 +87,9 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(self.app[RUNTIME].session.closed)
         self.assertEqual(self.app[RUNTIME].active, 0)
 
-    async def post_fault(self, scenario, budget=1000, idle=200):
+    async def post_synthetic(self, scenario, budget=1000, idle=200):
         return await self.client.post(
-            f"/fault/{scenario}", data=b"{}",
+            f"/execute/test-{scenario}", data=b"{}",
             headers={**self.headers, "X-Budget-Ms": str(budget), "X-Idle-Ms": str(idle)},
         )
 
@@ -102,7 +109,7 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.credential.calls, [])
 
     async def test_success_waits_for_complete_body_before_headers(self):
-        task = asyncio.create_task(self.post_fault("success"))
+        task = asyncio.create_task(self.post_synthetic("success"))
         try:
             await asyncio.sleep(0.025)
             self.assertFalse(task.done(), "Downstream headers must wait for the final body chunk")
@@ -114,54 +121,54 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
                 await asyncio.gather(task, return_exceptions=True)
         self.assertEqual(response.status, 200)
         self.assertEqual(await response.read(), b'{"result":"ok"}')
-        self.assertEqual(self.prepared, [("/fault/success", 200)])
+        self.assertEqual(self.prepared, [("/execute/test-success", 200)])
         self.assertEqual(response.headers["x-request-id"], "synthetic-request")
         self.assertIn("x-executor-attempt-id", response.headers)
-        self.assertEqual(self.credential.calls, [])
+        self.assertEqual(self.credential.calls, [TOKEN_SCOPE])
 
     async def test_actual_headers_then_body_stall_yields_only_504(self):
-        response = await self.post_fault("body-stall", budget=700, idle=60)
+        response = await self.post_synthetic("body-stall", budget=700, idle=60)
         await self.assert_error(response, 504, "body_read_timeout")
-        self.assertEqual(self.prepared, [("/fault/body-stall", 504)])
+        self.assertEqual(self.prepared, [("/execute/test-body-stall", 504)])
 
-    async def test_apim_700ms_idle_preserves_retry_budget_then_success(self):
+    async def test_idle_timeout_does_not_retry_and_next_request_can_succeed(self):
         loop = asyncio.get_running_loop()
         started = loop.time()
-        response = await self.post_fault("body-stall", budget=3750, idle=700)
+        response = await self.post_synthetic("body-stall", budget=3750, idle=700)
         await self.assert_error(response, 504, "body_read_timeout")
         elapsed_ms = (loop.time() - started) * 1000
         self.assertGreaterEqual(elapsed_ms, 650)
-        remaining_ms = 3750 - int(elapsed_ms)
-        self.assertGreater(remaining_ms, 2700)
-        response = await self.post_fault("success", budget=remaining_ms, idle=700)
+        self.assertLess(elapsed_ms, 1500)
+        self.assertEqual(self.credential.calls, [TOKEN_SCOPE])
+        self.assertEqual(self.prepared, [("/execute/test-body-stall", 504)])
+        response = await self.post_synthetic("success", budget=1000, idle=700)
         self.assertEqual(response.status, 200)
         self.assertEqual(await response.json(), {"result": "ok"})
         self.assertEqual(self.prepared, [
-            ("/fault/body-stall", 504),
-            ("/fault/success", 200),
+            ("/execute/test-body-stall", 504),
+            ("/execute/test-success", 200),
         ])
-        self.assertLess((loop.time() - started) * 1000, 3750)
-        self.assertEqual(self.credential.calls, [])
+        self.assertEqual(self.credential.calls, [TOKEN_SCOPE, TOKEN_SCOPE])
 
     async def test_drip_cannot_extend_total_deadline(self):
         start = asyncio.get_running_loop().time()
-        response = await self.post_fault("drip", budget=180, idle=120)
+        response = await self.post_synthetic("drip", budget=180, idle=120)
         await self.assert_error(response, 504, "total_timeout")
         self.assertLess(asyncio.get_running_loop().time() - start, 0.6)
-        self.assertEqual(self.prepared, [("/fault/drip", 504)])
+        self.assertEqual(self.prepared, [("/execute/test-drip", 504)])
 
     async def test_delayed_headers_use_total_not_body_idle_deadline(self):
-        response = await self.post_fault("delayed-headers", budget=120, idle=20)
+        response = await self.post_synthetic("delayed-headers", budget=120, idle=20)
         await self.assert_error(response, 504, "total_timeout")
 
     async def test_total_wins_when_body_idle_is_longer(self):
-        response = await self.post_fault("body-stall", budget=100, idle=500)
+        response = await self.post_synthetic("body-stall", budget=100, idle=500)
         await self.assert_error(response, 504, "total_timeout")
 
     async def test_failure_statuses_are_not_rewritten(self):
         for status in (400, 401, 403, 429, 500, 503):
             with self.subTest(status=status):
-                response = await self.post_fault(f"status{status}")
+                response = await self.post_synthetic(f"status{status}")
                 self.assertEqual(response.status, status)
                 self.assertEqual((await response.json())["error"]["code"], f"status{status}")
                 self.assertEqual(response.headers["retry-after"], "2")
@@ -169,12 +176,12 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
                 self.assertNotIn("x-executor-error", response.headers)
 
     async def test_invalid_json_never_commits_success(self):
-        response = await self.post_fault("truncated")
+        response = await self.post_synthetic("truncated")
         await self.assert_error(response, 502, "invalid_upstream_json")
-        self.assertEqual(self.prepared, [("/fault/truncated", 502)])
+        self.assertEqual(self.prepared, [("/execute/test-truncated", 502)])
 
     async def test_chunked_response_limit(self):
-        response = await self.post_fault("oversized", budget=2000)
+        response = await self.post_synthetic("oversized", budget=2000)
         await self.assert_error(response, 502, "response_too_large")
 
     async def test_unknown_backend_and_url_routing_rejected_before_token(self):
@@ -301,20 +308,20 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.credential.calls, [])
 
     async def test_capacity_rejects_without_queueing_and_slots_release(self):
-        tasks = [asyncio.create_task(self.post_fault("body-stall", budget=450, idle=350))
+        tasks = [asyncio.create_task(self.post_synthetic("body-stall", budget=450, idle=350))
                  for _ in range(MAX_CONCURRENCY)]
         try:
             async with asyncio.timeout(1):
                 while self.app[RUNTIME].active != MAX_CONCURRENCY:
                     await asyncio.sleep(0.005)
             start = asyncio.get_running_loop().time()
-            response = await self.post_fault("success")
+            response = await self.post_synthetic("success")
             await self.assert_error(response, 503, "capacity_exceeded")
             self.assertLess(asyncio.get_running_loop().time() - start, 0.15)
             responses = await asyncio.gather(*tasks)
             self.assertTrue(all(response.status == 504 for response in responses))
             self.assertEqual(self.app[RUNTIME].active, 0)
-            response = await self.post_fault("success")
+            response = await self.post_synthetic("success")
             self.assertEqual(response.status, 200)
         finally:
             for task in tasks:
@@ -345,17 +352,11 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
             writer.close()
             await writer.wait_closed()
 
-    async def test_loopback_synthetic_endpoint_not_public_and_requires_internal_key(self):
-        response = await self.client.post("/synthetic/success", headers=self.headers)
-        self.assertEqual(response.status, 404)
-        async with aiohttp.ClientSession() as session:
-            response = await session.post(
-                f"{self.app[RUNTIME].fault_origin}/synthetic/success",
-                headers={"X-Synthetic-Key": KEY},
-            )
-            self.assertEqual(response.status, 404)
-        self.assertTrue(self.app[RUNTIME].fault_origin.startswith("http://127.0.0.1:"))
-        self.assertNotEqual(self.app[RUNTIME].fault_key, KEY)
+    async def test_removed_demo_endpoints_are_not_registered(self):
+        for path in ("/fault/success", "/fault/body-stall", "/synthetic/success"):
+            response = await self.client.post(path, headers=self.headers)
+            await self.assert_error(response, 404, "http_error")
+        self.assertEqual(self.credential.calls, [])
 
     async def test_disconnect_cancels_actual_buffered_reader(self):
         entered = asyncio.Event()
@@ -367,12 +368,12 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
             except asyncio.CancelledError:
                 cancelled.set()
                 raise
-        url = self.client.make_url("/fault/body-stall")
+        url = self.client.make_url("/execute/test-body-stall")
         _, writer = await asyncio.open_connection(url.host, url.port)
         try:
             with patch("app.buffered_post", tracked_reader):
                 writer.write((
-                    f"POST /fault/body-stall HTTP/1.1\r\nHost: localhost\r\n"
+                    f"POST /execute/test-body-stall HTTP/1.1\r\nHost: localhost\r\n"
                     f"X-Executor-Key: {KEY}\r\nContent-Length: 2\r\n\r\n{{}}"
                 ).encode())
                 await writer.drain()
@@ -390,22 +391,10 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
             writer.close()
             await writer.wait_closed()
 
-    async def test_faults_disabled_by_default(self):
-        credential = FakeCredential()
-        client = TestClient(TestServer(create_app(Settings(KEY, {"chat": BACKEND}), credential)))
-        await client.start_server()
-        try:
-            response = await client.post("/fault/success", headers=self.headers)
-            await self.assert_error(response, 404, "unknown_fault")
-            self.assertIsNone(client.app[RUNTIME].fault_origin)
-            self.assertEqual(credential.calls, [])
-        finally:
-            await client.close()
-
     async def test_invalid_timeout_header(self):
         for header in ("X-Budget-Ms", "X-Idle-Ms"):
             response = await self.client.post(
-                "/fault/success", headers={**self.headers, header: "not-an-integer"},
+                "/execute/chat", headers={**self.headers, header: "not-an-integer"},
             )
             await self.assert_error(response, 400, "invalid_timeout_header")
 
@@ -647,8 +636,7 @@ class ConfigTests(unittest.TestCase):
 
     def test_valid_config(self):
         self.assertEqual(self.settings().backends["chat"], BACKEND)
-        self.assertFalse(self.settings().enable_faults)
-        self.assertTrue(self.settings(ENABLE_FAULTS="true").enable_faults)
+        self.assertIsNone(self.settings().identity_client_id)
 
     def test_untrusted_endpoint_config_rejected(self):
         for endpoint in (
@@ -673,7 +661,6 @@ class ConfigTests(unittest.TestCase):
             {"BACKENDS_JSON": "["},
             {"BACKENDS_JSON": "[]"},
             {"BACKENDS_JSON": "{}"},
-            {"ENABLE_FAULTS": "1"},
             {"BACKENDS_JSON": '{"chat":{"endpoint":"https://x.openai.azure.com","deployment":"../x","kind":"chat"}}'},
         ):
             with self.subTest(updates=updates):

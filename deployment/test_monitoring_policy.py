@@ -1,67 +1,55 @@
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
-import runpy
 from unittest.mock import patch
 
-from use_monitoring_routing import single_attempt_policy
+from configure_apim import build_policy, configure
 
 
 class MonitoringPolicyTests(unittest.TestCase):
-    def test_fresh_config_matches_single_attempt_migration(self):
-        policies = {}
+    def test_policy_forwards_once_to_current_primary(self):
+        root = ET.fromstring(build_policy())
+        self.assertIsNone(root.find(".//retry"))
+        self.assertEqual(len(root.find("backend")), 1)
+        self.assertEqual(root.find("backend")[0].tag, "forward-request")
+        selected = root.find(".//set-variable[@name='selected']").get("value")
+        self.assertIn('["primary"]', selected)
+        self.assertNotIn("attempt", selected)
+        self.assertNotIn("/fault/", build_policy())
+        self.assertEqual(root.find(".//set-header[@name='X-Lab-Attempts']/value").text, "1")
+
+    def test_secret_and_budget_are_forwarded_without_client_credentials(self):
+        root = ET.fromstring(build_policy())
+        self.assertEqual(root.find(".//set-header[@name='X-Executor-Key']/value").text,
+                         "{{executor-key}}")
+        for name in ("Authorization", "api-key", "Ocp-Apim-Subscription-Key"):
+            self.assertEqual(root.find(f".//set-header[@name='{name}']").get("exists-action"), "delete")
+        self.assertIn("X-Remaining-Budget-Ms", build_policy())
+
+    def run_configure(self, initialize_route=False):
+        writes = []
 
         def arm(method, path, body=None, version=None):
             if method == "GET":
                 return {"properties": {"configuration": {"ingress": {"fqdn": "executor.invalid"}}}}
-            if "/apis/" in path and path.endswith("/policies/policy"):
-                policies[path.split("/apis/")[1].split("/")[0]] = ET.fromstring(
-                    body["properties"]["value"]
-                )
+            writes.append((path, body))
             return {}
 
-        with patch("azure.arm", side_effect=arm), patch(
-            "azure.container_secrets", return_value={"executor-key": "test-placeholder"}
+        with patch("configure_apim.arm", side_effect=arm), patch(
+            "configure_apim.container_secrets", return_value={"executor-key": "test-placeholder"}
         ), patch.object(Path, "write_text"), patch("builtins.print"):
-            runpy.run_path(str(Path(__file__).with_name("configure_apim.py")))
-        self.assertIsNone(policies["llm"].find(".//retry"))
-        self.assertEqual(len(policies["llm"].find("backend")), 1)
-        self.assertEqual(policies["llm"].find("backend")[0].tag, "forward-request")
-        self.assertIsNotNone(policies["validation"].find(".//retry"))
+            configure(initialize_route=initialize_route)
+        return writes
 
-    def test_removes_retry_without_dropping_forwarding(self):
-        result = ET.fromstring(single_attempt_policy(
-            '<policies><inbound/><backend><retry count="1">'
-            '<set-variable name="attempt" value="@(1)"/>'
-            '<set-variable name="selected" value="old"/>'
-            '<set-header name="X-Executor-Key"><value>{{executor-key}}</value></set-header>'
-            '<forward-request timeout="5"/>'
-            '</retry></backend><outbound/></policies>'
-        ))
-        self.assertIsNone(result.find(".//retry"))
-        self.assertEqual(len(result.findall(".//forward-request")), 1)
-        self.assertEqual(len(result.find("backend")), 1)
-        self.assertEqual(result.find(".//set-header/value").text, "{{executor-key}}")
-        self.assertNotIn("attempt", result.find(".//set-variable[@name='selected']").get("value"))
+    def test_default_configuration_preserves_route_and_omits_demo_api(self):
+        paths = [path for path, _ in self.run_configure()]
+        self.assertFalse(any("/namedValues/chat-route" in path for path in paths))
+        self.assertFalse(any("/apis/validation" in path for path in paths))
+        self.assertTrue(any("/apis/llm/policies/policy" in path for path in paths))
 
-    def test_idempotent(self):
-        xml = ('<policies><inbound/><backend><set-variable name="selected" value="old"/>'
-               '<forward-request/></backend></policies>')
-        result = single_attempt_policy(xml)
-        self.assertEqual(single_attempt_policy(result), result)
+    def test_route_initialization_is_explicit(self):
+        writes = self.run_configure(initialize_route=True)
+        self.assertEqual(sum(path.endswith("/namedValues/chat-route") for path, _ in writes), 1)
 
-    def test_decodes_management_xml_format(self):
-        xml = ('<policies><inbound><set-variable name="purpose" value="@(&amp;quot;generate&amp;quot;)"/>'
-               '</inbound><backend><set-variable name="selected" value="old"/>'
-               '<forward-request/></backend></policies>')
-        root = ET.fromstring(single_attempt_policy(xml, encoded=True))
-        self.assertEqual(root.find(".//set-variable[@name='purpose']").get("value"), '@("generate")')
-
-    def test_unknown_layout_fails_closed(self):
-        for xml in (
-            "<policies/>",
-            "<policies><backend/></policies>",
-            "<policies><backend><retry/><retry/></backend></policies>",
-        ):
-            with self.subTest(xml=xml), self.assertRaises(ValueError):
-                single_attempt_policy(xml)
+    def test_generated_snapshot_matches_source(self):
+        self.assertEqual(Path(__file__).with_name("llm-policy.xml").read_text(), build_policy())

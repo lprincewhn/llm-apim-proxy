@@ -1,54 +1,44 @@
 # llm-apim-proxy
 
-Azure APIM LLM 代理验证项目：由 APIM 选择后端，执行器完整读取响应后再提交给下游。业务接口只尝试一次；跨后端切换采用 **APIM 日志 → Azure Monitor 告警 → Action Group → Logic App 健康探测 → APIM 路由更新**，配置传播后影响新请求，不重投正在执行的请求。
+**真实 Azure Monitor 告警驱动 APIM 后续请求切换**，不是请求内重试。
 
-**当前是验证环境，不是生产就绪版本。** 模型及控制器 RBAC 阻塞均已解除。2026-09-15 09:17 UTC，已通过真实错误告警 → Action Group → Logic App 两次真实备用探测 → 路由更新 → 新请求在 Sweden 返回 200 的闭环演练。两个告警已启用；当前路由为 Sweden，East US 2 已被隔离且不会自动回切。演练使用受控请求预算超时，不是 Foundry 真实故障；时延告警未单独触发演练，Java/Search 全链路及 8s/15s 性能目标尚未验收。详见 [闭环记录](deployment/monitoring/drill-20260915.md)。
+APIM 记录后端时延／错误，Azure Monitor 告警经 Action Group 调用 Logic App；控制器确认备用模型健康后，通过 APIM 管理 API 更新路由。配置传播至网关后，**新请求**才转向备用后端。当前失败请求不会自动重投，也不会自动回切。
 
-## 代码与文档
+## 方案与运行状态
 
-| 路径 | 内容 |
+完整设计见 [告警驱动切换方案](docs/monitoring-failover.zh-CN.md)，部署与运维见 [部署说明](deployment/README.md) 和 [控制器操作手册](deployment/monitoring/README.md)。
+
+2026-09-15 09:17 UTC，实验环境已完成真实错误告警 → 两次真实 Sweden GPT 探测 → ETag 路由更新 → 新请求 Sweden `200 / OK` 的闭环。[演练记录](deployment/monitoring/drill-20260915.md)及[原始脱敏结果](deployment/monitoring/drill-20260915.json)保留在仓库。
+
+演练结束时：两个告警启用，`switchEnabled=true`；`primary=sweden`、`enabled=[sweden]`、`version=2`。East US 2 因演练被隔离，需人工确认健康后重新启用，**当前没有已启用备用**。这是时间点记录，不代替在线状态查询。
+
+## 仓库范围
+
+| 路径 | 用途 |
 |---|---|
-| `deployment/executor/` | Python/aiohttp 完整响应执行器、Dockerfile、故障注入与单元测试 |
-| `deployment/configure_apim.py` | APIM API、预算、路由、订阅与诊断配置 |
-| `deployment/use_monitoring_routing.py` | 原地关闭 `/llm` 请求内重试，不重置路由或密钥 |
-| `deployment/monitoring/` | 告警、Action Group、Logic App 控制器及专用授权说明 |
-| `deployment/deploy_executor.py` | 验证环境 Container App 初始部署 |
-| `deployment/config.json`、`deployment/azure.py` | MCAPS 验证环境资源标识与 Azure 管理助手 |
-| `deployment/routing.py` | 早期参考健康状态机；实际控制器见 `deployment/monitoring/` |
-| `deployment/validate*.py` | Azure 在线验证脚本，需授权 |
-| `deployment/*results.json` | 2026-09-15 的结果快照，包含失败项 |
-| `deployment/grant-required-roles.sh` | 由授权管理员执行的资源级 RBAC 命令 |
-| [部署交接说明](deployment/README.md) | 资源、接口、费用、限制和安全清理范围 |
-| [设计方案](docs/design.zh-CN.md) | 时延预算、路由、监控和实施方案 |
-| [部署结果快照](docs/deployment-report-2026-09-15.zh-CN.md) | 当时的实际部署结果和阻塞 |
+| `deployment/monitoring/` | 告警、Action Group、Logic App、管理权限脚本、控制器测试及真实闭环记录 |
+| `deployment/configure_apim.py`、`llm-policy.xml` | 只转发一次的业务 API 和不记录正文的诊断配置 |
+| `deployment/executor/` | APIM 调用和控制器探测实际依赖的模型执行器；不选备用、不改路由、不重试 |
+| `deployment/deploy_executor.py`、`config.json`、`azure.py` | 实验执行器部署、后端白名单及 Azure 管理辅助 |
+| `deployment/grant-required-roles.sh` | 执行器访问三个现有模型资源的最小范围授权 |
+| `docs/monitoring-failover.zh-CN.md` | 当前唯一主方案 |
 
-## 本地测试
+旧的请求内补救演示、独立模拟路由状态机、手动切路验证脚本及过时报告已移除。合成上游只作为执行器的**本地测试夹具**保留，不作为线上服务能力或闭环证据。`lab-validation` 是为兼容已部署调用方保留的 APIM 订阅 ID，不是演示 API。
 
-使用 Python 3.12，在仓库根目录执行；不需要 Azure 凭据，也不会调用真实模型：
+## 本地验证
+
+Python 3.12，在仓库根目录：
 
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install -r deployment/executor/requirements.txt
-(
-  cd deployment/executor
-  ../../.venv/bin/python -m unittest discover -s tests -v
-)
-(
-  cd deployment
-  ../.venv/bin/python -m unittest test_routing -v
-)
+(cd deployment/executor && ../../.venv/bin/python -m unittest discover -s tests -v)
+(cd deployment && ../.venv/bin/python -m unittest test_monitoring_policy -v)
+python3 -m unittest discover -s deployment/monitoring -p 'test_*.py' -v
 ```
 
-执行器配置与启动方式见 [executor README](deployment/executor/README.md)。默认不启用故障接口；Azure 验证环境显式启用了独立、鉴权保护的合成故障入口。
+这些命令不调用 Azure 或真实模型。部署脚本会改变云端资源，必须先读操作手册；凭据、回调 URL 和本地认证目录不得提交。
 
-## Azure 操作边界
+## 边界
 
-部署脚本包含现有 MCAPS 实验资源的非秘密标识，**不是任意订阅的一键初始化模板**。先阅读部署交接说明，再执行任何写操作。
-
-- `configure_apim.py` 会重置实验路由至 East US 2 主后端。
-- `deploy_executor.py` 会生成新的执行器密钥和只读镜像凭据；不能将它视为无副作用的重复发布命令。
-- `validate_extended.py` 会临时修改实验路由并恢复，不得对生产资源直接运行。
-- 不提交 Azure/GitHub token、订阅调用密钥、模型 API key 或本地认证目录；实际凭据只在内存或 Azure secret 中处理。
-- 不通过关闭 Foundry 本地认证限制来绕过缺失的 RBAC。
-
-本仓库私有，包含指定验证环境的部署上下文。`docs/` 设计和结果文档以及既有 JSON 是历史快照；原方案中的请求内补救已从业务 API 移除，仅保留在隔离的 `/validation` 演示接口。不能把该演示成功视为告警控制器成功或真实模型性能达标。
+本仓库针对 MCAPS Developer 规格实验环境，不是通用一键 IaC 或生产可用性承诺。已通过的是**受控超时引发的真实错误告警闭环**，不是自然发生的 Foundry 区域故障。时延告警独立触发、备用持续容量、Java/Search 整体业务链及 8s/15s 性能目标均未验收。
