@@ -24,21 +24,24 @@ policy has no retry; a deliberately reduced request budget returned 504 with
 one attempt rather than moving to another backend.
 
 The controller's dedicated principal is
-`f11678b8-01cb-4b24-a17f-584925f02b65`. Its access-check run
-`08584121436710629255686979683CU36` failed at `Read_access_route` with
-`Forbidden`. No route write ran. Both alerts remain disabled and
-`switchEnabled=false`, pending the administrator grant below. This is a new
-**APIM management** permission, separate from the executor's already-working
-Foundry inference roles. The full live alert-to-gateway-switch drill is blocked,
-not passed.
+`f11678b8-01cb-4b24-a17f-584925f02b65`. Its initial Forbidden error was resolved
+after the administrator's grant. On 2026-09-15 09:13 UTC, its real MI GET and
+ETag-protected unchanged-value PUT succeeded.
+
+**Current state: both alerts ENABLED, `switchEnabled=true`.** A real error alert
+triggered the Action Group and workflow, both real backup probes passed, the
+controller wrote route version 2, and a new gateway request completed on Sweden.
+Current route: `primary=sweden`, `enabled=[sweden]`; East US 2 is quarantined,
+not automatically recovered. See [drill evidence](drill-20260915.md).
+Fresh deployments still start disabled and require the safeguards below.
 
 Only `deployment/monitoring/` is owned by this implementation. The executor,
 APIM policy, diagnostics configuration, and initial route remain prerequisites.
 No additional Python packages are needed.
 
-## Lab deployment checkpoint — 2026-09-15
+## Historical initial deployment checkpoint — 2026-09-15
 
-The ARM deployment `llm-monitoring` succeeded. Read-back confirmed the Logic App
+Before the administrator grant, ARM deployment `llm-monitoring` succeeded. Read-back confirmed the Logic App
 is enabled with `switchEnabled=false`, and **both alerts are disabled**. Its
 system-assigned identity principal is
 `f11678b8-01cb-4b24-a17f-584925f02b65`.
@@ -50,7 +53,8 @@ common-alert payload delivery or real alert-to-GPT-to-ARM switching.
 
 The Contributor deployment identity cannot perform
 `Microsoft.Authorization/*/Write`. **No role grant or live switching run was
-performed.** An RBAC administrator can use the script below or this concrete
+performed at that checkpoint.** The later grant and drill supersede this state.
+For a fresh deployment, an RBAC administrator can use the script below or this concrete
 single-resource command:
 
 ```bash

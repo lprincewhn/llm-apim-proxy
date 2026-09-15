@@ -2,7 +2,7 @@
 
 Azure APIM LLM 代理验证项目：由 APIM 选择后端，执行器完整读取响应后再提交给下游。业务接口只尝试一次；跨后端切换采用 **APIM 日志 → Azure Monitor 告警 → Action Group → Logic App 健康探测 → APIM 路由更新**，配置传播后影响新请求，不重投正在执行的请求。
 
-**当前是验证环境，不是生产就绪版本。** 2026-09-15 08:50 UTC，两个聊天后端及 embedding 的执行器调用均已有成功记录，原模型 RBAC 阻塞已解除。告警控制器使用独立身份，需另行授予指定 APIM Named Value 的管理权限后才能启用告警；部署不等于告警切换闭环已通过。Java/Search 全链路及 8s/15s 性能目标尚未验收。
+**当前是验证环境，不是生产就绪版本。** 模型及控制器 RBAC 阻塞均已解除。2026-09-15 09:17 UTC，已通过真实错误告警 → Action Group → Logic App 两次真实备用探测 → 路由更新 → 新请求在 Sweden 返回 200 的闭环演练。两个告警已启用；当前路由为 Sweden，East US 2 已被隔离且不会自动回切。演练使用受控请求预算超时，不是 Foundry 真实故障；时延告警未单独触发演练，Java/Search 全链路及 8s/15s 性能目标尚未验收。详见 [闭环记录](deployment/monitoring/drill-20260915.md)。
 
 ## 代码与文档
 

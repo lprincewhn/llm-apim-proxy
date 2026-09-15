@@ -124,8 +124,10 @@ delay: this is neither a per-request deadline mechanism nor an instantaneous swi
 `routing.py` remains an early reference only. The Logic App uses real backup
 completion probes, serialized execution, ETag conditional writes, cooldown,
 stale-alert rejection and explicit quarantine. Two successful short probes do
-not prove N-1 capacity. Alerts remain disabled until dedicated MI authorization;
-an actual fired-alert-to-new-gateway-request drill is still required for acceptance.
+not prove N-1 capacity. Dedicated MI authorization was verified on 2026-09-15;
+both alerts are now enabled. A real error-alert-to-new-gateway-request drill
+switched East US 2 to Sweden successfully. See `monitoring/drill-20260915.md`.
+Latency-trigger-specific and full business performance acceptance remain separate.
 
 ## Reproduction and operational caution
 
