@@ -12,7 +12,11 @@
 
 APIM 用命名 Backend `llm-eastus2`、`llm-sweden`、`llm-embedding` 表示三个部署所在资源，按 `chat-route.primary` 选择聊天后端；embedding 独立，不参与聊天切换。
 
-请求路径改写为 `/openai/deployments/<deployment>/chat/completions` 或 `/embeddings`，使用 `api-version=2024-10-21`。客户端的逻辑 `model` 校验后移除，由 URL 指定实际部署；非流式一次调用。
+对外直接暴露 Azure OpenAI 原生路径 `/openai/deployments/<deployment>/chat/completions` 或 `/embeddings`，不再定义 intent／rewrite／generate 业务接口。原始 JSON body 不读取、不删除 `model`、不重建；`api-version` 和业务查询参数按调用方原值传递。模型参数合法性由 Foundry 判断，原始错误状态和正文返回客户端；支持 `stream=true`，不缓冲 SSE。
+
+聊天部署入口支持现有 `gpt-5.1` 和 `svhwb107-gpt51` 两个名称，都遵循同一 `chat-route`，不是客户端指定区域。因两地部署名不同，网关只改写目标主机及 URL 中的部署名。embedding 入口为 `text-embedding-3-small`。不开放任意部署、管理 API 或尚未配置的 `/openai/v1/responses`。
+
+客户端使用标准 `api-key` 头，值为 APIM 订阅密钥（不是 Foundry Key）。APIM 校验后移除该密钥及客户端 Authorization；`subscription-key` 查询参数也不转发后端。模型鉴权继续由托管身份完成。
 
 APIM 与 Logic App 都绑定现有用户分配托管身份 `id-svhwb107-exec`，复用其三个资源范围的 `Cognitive Services OpenAI User`。**这是沿用历史身份名称，并非保留执行器。** APIM 通过客户端 ID 选择身份；Logic App HTTP 通过身份资源 ID 选择，token audience 为 Cognitive Services。
 
@@ -51,7 +55,7 @@ Logic App 系统身份另有单一 `chat-route` 范围的 APIM 管理权限，�
 
 不再提供执行器原有的完整 body 缓冲、JSON 完整性校验、2MiB 限制、5500ms 总读取／1200ms 空闲超时或容器并发限制。
 
-APIM 仍有单次 `forward-request` 超时；当前策略把输入毫秒预算按剩余时间**向上取整为整秒，最小 1 秒**。500ms 不等于 500ms 硬限制，转发超时主要约束等待响应头，不保证完整 body 截止。
+APIM 单次 `forward-request timeout=120` 主要约束等待响应头，不保证完整 body 截止。不再有 intent／rewrite／generate／embedding 分类预算，也不再解释 `X-Remaining-Budget-Ms`；旧 embedding 一秒转发限制已取消。原始请求和响应不做策略缓冲，流式输出开始后不会改写或换后端。
 
 Logic App 的同步 HTTP 网络传输受平台上限约束（Consumption 可能达 120s），没有执行器细粒度预算。延长等待不能被误判为健康；客户端仍需整个业务回合的超时和取消逻辑。8s/15s 目标没有因此获得保证。
 

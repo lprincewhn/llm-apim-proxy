@@ -19,11 +19,5 @@
       "deployment": "text-embedding-3-small",
       "kind": "embedding"
     }
-  },
-  "budgetsMs": {
-    "intent": 5000,
-    "rewrite": 1200,
-    "generate": 4000,
-    "embedding": 500
   }
 }

@@ -38,6 +38,14 @@ operation path**. Similar hosts, other deployments, legacy `/execute/*` and
 embedding are excluded. `BackendId` is useful for diagnostics but not required
 by the query. This is endpoint attribution, not proof of a regional root cause.
 
+The public API uses native `/openai/deployments/...` paths; ARM `ApiId='llm'`
+remains unchanged. Chat deployment aliases map to the actual current-primary
+deployment before logging. Query `api-version` is forwarded, not replaced, and
+is excluded from attribution. Both non-streaming and SSE chat calls enter the
+same population; a post-header stream interruption is not necessarily a 5xx,
+and these rules do not measure SSE idle time or guarantee detection of every
+interrupted stream.
+
 Errors count either gateway `ResponseCode` or `BackendResponseCode`. A 401/403 in
 either field excludes that sample from both health-alert populations, rather
 than initiating failover for an authorization configuration problem. Such errors

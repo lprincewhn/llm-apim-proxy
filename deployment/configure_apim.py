@@ -5,7 +5,20 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from azure import APIM, ROOT, arm
-from backends import API_VERSION, MODEL_IDENTITY_CLIENT_ID, MODEL_IDENTITY_ID, load_backends
+from backends import MODEL_IDENTITY_CLIENT_ID, MODEL_IDENTITY_ID, load_backends
+
+
+def native_operations():
+    return {
+        "native-" + name: {
+            "displayName": "Azure OpenAI " + name,
+            "method": "POST",
+            "urlTemplate": "/deployments/" + backend["deployment"] + "/"
+            + ("embeddings" if backend["kind"] == "embedding" else "chat/completions"),
+            "responses": [],
+        }
+        for name, backend in load_backends().items()
+    }
 
 
 def build_policy():
@@ -17,44 +30,18 @@ def build_policy():
         "calls": "30", "renewal-period": "60",
         "counter-key": '@("svhwb107-" + context.Subscription.Id)',
     })
-    ET.SubElement(inbound, "set-variable", {
-        "name": "purpose", "value": "@(context.Operation.Id)",
-    })
-    choose = ET.SubElement(inbound, "choose")
-    bad_model = ET.SubElement(choose, "when", {
-        "condition": '@{ var body = context.Request.Body.As<JObject>(preserveContent: true); '
-        'var model = (string)body["model"]; var expected = context.Operation.Id == "embedding" '
-        '? "text-embedding-3-small" : "gpt-5.1"; return (model != null && model != expected) '
-        '|| (body["stream"] != null && body["stream"].Type != JTokenType.Null '
-        '&& (body["stream"].Type != JTokenType.Boolean || (bool)body["stream"])); }',
-    })
-    response = ET.SubElement(bad_model, "return-response")
-    ET.SubElement(response, "set-status", {"code": "400", "reason": "Unsupported model or streaming"})
-    ET.SubElement(inbound, "set-body").text = (
-        '@{ var body = context.Request.Body.As<JObject>(); body.Remove("model"); return body.ToString(); }'
-    )
-    ET.SubElement(inbound, "set-variable", {
-        "name": "budget", "value": '@((string)context.Variables["purpose"] == "rewrite" ? 1200 : '
-        '(string)context.Variables["purpose"] == "embedding" ? 500 : '
-        '(string)context.Variables["purpose"] == "intent" ? 5000 : 4000)',
-    })
-    ET.SubElement(inbound, "set-variable", {
-        "name": "budget",
-        "value": '@{ int remaining; var raw = context.Request.Headers.GetValueOrDefault("X-Remaining-Budget-Ms", ""); '
-        'if (int.TryParse(raw, out remaining)) { return Math.Max(1, Math.Min(remaining, (int)context.Variables["budget"])); } '
-        'return (int)context.Variables["budget"]; }',
-    })
     ET.SubElement(inbound, "set-variable", {"name": "route", "value": "{{chat-route}}"})
     choose = ET.SubElement(inbound, "choose")
     when = ET.SubElement(choose, "when", {
-        "condition": '@((string)context.Variables["purpose"] != "embedding" && '
-        '((JArray)JObject.Parse((string)context.Variables["route"])["enabled"]).Count == 0)',
+        "condition": '@(context.Operation.Id != "native-embedding" && '
+        '!((JArray)JObject.Parse((string)context.Variables["route"])["enabled"]).Any(item => (string)item == '
+        '(string)JObject.Parse((string)context.Variables["route"])["primary"]))',
     })
     ret = ET.SubElement(when, "return-response")
     ET.SubElement(ret, "set-status", {"code": "503", "reason": "No healthy backends"})
     ET.SubElement(inbound, "set-variable", {
         "name": "selected", "value": '@{'
-        'if ((string)context.Variables["purpose"] == "embedding") { return "embedding"; } '
+        'if (context.Operation.Id == "native-embedding") { return "embedding"; } '
         'return (string)JObject.Parse((string)context.Variables["route"])["primary"]; }',
     })
     targets = ET.SubElement(inbound, "choose")
@@ -66,13 +53,14 @@ def build_policy():
         operation = "embeddings" if backend_config["kind"] == "embedding" else "chat/completions"
         ET.SubElement(target, "rewrite-uri", {
             "template": "/openai/deployments/" + backend_config["deployment"] + "/" + operation,
-            "copy-unmatched-params": "false",
+            "copy-unmatched-params": "true",
         })
     invalid = ET.SubElement(targets, "otherwise")
     invalid_response = ET.SubElement(invalid, "return-response")
     ET.SubElement(invalid_response, "set-status", {"code": "503", "reason": "Unknown route backend"})
-    query = ET.SubElement(inbound, "set-query-parameter", {"name": "api-version", "exists-action": "override"})
-    ET.SubElement(query, "value").text = API_VERSION
+    ET.SubElement(inbound, "set-query-parameter", {
+        "name": "subscription-key", "exists-action": "delete",
+    })
     for name in (
         "Ocp-Apim-Subscription-Key", "Authorization", "api-key", "X-Executor-Key",
         "X-Budget-Ms", "X-Idle-Ms", "X-Remaining-Budget-Ms",
@@ -85,8 +73,8 @@ def build_policy():
     })
     backend = ET.SubElement(policy, "backend")
     ET.SubElement(backend, "forward-request", {
-        "timeout": '@(Math.Max(1, (int)Math.Ceiling(((int)context.Variables["budget"] - (DateTime.UtcNow - context.Timestamp).TotalMilliseconds) / 1000.0)))',
-        "buffer-request-body": "true", "buffer-response": "true",
+        "timeout": "120",
+        "buffer-request-body": "false", "buffer-response": "false",
         "fail-on-error-status-code": "false",
     })
     outbound = ET.SubElement(policy, "outbound")
@@ -129,24 +117,30 @@ def configure(*, initialize_route=False):
     identities = {resource_id: {} for resource_id in identity.get("userAssignedIdentities", {})}
     identities[MODEL_IDENTITY_ID] = {}
     identity_type = "SystemAssigned, UserAssigned" if "SystemAssigned" in identity.get("type", "") else "UserAssigned"
-    arm("PATCH", APIM, {"identity": {"type": identity_type, "userAssignedIdentities": identities}})
+    if MODEL_IDENTITY_ID.lower() not in {
+        resource_id.lower() for resource_id in identity.get("userAssignedIdentities", {})
+    }:
+        arm("PATCH", APIM, {"identity": {"type": identity_type, "userAssignedIdentities": identities}})
     for name, backend in load_backends().items():
         put("/backends/llm-" + name, {
             "protocol": "http", "url": backend["endpoint"].rstrip("/"),
             "description": "Direct Foundry " + name,
         })
     put("/apis/llm", {
-        "displayName": "SVHWB107 direct Foundry",
-        "path": "llm", "protocols": ["https"], "subscriptionRequired": True,
+        "displayName": "Azure OpenAI native proxy",
+        "path": "openai", "protocols": ["https"], "subscriptionRequired": True,
+        "subscriptionKeyParameterNames": {"header": "api-key", "query": "subscription-key"},
     })
-    for purpose in ("intent", "rewrite", "generate", "embedding"):
-        put(f"/apis/llm/operations/{purpose}", {
-            "displayName": purpose, "method": "POST",
-            "urlTemplate": "/" + purpose, "responses": [],
-        })
+    for operation_id, operation in native_operations().items():
+        put(f"/apis/llm/operations/{operation_id}", operation)
     xml = build_policy()
     put("/apis/llm/policies/policy", {"format": "rawxml", "value": xml})
     Path(__file__).with_name("llm-policy.xml").write_text(xml, encoding="utf-8")
+    operations = arm("GET", APIM + "/apis/llm/operations")["value"]
+    for operation in operations:
+        if operation["name"] in ("intent", "rewrite", "generate", "embedding"):
+            arm("DELETE", APIM + "/apis/llm/operations/" + operation["name"],
+                headers={"If-Match": "*"})
     put("/subscriptions/lab-validation", {
         "displayName": "SVHWB107 business client", "scope": "/apis", "state": "active",
     })

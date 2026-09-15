@@ -2,38 +2,27 @@
   <inbound>
     <base />
     <rate-limit-by-key calls="30" renewal-period="60" counter-key="@(&quot;svhwb107-&quot; + context.Subscription.Id)" />
-    <set-variable name="purpose" value="@(context.Operation.Id)" />
-    <choose>
-      <when condition="@{ var body = context.Request.Body.As&lt;JObject&gt;(preserveContent: true); var model = (string)body[&quot;model&quot;]; var expected = context.Operation.Id == &quot;embedding&quot; ? &quot;text-embedding-3-small&quot; : &quot;gpt-5.1&quot;; return (model != null &amp;&amp; model != expected) || (body[&quot;stream&quot;] != null &amp;&amp; body[&quot;stream&quot;].Type != JTokenType.Null &amp;&amp; (body[&quot;stream&quot;].Type != JTokenType.Boolean || (bool)body[&quot;stream&quot;])); }">
-        <return-response>
-          <set-status code="400" reason="Unsupported model or streaming" />
-        </return-response>
-      </when>
-    </choose>
-    <set-body>@{ var body = context.Request.Body.As&lt;JObject&gt;(); body.Remove("model"); return body.ToString(); }</set-body>
-    <set-variable name="budget" value="@((string)context.Variables[&quot;purpose&quot;] == &quot;rewrite&quot; ? 1200 : (string)context.Variables[&quot;purpose&quot;] == &quot;embedding&quot; ? 500 : (string)context.Variables[&quot;purpose&quot;] == &quot;intent&quot; ? 5000 : 4000)" />
-    <set-variable name="budget" value="@{ int remaining; var raw = context.Request.Headers.GetValueOrDefault(&quot;X-Remaining-Budget-Ms&quot;, &quot;&quot;); if (int.TryParse(raw, out remaining)) { return Math.Max(1, Math.Min(remaining, (int)context.Variables[&quot;budget&quot;])); } return (int)context.Variables[&quot;budget&quot;]; }" />
     <set-variable name="route" value="{{chat-route}}" />
     <choose>
-      <when condition="@((string)context.Variables[&quot;purpose&quot;] != &quot;embedding&quot; &amp;&amp; ((JArray)JObject.Parse((string)context.Variables[&quot;route&quot;])[&quot;enabled&quot;]).Count == 0)">
+      <when condition="@(context.Operation.Id != &quot;native-embedding&quot; &amp;&amp; !((JArray)JObject.Parse((string)context.Variables[&quot;route&quot;])[&quot;enabled&quot;]).Any(item =&gt; (string)item == (string)JObject.Parse((string)context.Variables[&quot;route&quot;])[&quot;primary&quot;]))">
         <return-response>
           <set-status code="503" reason="No healthy backends" />
         </return-response>
       </when>
     </choose>
-    <set-variable name="selected" value="@{if ((string)context.Variables[&quot;purpose&quot;] == &quot;embedding&quot;) { return &quot;embedding&quot;; } return (string)JObject.Parse((string)context.Variables[&quot;route&quot;])[&quot;primary&quot;]; }" />
+    <set-variable name="selected" value="@{if (context.Operation.Id == &quot;native-embedding&quot;) { return &quot;embedding&quot;; } return (string)JObject.Parse((string)context.Variables[&quot;route&quot;])[&quot;primary&quot;]; }" />
     <choose>
       <when condition="@((string)context.Variables[&quot;selected&quot;] == &quot;eastus2&quot;)">
         <set-backend-service backend-id="llm-eastus2" />
-        <rewrite-uri template="/openai/deployments/gpt-5.1/chat/completions" copy-unmatched-params="false" />
+        <rewrite-uri template="/openai/deployments/gpt-5.1/chat/completions" copy-unmatched-params="true" />
       </when>
       <when condition="@((string)context.Variables[&quot;selected&quot;] == &quot;sweden&quot;)">
         <set-backend-service backend-id="llm-sweden" />
-        <rewrite-uri template="/openai/deployments/svhwb107-gpt51/chat/completions" copy-unmatched-params="false" />
+        <rewrite-uri template="/openai/deployments/svhwb107-gpt51/chat/completions" copy-unmatched-params="true" />
       </when>
       <when condition="@((string)context.Variables[&quot;selected&quot;] == &quot;embedding&quot;)">
         <set-backend-service backend-id="llm-embedding" />
-        <rewrite-uri template="/openai/deployments/text-embedding-3-small/embeddings" copy-unmatched-params="false" />
+        <rewrite-uri template="/openai/deployments/text-embedding-3-small/embeddings" copy-unmatched-params="true" />
       </when>
       <otherwise>
         <return-response>
@@ -41,9 +30,7 @@
         </return-response>
       </otherwise>
     </choose>
-    <set-query-parameter name="api-version" exists-action="override">
-      <value>2024-10-21</value>
-    </set-query-parameter>
+    <set-query-parameter name="subscription-key" exists-action="delete" />
     <set-header name="Ocp-Apim-Subscription-Key" exists-action="delete" />
     <set-header name="Authorization" exists-action="delete" />
     <set-header name="api-key" exists-action="delete" />
@@ -54,7 +41,7 @@
     <authentication-managed-identity resource="https://cognitiveservices.azure.com" client-id="3dfb189c-3492-4eb9-80f8-4bc97213bf76" ignore-error="false" />
   </inbound>
   <backend>
-    <forward-request timeout="@(Math.Max(1, (int)Math.Ceiling(((int)context.Variables[&quot;budget&quot;] - (DateTime.UtcNow - context.Timestamp).TotalMilliseconds) / 1000.0)))" buffer-request-body="true" buffer-response="true" fail-on-error-status-code="false" />
+    <forward-request timeout="120" buffer-request-body="false" buffer-response="false" fail-on-error-status-code="false" />
   </backend>
   <outbound>
     <base />

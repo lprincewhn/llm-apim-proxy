@@ -8,6 +8,8 @@
 
 完整说明见 [中文方案](docs/monitoring-failover.zh-CN.md)、[部署手册](deployment/README.md)及[控制器操作手册](deployment/monitoring/README.md)。
 
+对外使用 **Azure OpenAI 原生路径** `/openai/deployments/{deployment}/chat/completions` 和 `/embeddings`，不再提供 `/llm/intent`、`/rewrite`、`/generate` 等自定义业务接口。原始请求 body、调用方 `api-version` 及 SSE 响应透传；客户端使用 `api-key` 头携带 APIM 订阅密钥。两地聊天部署名称不同，仅在网关内映射目标部署名，不改写 body。
+
 ## 组件
 
 | 路径 | 用途 |
@@ -34,7 +36,7 @@ python3 -m unittest discover -s deployment/monitoring -p 'test_*.py' -v
 
 ## 运行边界
 
-APIM 的转发超时不能承诺完整 body 的严格截止时间，且毫秒预算会向上取整为秒；移除执行器后不再提供其完整 JSON 缓冲、2MiB 限制、5500ms 总读取／1200ms 空闲控制。调用方仍需业务总截止时间。Logic App HTTP 探测也不具有该执行器预算。
+APIM 使用 120 秒等待响应头的转发超时，不再读取自定义业务毫秒预算；它不能承诺完整 body 的严格截止时间。移除执行器后不再提供其完整 JSON 缓冲、2MiB 限制、5500ms 总读取／1200ms 空闲控制。调用方仍需业务总截止时间。Logic App HTTP 探测也不具有该执行器预算。
 
 仓库针对 MCAPS Developer 实验环境，不是通用 IaC 或生产 SLA。日志使用 Foundry 精确 endpoint／部署路径归属后端，不是纯模型推理监控。两次短探测不能证明备用持续容量。
 

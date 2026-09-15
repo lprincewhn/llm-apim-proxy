@@ -53,7 +53,10 @@ or management roles still requires an authorized RBAC administrator.
 6. Inspect **actual** `ApiManagementGatewayLogs` direct `BackendUrl`/`BackendId`,
    status and timing fields before enabling the revised alerts.
 
-The existing `lab-validation` subscription ID is retained for client compatibility.
+The existing `lab-validation` subscription ID and key are retained. The client
+header changes to standard Azure OpenAI `api-key` (not `Ocp-Apim-Subscription-Key`).
+The ARM API ID remains `llm` for log attribution, but its public prefix is `openai`.
+Configuration removes the four old custom operations after installing native ones.
 There is no generated validation API. `llm-policy.xml` is an offline-generated
 snapshot of `configure_apim.build_policy()`; importing the module has no cloud effects.
 
@@ -64,32 +67,84 @@ consumers are excluded. Exact actions taken are in the migration record.
 
 ## API contract and changed timeout behavior
 
-All paths are POST, protected by `Ocp-Apim-Subscription-Key`; get its value through
+All paths are POST, protected by `api-key` containing an **APIM subscription key**; get its value through
 the authorized APIM interface. Credentials are never stored in source or output.
 
-| Path | Logical model | Configured budget input |
-|---|---|---|
-| `/llm/intent` | `gpt-5.1` | 5000ms |
-| `/llm/rewrite` | `gpt-5.1` | 1200ms |
-| `/llm/generate` | `gpt-5.1` | 4000ms |
-| `/llm/embedding` | `text-embedding-3-small` | 500ms |
+| Native path | Routing |
+|---|---|
+| `/openai/deployments/gpt-5.1/chat/completions` | Current chat primary |
+| `/openai/deployments/svhwb107-gpt51/chat/completions` | Same chat primary (existing deployment alias) |
+| `/openai/deployments/text-embedding-3-small/embeddings` | Fixed West US 3 embedding |
 
-APIM validates the logical model, removes `model`, and targets the fixed deployment
-URL using API version `2024-10-21`. Only non-streaming requests are accepted.
-Chat follows `chat-route.primary`; embedding remains independent of chat failover.
-Client auth and old executor headers are removed before managed-identity auth.
+Only the gateway host and, for chat failover across differently named deployments,
+the target deployment segment change. APIM does **not read or transform the request
+body**, remove `model`, impose a messages schema, or replace `api-version`.
+Other business query parameters are preserved. API ID `llm` is unchanged, so the
+existing endpoint-attributed alert queries continue to apply.
 
-`X-Remaining-Budget-Ms` can shorten the configured budget. APIM calculates remaining
-time and **rounds up to whole seconds**, minimum one second. Thus a 500ms input is
-not a 500ms hard limit. This is APIM's forwarding timeout, not an executor-enforced
-full-body deadline. No explicit complete-JSON validation or executor body-size
-cap remains. Caller overall deadlines and cancellation are required.
+Foundry validates original parameters and returns its original status/body,
+including errors. `stream=true` is allowed and response buffering is disabled
+for SSE. The supported scope is the configured chat and embedding deployments,
+not all Foundry APIs or `/openai/v1/responses`.
+
+Client credentials, old executor headers and the APIM `subscription-key` query
+parameter are removed before managed-identity backend authentication.
+The custom `/llm/*` endpoints and operation-specific budgets are retired.
+`X-Remaining-Budget-Ms` no longer controls forwarding. `forward-request` waits up
+to 120 seconds for response headers; this is not a complete-body deadline.
+Caller overall deadlines and cancellation are required.
+
+With an APIM key entered interactively, a native request is:
+
+```bash
+(
+  set +x
+  read -rsp 'APIM subscription key: ' APIM_KEY
+  printf '\n'
+  printf 'api-key: %s\n' "$APIM_KEY" |
+    curl --silent --show-error --include --max-time 130 \
+      'https://apim-svhwb107-0915.azure-api.net/openai/deployments/gpt-5.1/chat/completions?api-version=2024-10-21' \
+      --header @- --header 'Content-Type: application/json' \
+      --data-raw '{"messages":[{"role":"user","content":"Reply only OK"}],"max_completion_tokens":32,"reasoning_effort":"none","stream":false}'
+)
+```
+
+For SSE, use `stream:true` and curl `--no-buffer`. With the `AzureOpenAI` SDK,
+set `azure_endpoint` to the gateway root above, `api_key` to the APIM subscription
+key, `api_version` to your supported version, and `model` to `gpt-5.1`.
+The SDK still uses native deployment paths; no custom business API is needed.
 
 All attempts are single requests. Timeout/error responses do not reroute themselves.
 Logs must distinguish backend responses from gateway failures; no prompt, token,
 API key, authorization header or response body logging is required.
 
 ## Operations and evidence
+
+### Native API migration, 2026-09-15 11:43 UTC
+
+The final live smoke returned 200 for both chat deployment aliases (Sweden,
+2562/2237ms), SSE chat (four data events plus `[DONE]`, 2614ms) and embeddings
+(1536 dimensions, 1906ms). Each forwarded once. An invalid caller `api-version`
+reached Foundry and returned its 404; an invalid original body returned Foundry's
+400 `invalid_type`. The retired `/llm/generate` returned 404 and a native request
+without an APIM key returned 401.
+
+Ingested gateway records retain `ApiId=llm`, use `native-eastus2` /
+`native-sweden` / `native-embedding` operation IDs, and show the configured
+direct backend URLs. The invalid-version record contains the unchanged
+`api-version=invalid-version` and backend 404, confirming query passthrough.
+
+Both alert rules and `switchEnabled` were restored to enabled; unchanged-value
+MI route access run `08584121342016356741430252673CU37` succeeded. Route remains
+Sweden, `enabled=[sweden]`, version 2. No regional failover or recovery was forced.
+Migration-time probes encountered transient 503s before the corrected route
+guard propagated; final results are not an availability or performance SLA.
+
+SSE data is forwarded without policy buffering. Stream interruptions after a
+200 header need client-side handling; existing HTTP-code alerts cannot promise
+to detect every partial-stream failure. This is not full body/idle timeout control.
+
+### Earlier executor retirement
 
 The historical 09:17 error-alert drill used the old topology. It establishes prior
 control logic behavior, not direct-model credentials or current log attribution.
