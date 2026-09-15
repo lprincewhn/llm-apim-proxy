@@ -12,9 +12,13 @@
 
 APIM 用命名 Backend `llm-eastus2`、`llm-sweden`、`llm-embedding` 表示三个部署所在资源，按 `chat-route.primary` 选择聊天后端；embedding 独立，不参与聊天切换。
 
-对外直接暴露 Azure OpenAI 原生路径 `/openai/deployments/<deployment>/chat/completions` 或 `/embeddings`，不再定义 intent／rewrite／generate 业务接口。原始 JSON body 不读取、不删除 `model`、不重建；`api-version` 和业务查询参数按调用方原值传递。模型参数合法性由 Foundry 判断，原始错误状态和正文返回客户端；支持 `stream=true`，不缓冲 SSE。
+对外使用根路径通配代理：GET／POST／PUT／PATCH／DELETE／HEAD／OPTIONS 的任意路径均转发，不再枚举接口，也不限定 Azure URL 格式。一般请求仅切换目标主机，原始路径、body、业务查询参数保留；不读取 JSON、不删除或改写 `model`。模型参数合法性由上游判断，原始错误状态和正文返回客户端；支持 SSE，不缓冲响应。
 
-聊天部署入口支持现有 `gpt-5.1` 和 `svhwb107-gpt51` 两个名称，都遵循同一 `chat-route`，不是客户端指定区域。因两地部署名不同，网关只改写目标主机及 URL 中的部署名。embedding 入口为 `text-embedding-3-small`。不开放任意部署、管理 API 或尚未配置的 `/openai/v1/responses`。
+保留三个精确 POST 入口作为兼容例外：现有 Azure 聊天部署 `gpt-5.1` 和 `svhwb107-gpt51` 都遵循同一 `chat-route`，映射目标部署名；`text-embedding-3-small` 的 Azure embeddings 路径固定到 West US 3。其余路径（包括 `/openai/v1/responses`、`/v1/chat/completions`、`/v1/messages`）不改写，直接送当前主后端。
+
+**地址可透传，不等于后端具备所有协议。** 当前可信后端仍为已有 Foundry，未配置第三方供应商；不支持的接口由后端返回 404／405。不同供应商需要另配可信地址、鉴权、健康探测和监控，不能让调用方提供任意目标 URL。非 JSON／multipart body 同样不做策略解析；不含 CONNECT 隧道、WebSocket 或 gRPC 接入。
+
+通配 v1 请求的 body `model` 必须是当前后端实际部署名；不会自动跨供应商／区域转换。通用切换要求备用具有兼容模型名及接口；文件、任务和 response ID 等状态不自动复制。订阅密钥持有者现在可调用模型身份有权限的全部上游数据面接口（包括写入／删除），不是仅限聊天。此 APIM 上更具体前缀的其他 API 仍优先于根通配接口。
 
 客户端使用标准 `api-key` 头，值为 APIM 订阅密钥（不是 Foundry Key）。APIM 校验后移除该密钥及客户端 Authorization；`subscription-key` 查询参数也不转发后端。模型鉴权继续由托管身份完成。
 
@@ -24,7 +28,7 @@ Logic App 系统身份另有单一 `chat-route` 范围的 APIM 管理权限，�
 
 ## 分后端日志与告警规则
 
-使用 APIM 自身的 `ApiManagementGatewayLogs` 表，而不是容器或 Foundry 服务端日志。限制 `_ResourceId` 为目标 APIM、`ApiId` 为 `llm`，按真实 `BackendUrl` **精确匹配 HTTPS 主机名和部署操作路径**，忽略查询参数后映射为 East US 2／Sweden。旧 `/execute/*` 路径不再匹配；embedding 不进入聊天告警。
+所有转发仍记录 APIM 自身的 `ApiManagementGatewayLogs`。聊天切换告警限制 `_ResourceId`、`ApiId=llm`、`Method=POST`，按真实 `BackendUrl` 精确匹配两地部署聊天路径以及 `/openai/v1/chat/completions`、`/openai/v1/responses`，忽略查询参数后映射为 East US 2／Sweden。任意文件／任务路径、旧 `/execute/*`、embedding 不进入聊天告警，避免把其他 API 故障当作聊天故障。
 
 映射由 `deployment/config.json` 和 `backends.py` 共享，避免 APIM、探测和 KQL 的后端定义漂移。APIM 命名 Backend 也会记录 `BackendId`，但告警不依赖它必定有值；`Region` 不是 Foundry 后端区域。
 

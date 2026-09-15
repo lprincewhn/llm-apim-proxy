@@ -14,15 +14,27 @@
     <choose>
       <when condition="@((string)context.Variables[&quot;selected&quot;] == &quot;eastus2&quot;)">
         <set-backend-service backend-id="llm-eastus2" />
-        <rewrite-uri template="/openai/deployments/gpt-5.1/chat/completions" copy-unmatched-params="true" />
+        <choose>
+          <when condition="@(context.Operation.Id.StartsWith(&quot;native-&quot;))">
+            <rewrite-uri template="/openai/deployments/gpt-5.1/chat/completions" copy-unmatched-params="true" />
+          </when>
+        </choose>
       </when>
       <when condition="@((string)context.Variables[&quot;selected&quot;] == &quot;sweden&quot;)">
         <set-backend-service backend-id="llm-sweden" />
-        <rewrite-uri template="/openai/deployments/svhwb107-gpt51/chat/completions" copy-unmatched-params="true" />
+        <choose>
+          <when condition="@(context.Operation.Id.StartsWith(&quot;native-&quot;))">
+            <rewrite-uri template="/openai/deployments/svhwb107-gpt51/chat/completions" copy-unmatched-params="true" />
+          </when>
+        </choose>
       </when>
       <when condition="@((string)context.Variables[&quot;selected&quot;] == &quot;embedding&quot;)">
         <set-backend-service backend-id="llm-embedding" />
-        <rewrite-uri template="/openai/deployments/text-embedding-3-small/embeddings" copy-unmatched-params="true" />
+        <choose>
+          <when condition="@(context.Operation.Id.StartsWith(&quot;native-&quot;))">
+            <rewrite-uri template="/openai/deployments/text-embedding-3-small/embeddings" copy-unmatched-params="true" />
+          </when>
+        </choose>
       </when>
       <otherwise>
         <return-response>

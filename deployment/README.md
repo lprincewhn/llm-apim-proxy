@@ -55,8 +55,11 @@ or management roles still requires an authorized RBAC administrator.
 
 The existing `lab-validation` subscription ID and key are retained. The client
 header changes to standard Azure OpenAI `api-key` (not `Ocp-Apim-Subscription-Key`).
-The ARM API ID remains `llm` for log attribution, but its public prefix is `openai`.
-Configuration removes the four old custom operations after installing native ones.
+The ARM API ID remains `llm` for log attribution. Its public prefix is empty:
+seven method-specific `/*` operations proxy arbitrary paths at the gateway root.
+Configuration refuses to take over an existing root API. Other APIs on this APIM
+with a more-specific prefix still take precedence; the wildcard does not replace them.
+The three native POST compatibility operations take precedence over wildcards.
 There is no generated validation API. `llm-policy.xml` is an offline-generated
 snapshot of `configure_apim.build_policy()`; importing the module has no cloud effects.
 
@@ -67,29 +70,53 @@ consumers are excluded. Exact actions taken are in the migration record.
 
 ## API contract and changed timeout behavior
 
-All paths are POST, protected by `api-key` containing an **APIM subscription key**; get its value through
+GET, POST, PUT, PATCH, DELETE, HEAD and OPTIONS accept arbitrary paths, protected
+by `api-key` containing an **APIM subscription key**; get its value through
 the authorized APIM interface. Credentials are never stored in source or output.
 
-| Native path | Routing |
+| Path | Routing |
 |---|---|
-| `/openai/deployments/gpt-5.1/chat/completions` | Current chat primary |
-| `/openai/deployments/svhwb107-gpt51/chat/completions` | Same chat primary (existing deployment alias) |
-| `/openai/deployments/text-embedding-3-small/embeddings` | Fixed West US 3 embedding |
+| Any path, seven methods | Current primary origin; path/body/query unchanged |
+| POST `/openai/deployments/gpt-5.1/chat/completions` | Compatibility exception: current chat primary/deployment |
+| POST `/openai/deployments/svhwb107-gpt51/chat/completions` | Same compatibility exception |
+| POST `/openai/deployments/text-embedding-3-small/embeddings` | Compatibility exception: fixed West US 3 embedding |
 
-Only the gateway host and, for chat failover across differently named deployments,
-the target deployment segment change. APIM does **not read or transform the request
+For wildcard operations only the target origin changes. No prefix is added,
+removed or inferred: `/v1/chat/completions` stays `/v1/chat/completions`,
+`/openai/v1/responses` stays `/openai/v1/responses`, and `/anything` stays `/anything`.
+For the three exact POST compatibility operations, existing deployment routing
+is preserved so working clients do not break. APIM does **not read or transform the request
 body**, remove `model`, impose a messages schema, or replace `api-version`.
-Other business query parameters are preserved. API ID `llm` is unchanged, so the
-existing endpoint-attributed alert queries continue to apply.
+Other business query parameters are preserved, including repeated values.
 
 Foundry validates original parameters and returns its original status/body,
 including errors. `stream=true` is allowed and response buffering is disabled
-for SSE. The supported scope is the configured chat and embedding deployments,
-not all Foundry APIs or `/openai/v1/responses`.
+for SSE. Binary/multipart bodies are not parsed by policy either. HTTP content
+framing, hop-by-hop headers and URL normalization still follow APIM behavior;
+this is not a byte-for-byte TCP tunnel. CONNECT/TRACE, WebSockets and gRPC are
+not configured by this HTTP proxy.
+
+**All paths are proxied; not all APIs are implemented by the upstream.** Current
+trusted origins remain the existing Foundry accounts, with Azure managed identity.
+A `/v1/messages` request reaches that origin unchanged, not Anthropic, and may
+return 404. An OpenAI/Anthropic/custom upstream requires operator configuration
+of its trusted origin and authentication plus corresponding health probes and
+monitoring rules; it cannot be selected through a caller-supplied URL or Host.
+The current Azure-specific deployment helper deliberately retains its origin
+allowlist. No external providers or credentials were provisioned in this change.
+
+For wildcard v1 calls, `model` must already name a deployment available at the
+current upstream (Sweden: `svhwb107-gpt51`). The proxy never rewrites body model
+names. Safe cross-region failover for such calls requires compatible deployment
+names/models on both sides. Stateful files/jobs/response IDs are not replicated
+between regions; forwarding arbitrary APIs does not make them region-portable.
+APIM subscription holders can now reach all upstream data-plane paths allowed
+by the model identity, including write/delete paths, not only inference.
 
 Client credentials, old executor headers and the APIM `subscription-key` query
 parameter are removed before managed-identity backend authentication.
-The custom `/llm/*` endpoints and operation-specific budgets are retired.
+The custom `/llm/*` business handlers and operation-specific budgets are retired;
+those paths now go to the upstream through the wildcard like any other path.
 `X-Remaining-Budget-Ms` no longer controls forwarding. `forward-request` waits up
 to 120 seconds for response headers; this is not a complete-body deadline.
 Caller overall deadlines and cancellation are required.
@@ -114,11 +141,43 @@ set `azure_endpoint` to the gateway root above, `api_key` to the APIM subscripti
 key, `api_version` to your supported version, and `model` to `gpt-5.1`.
 The SDK still uses native deployment paths; no custom business API is needed.
 
+The standard OpenAI SDK can use
+`base_url=https://apim-svhwb107-0915.azure-api.net/openai/v1/`,
+`default_headers={"api-key": APIM_SUBSCRIPTION_KEY}`, and
+`model="svhwb107-gpt51"` for the current Sweden upstream. Its Bearer Authorization
+is not the gateway credential: `api-key` is required and backend auth uses MI.
+For curl, replace the native URL above with `/openai/v1/chat/completions` and
+include `"model":"svhwb107-gpt51"` in the original JSON body. No api-version is
+required by that upstream v1 API.
+
 All attempts are single requests. Timeout/error responses do not reroute themselves.
 Logs must distinguish backend responses from gateway failures; no prompt, token,
 API key, authorization header or response body logging is required.
 
 ## Operations and evidence
+
+### Wildcard migration, 2026-09-15 12:00 UTC
+
+Live calls through the wildcard `/openai/v1/chat/completions` returned 200/OK,
+one attempt (3034ms); existing chat aliases, SSE with `[DONE]` and embedding
+also continued to work. Seven methods on a deliberately nonexistent nested path
+returned backend 404, one attempt each, rather than APIM OperationNotFound.
+POST/PUT/PATCH used non-JSON request bodies. No existing upstream resources were
+created, overwritten or deleted in these probes.
+
+At 12:04, `/openai/v1/responses` also returned 200, status `completed`, text
+`OK` (2972ms); `store=false` was sent. Ingested GatewayLogs show wildcard method
+IDs, unchanged nested paths, both repeated `probe` values and `encoded=a%2Fb`.
+The expanded observation-only 15-minute query selected six chat samples and
+zero errors, excluding the seven arbitrary-path 404s and embedding.
+Both rules and `switchEnabled` were re-enabled after access run
+`08584121330157544471243293264CU13`; route/quarantine stayed unchanged.
+
+Chat alert attribution includes POST requests to the configured deployment chat
+URLs and both origins' `/openai/v1/chat/completions` and `/openai/v1/responses`.
+It does not count arbitrary wildcard paths, file/job operations or embeddings as
+chat health. All forwarded paths still produce GatewayLogs. Existing thresholds,
+quarantine and no-retry behavior remain unchanged.
 
 ### Native API migration, 2026-09-15 11:43 UTC
 

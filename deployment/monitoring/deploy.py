@@ -474,14 +474,21 @@ def alert_query(kind):
         raise ValueError("Unknown alert kind")
     violation = "AverageBackendMs >= 3200" if kind == "latency" else "ErrorRatePct >= 20.0"
     urls = backend_urls()
+    configured = load_backends()
     classification = ", ".join(
-        f"BackendRequestUrl == '{urls[name].split('?', 1)[0]}', '{name}'"
+        f"BackendRequestUrl == '{url}', '{name}'"
         for name in BACKENDS
+        for url in (
+            urls[name].split("?", 1)[0],
+            configured[name]["endpoint"].rstrip("/") + "/openai/v1/chat/completions",
+            configured[name]["endpoint"].rstrip("/") + "/openai/v1/responses",
+        )
     )
     return "\n".join([
         "ApiManagementGatewayLogs",
         "| where TimeGenerated >= ago(5m)",
         f"| where _ResourceId =~ '{APIM}' and ApiId == 'llm'",
+        "| where Method == 'POST'",
         '| extend BackendRequestUrl = tostring(split(tostring(BackendUrl), "?")[0])',
         f"| extend Backend = case({classification}, '')",
         "| where Backend in ('eastus2', 'sweden')",

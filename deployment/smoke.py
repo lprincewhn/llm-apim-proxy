@@ -34,10 +34,36 @@ def read_stream(response):
     }
 
 
+def wildcard_smoke(gateway, key):
+    results = []
+    for method in ("GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"):
+        # Deliberately nonexistent resource: never modify real files/jobs/models.
+        path = "/proxy-smoke-nonexistent/nested/resource?probe=one&probe=two&encoded=a%2Fb"
+        request = urllib.request.Request(
+            gateway + path, method=method,
+            data=b"unmodified non-JSON payload" if method in ("POST", "PUT", "PATCH") else None,
+            headers={"api-key": key, "Content-Type": "application/octet-stream"},
+        )
+        try:
+            response = urllib.request.urlopen(request, timeout=130)
+        except urllib.error.HTTPError as exc:
+            response = exc
+        with response:
+            response.read()
+            attempts = response.headers.get("X-Lab-Attempts")
+            results.append({
+                "case": "wildcard-" + method, "status": response.status,
+                "backend": response.headers.get("X-Lab-Backend"), "attempts": attempts,
+                "pass": response.status in (404, 405) and attempts == "1",
+            })
+    return results
+
+
 def run():
     gateway = arm("GET", APIM)["properties"]["gatewayUrl"]
     key = arm("POST", APIM + "/subscriptions/lab-validation/listSecrets", {})["primaryKey"]
     backends = load_backends()
+    primary = json.loads(arm("GET", APIM + "/namedValues/chat-route")["properties"]["value"])["primary"]
     chat = {
         "messages": [{"role": "user", "content": "Reply only OK"}],
         "max_completion_tokens": 32, "reasoning_effort": "none",
@@ -49,11 +75,18 @@ def run():
         ("embedding", "embedding", {"input": "synthetic connectivity probe"}, API_VERSION, 200),
         ("invalid-version", "eastus2", chat, "invalid-version", 404),
         ("invalid-body", "eastus2", {"messages": "not-an-array"}, API_VERSION, 400),
+        ("v1-chat", "v1", {**chat, "model": backends[primary]["deployment"]}, API_VERSION, 200),
+        ("v1-responses", "responses", {
+            "model": backends[primary]["deployment"], "input": "Reply only OK",
+            "max_output_tokens": 32, "reasoning": {"effort": "none"}, "store": False,
+        }, API_VERSION, 200),
     ]
     results = []
     for name, target, body, version, expected in cases:
         operation = "embeddings" if target == "embedding" else "chat/completions"
-        url = (gateway + "/openai/deployments/" + backends[target]["deployment"]
+        url = (gateway + "/openai/v1/responses" if target == "responses" else
+               gateway + "/openai/v1/chat/completions" if target == "v1" else
+               gateway + "/openai/deployments/" + backends[target]["deployment"]
                + "/" + operation + "?api-version=" + version)
         request = urllib.request.Request(
             url, data=json.dumps(body).encode(),
@@ -95,6 +128,14 @@ def run():
                     valid = len(vector) == 1536 and all(
                         isinstance(value, (int, float)) and math.isfinite(value) for value in vector
                     )
+                elif response.status == 200 and target == "responses":
+                    result["content"] = "".join(
+                        part["text"] for item in data.get("output", [])
+                        if item.get("type") == "message"
+                        for part in item.get("content", []) if part.get("type") == "output_text"
+                    )
+                    result["response_status"] = data.get("status")
+                    valid = result["content"] == "OK" and result["response_status"] == "completed"
                 elif response.status == 200:
                     choice = data.get("choices", [{}])[0]
                     result["content"] = choice.get("message", {}).get("content")
@@ -103,6 +144,7 @@ def run():
             result["elapsed_ms"] = round((time.monotonic() - start) * 1000)
             result["pass"] = response.status == expected and valid and result["attempts"] == "1"
             results.append(result)
+    results.extend(wildcard_smoke(gateway, key))
     return {"completed_at": datetime.now(timezone.utc).isoformat(), "results": results}
 
 

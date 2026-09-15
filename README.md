@@ -8,7 +8,9 @@
 
 完整说明见 [中文方案](docs/monitoring-failover.zh-CN.md)、[部署手册](deployment/README.md)及[控制器操作手册](deployment/monitoring/README.md)。
 
-对外使用 **Azure OpenAI 原生路径** `/openai/deployments/{deployment}/chat/completions` 和 `/embeddings`，不再提供 `/llm/intent`、`/rewrite`、`/generate` 等自定义业务接口。原始请求 body、调用方 `api-version` 及 SSE 响应透传；客户端使用 `api-key` 头携带 APIM 订阅密钥。两地聊天部署名称不同，仅在网关内映射目标部署名，不改写 body。
+对外使用 **网关根路径通配反向代理**：GET／POST／PUT／PATCH／DELETE／HEAD／OPTIONS 的任意路径直接转发，不再逐个登记接口或限定 `/openai/deployments/...`。普通请求只替换目标主机，路径、业务查询参数、body 和 SSE 响应透传。客户端用 `api-key` 头携带 APIM 订阅密钥。
+
+当前上游仍是已有 Foundry 资源。路径能透传不等于上游实现该 API，也不代表 Azure／OpenAI／Anthropic 协议自动互转；`/v1/messages` 等不受上游支持的路径会返回上游错误。三个已存在的 Azure 部署 POST 入口保留精确兼容路由：聊天按区域映射部署名、embedding 走 West US 3，其他请求不做路径改写。
 
 ## 组件
 

@@ -549,9 +549,13 @@ class TemplateTests(unittest.TestCase):
             query = deploy.alert_query(kind)
             self.assertIn('tostring(split(tostring(BackendUrl), "?")[0])', query)
             matches = re.findall(r"BackendRequestUrl == '([^']+)', '([^']+)'", query)
-            self.assertEqual(dict(matches), {
-                url.split("?", 1)[0]: name for name, url in deploy.backend_urls().items()
-            })
+            expected = {url.split("?", 1)[0]: name for name, url in deploy.backend_urls().items()}
+            for name, backend in deploy.load_backends().items():
+                if name in deploy.BACKENDS:
+                    for path in ("/openai/v1/chat/completions", "/openai/v1/responses"):
+                        expected[backend["endpoint"].rstrip("/") + path] = name
+            self.assertEqual(dict(matches), expected)
+            self.assertIn("Method == 'POST'", query)
             self.assertNotIn("/execute/", query)
             self.assertNotIn("extract(", query)
             self.assertNotIn("BackendId", query)
@@ -562,7 +566,12 @@ class TemplateTests(unittest.TestCase):
                 origin, path = url.split("/openai/", 1)
                 self.assertEqual(classify(url), name)
                 self.assertEqual(classify(url.split("?", 1)[0] + "?api-version=other"), name)
+                self.assertEqual(classify(origin + "/openai/v1/chat/completions"), name)
+                self.assertEqual(classify(origin + "/openai/v1/responses"), name)
                 for untrusted in (
+                    origin + "/openai/v1/embeddings",
+                    origin + "/openai/v1/files",
+                    origin + "/openai/v1/responses/existing-id",
                     origin + "/execute/" + name,
                     "https://old.azurecontainerapps.io/execute/" + name,
                     origin + ".attacker.example/openai/" + path,

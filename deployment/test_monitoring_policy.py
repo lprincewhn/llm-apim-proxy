@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from unittest.mock import patch
 
-from configure_apim import build_policy, configure, native_operations
+from configure_apim import build_policy, configure, native_operations, proxy_operations
 from backends import MODEL_IDENTITY_CLIENT_ID, MODEL_IDENTITY_ID, backend_url, load_backends
 from smoke import read_stream
 
@@ -41,6 +41,8 @@ class MonitoringPolicyTests(unittest.TestCase):
 
         def arm(method, path, body=None, version=None, headers=None):
             if method == "GET":
+                if path.endswith("/apis"):
+                    return {"value": [{"name": "llm", "properties": {"path": "openai"}}]}
                 if path.endswith("/operations"):
                     return {"value": [{"name": name} for name in (
                         "intent", "rewrite", "generate", "embedding", "native-sweden",
@@ -74,6 +76,18 @@ class MonitoringPolicyTests(unittest.TestCase):
         })
         self.assertFalse(any("identity" in body for _, body in writes))
 
+    def test_configuration_refuses_another_root_api(self):
+        def arm(method, path, *args, **kwargs):
+            self.assertEqual(method, "GET")
+            if path.endswith("/apis"):
+                return {"value": [{"name": "other", "properties": {"path": ""}}]}
+            return {"properties": {}}
+
+        with patch("configure_apim.arm", side_effect=arm), self.assertRaisesRegex(
+            RuntimeError, "Another API owns the gateway root"
+        ):
+            configure()
+
     def test_route_initialization_is_explicit(self):
         writes = self.run_configure(initialize_route=True)
         self.assertEqual(sum(path.endswith("/namedValues/chat-route") for path, _ in writes), 1)
@@ -99,16 +113,29 @@ class MonitoringPolicyTests(unittest.TestCase):
     def test_native_api_replaces_custom_operations(self):
         writes = self.run_configure()
         api = next(body["properties"] for path, body in writes if path.endswith("/apis/llm"))
-        self.assertEqual(api["path"], "openai")
+        self.assertEqual(api["path"], "")
         self.assertEqual(api["subscriptionKeyParameterNames"]["header"], "api-key")
         operations = native_operations()
         self.assertEqual(operations["native-eastus2"]["urlTemplate"],
-                         "/deployments/gpt-5.1/chat/completions")
+                         "/openai/deployments/gpt-5.1/chat/completions")
         self.assertEqual(operations["native-embedding"]["urlTemplate"],
-                         "/deployments/text-embedding-3-small/embeddings")
+                         "/openai/deployments/text-embedding-3-small/embeddings")
         removed = [path.rsplit("/", 1)[1] for path, body in writes if body.get("deleted")]
         self.assertEqual(removed, ["intent", "rewrite", "generate", "embedding"])
         self.assertNotIn("native-sweden", removed)
+
+    def test_wildcards_forward_standard_http_methods_without_path_rewrite(self):
+        operations = proxy_operations()
+        wildcards = [op for op in operations.values() if op["urlTemplate"] == "/*"]
+        self.assertEqual({op["method"] for op in wildcards},
+                         {"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"})
+        root = ET.fromstring(build_policy())
+        for when in root.findall(".//when"):
+            if when.find("rewrite-uri") is not None:
+                self.assertEqual(when.get("condition"),
+                                 '@(context.Operation.Id.StartsWith("native-"))')
+        self.assertNotIn("context.Request.Url.Host", build_policy())
+        self.assertNotIn("set-method", build_policy())
 
     def test_chat_primary_must_be_enabled(self):
         root = ET.fromstring(build_policy())

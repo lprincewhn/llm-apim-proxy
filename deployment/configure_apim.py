@@ -13,11 +13,24 @@ def native_operations():
         "native-" + name: {
             "displayName": "Azure OpenAI " + name,
             "method": "POST",
-            "urlTemplate": "/deployments/" + backend["deployment"] + "/"
+            "urlTemplate": "/openai/deployments/" + backend["deployment"] + "/"
             + ("embeddings" if backend["kind"] == "embedding" else "chat/completions"),
             "responses": [],
         }
         for name, backend in load_backends().items()
+    }
+
+
+def proxy_operations():
+    return {
+        **native_operations(),
+        **{
+            "proxy-" + method.lower(): {
+                "displayName": "Proxy " + method, "method": method,
+                "urlTemplate": "/*", "responses": [],
+            }
+            for method in ("GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS")
+        },
     }
 
 
@@ -51,7 +64,11 @@ def build_policy():
         })
         ET.SubElement(target, "set-backend-service", {"backend-id": "llm-" + name})
         operation = "embeddings" if backend_config["kind"] == "embedding" else "chat/completions"
-        ET.SubElement(target, "rewrite-uri", {
+        aliases = ET.SubElement(target, "choose")
+        alias = ET.SubElement(aliases, "when", {
+            "condition": '@(context.Operation.Id.StartsWith("native-"))',
+        })
+        ET.SubElement(alias, "rewrite-uri", {
             "template": "/openai/deployments/" + backend_config["deployment"] + "/" + operation,
             "copy-unmatched-params": "true",
         })
@@ -113,6 +130,9 @@ def configure(*, initialize_route=False):
         # Fail if the prerequisite is missing; never silently reset a live quarantine.
         arm("GET", APIM + "/namedValues/chat-route")
     service = arm("GET", APIM)
+    apis = arm("GET", APIM + "/apis")["value"]
+    if any(api["name"] != "llm" and api["properties"].get("path", "") == "" for api in apis):
+        raise RuntimeError("Another API owns the gateway root; refusing to replace its route")
     identity = service.get("identity") or {}
     identities = {resource_id: {} for resource_id in identity.get("userAssignedIdentities", {})}
     identities[MODEL_IDENTITY_ID] = {}
@@ -127,11 +147,11 @@ def configure(*, initialize_route=False):
             "description": "Direct Foundry " + name,
         })
     put("/apis/llm", {
-        "displayName": "Azure OpenAI native proxy",
-        "path": "openai", "protocols": ["https"], "subscriptionRequired": True,
+        "displayName": "LLM wildcard reverse proxy",
+        "path": "", "protocols": ["https"], "subscriptionRequired": True,
         "subscriptionKeyParameterNames": {"header": "api-key", "query": "subscription-key"},
     })
-    for operation_id, operation in native_operations().items():
+    for operation_id, operation in proxy_operations().items():
         put(f"/apis/llm/operations/{operation_id}", operation)
     xml = build_policy()
     put("/apis/llm/policies/policy", {"format": "rawxml", "value": xml})

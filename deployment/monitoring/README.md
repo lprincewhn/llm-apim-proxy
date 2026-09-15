@@ -34,13 +34,15 @@ Two scheduled-query rules evaluate a five-minute window every minute:
 
 Queries filter `_ResourceId` and `ApiId='llm'`, strip the query string from
 `BackendUrl`, then match the **complete configured HTTPS origin and deployment
-operation path**. Similar hosts, other deployments, legacy `/execute/*` and
+operation path**: configured deployment completions plus each origin's
+`/openai/v1/chat/completions` and `/openai/v1/responses`, POST only.
+Similar hosts, other deployments, arbitrary wildcard file/job paths, legacy `/execute/*` and
 embedding are excluded. `BackendId` is useful for diagnostics but not required
 by the query. This is endpoint attribution, not proof of a regional root cause.
 
-The public API uses native `/openai/deployments/...` paths; ARM `ApiId='llm'`
-remains unchanged. Chat deployment aliases map to the actual current-primary
-deployment before logging. Query `api-version` is forwarded, not replaced, and
+The public API is a root wildcard HTTP proxy; ARM `ApiId='llm'` remains unchanged.
+The three exact Azure POST compatibility operations retain deployment mapping;
+other paths are forwarded unchanged. Query `api-version` is forwarded, not replaced, and
 is excluded from attribution. Both non-streaming and SSE chat calls enter the
 same population; a post-header stream interruption is not necessarily a 5xx,
 and these rules do not measure SSE idle time or guarantee detection of every
