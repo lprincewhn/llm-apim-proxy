@@ -1,8 +1,8 @@
 # llm-apim-proxy
 
-Azure APIM LLM 代理验证项目：由 APIM 选择后端，执行器完整读取响应后再提交给下游，在剩余预算允许时对可恢复错误进行一次跨后端补救。
+Azure APIM LLM 代理验证项目：由 APIM 选择后端，执行器完整读取响应后再提交给下游。业务接口只尝试一次；跨后端切换采用 **APIM 日志 → Azure Monitor 告警 → Action Group → Logic App 健康探测 → APIM 路由更新**，配置传播后影响新请求，不重投正在执行的请求。
 
-**当前是验证环境，不是生产就绪版本。** 合成 HTTP 故障验证已完成；截至 2026-09-15 的部署记录，真实 Foundry 调用因托管身份 RBAC 返回 401，监控自动摘除控制器和 Java/Search 全链路尚未完成。既有 8s/15s 指标是设计目标，不是已实现的性能承诺。
+**当前是验证环境，不是生产就绪版本。** 2026-09-15 08:50 UTC，两个聊天后端及 embedding 的执行器调用均已有成功记录，原模型 RBAC 阻塞已解除。告警控制器使用独立身份，需另行授予指定 APIM Named Value 的管理权限后才能启用告警；部署不等于告警切换闭环已通过。Java/Search 全链路及 8s/15s 性能目标尚未验收。
 
 ## 代码与文档
 
@@ -10,9 +10,11 @@ Azure APIM LLM 代理验证项目：由 APIM 选择后端，执行器完整读�
 |---|---|
 | `deployment/executor/` | Python/aiohttp 完整响应执行器、Dockerfile、故障注入与单元测试 |
 | `deployment/configure_apim.py` | APIM API、预算、路由、订阅与诊断配置 |
+| `deployment/use_monitoring_routing.py` | 原地关闭 `/llm` 请求内重试，不重置路由或密钥 |
+| `deployment/monitoring/` | 告警、Action Group、Logic App 控制器及专用授权说明 |
 | `deployment/deploy_executor.py` | 验证环境 Container App 初始部署 |
 | `deployment/config.json`、`deployment/azure.py` | MCAPS 验证环境资源标识与 Azure 管理助手 |
-| `deployment/routing.py` | 参考健康状态机，尚非运行中的自动控制器 |
+| `deployment/routing.py` | 早期参考健康状态机；实际控制器见 `deployment/monitoring/` |
 | `deployment/validate*.py` | Azure 在线验证脚本，需授权 |
 | `deployment/*results.json` | 2026-09-15 的结果快照，包含失败项 |
 | `deployment/grant-required-roles.sh` | 由授权管理员执行的资源级 RBAC 命令 |
@@ -49,4 +51,4 @@ python3 -m venv .venv
 - 不提交 Azure/GitHub token、订阅调用密钥、模型 API key 或本地认证目录；实际凭据只在内存或 Azure secret 中处理。
 - 不通过关闭 Foundry 本地认证限制来绕过缺失的 RBAC。
 
-本仓库私有，包含指定验证环境的部署上下文。设计、结果文档是历史快照；后续授权和验证结果应明确更新，不能把合成故障成功视为真实模型性能达标。
+本仓库私有，包含指定验证环境的部署上下文。`docs/` 设计和结果文档以及既有 JSON 是历史快照；原方案中的请求内补救已从业务 API 移除，仅保留在隔离的 `/validation` 演示接口。不能把该演示成功视为告警控制器成功或真实模型性能达标。

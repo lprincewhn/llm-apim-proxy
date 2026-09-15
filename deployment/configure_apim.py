@@ -100,7 +100,7 @@ for api, validation in (("llm", False), ("validation", True)):
     )
     retry = ET.SubElement(backend, "retry", {
         "condition": condition, "count": "1", "interval": "1", "first-fast-retry": "true",
-    })
+    }) if validation else inbound
     ET.SubElement(retry, "set-variable", {
         "name": "attempt", "value": '@((int)context.Variables["attempt"] + 1)',
     })
@@ -127,7 +127,7 @@ for api, validation in (("llm", False), ("validation", True)):
         ET.SubElement(header, "value").text = value
     for name in ("Ocp-Apim-Subscription-Key", "Authorization", "api-key"):
         ET.SubElement(retry, "set-header", {"name": name, "exists-action": "delete"})
-    ET.SubElement(retry, "forward-request", {
+    ET.SubElement(retry if validation else backend, "forward-request", {
         "timeout": '@(Math.Max(1, (int)Math.Ceiling(((int)context.Variables["budget"] - (DateTime.UtcNow - context.Timestamp).TotalMilliseconds) / 1000.0)))',
         "buffer-request-body": "true", "buffer-response": "true",
         "fail-on-error-status-code": "false",
