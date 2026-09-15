@@ -2,10 +2,16 @@
 
 ## Status
 
-The isolated APIM and buffered executor are deployed and synthetic failure tests
-pass. **Live Foundry inference is blocked by missing managed-identity RBAC.**
+The isolated APIM and buffered executor are deployed. As of 2026-09-15 08:50 UTC,
+real East US 2/Sweden GPT-5.1 and West US 3 embedding probes succeeded; the
+executor's model RBAC blocker is resolved.
+
+The corrected design is **APIM telemetry -> Azure Monitor -> Action Group ->
+Logic App -> backup health check -> APIM route update -> future requests**.
+The `/llm` API no longer retries or switches endpoints within a request.
+See `monitoring/README.md` for deployment, dedicated controller RBAC and activation.
 The current deployment principal cannot create role assignments. Do not disable
-Foundry `disableLocalAuth` or copy a privileged user's credentials into the app.
+Foundry `disableLocalAuth` or copy privileged credentials into the controller.
 
 This is a Developer-tier lab, not a production release. The Java orchestration,
 Azure AI Search and 8-second knowledge-base/15-second full-turn integration are
@@ -37,21 +43,21 @@ independent region-local inference guarantees.
 An App Service B1 plan attempt was rejected because the regional quota is zero;
 no App Service instance remains. Container Apps is used instead.
 
-## Required owner action
+## Executor authorization (completed)
 
 Run `grant-required-roles.sh` as an authorized Owner/User Access Administrator.
 It grants only `Cognitive Services OpenAI User`, scoped to each of the three
 existing Foundry/OpenAI accounts, to the new executor identity.
 
-Actual upstream response observed:
+Historical upstream response before authorization propagation:
 
 ```json
 {"status":401,"code":"PermissionDenied","message":"Principal does not have access to API/Operation."}
 ```
 
-After propagation, repeat `python3 deployment/validate.py` and direct identity
-probes in `validate_extended.py`. Do not treat 401 latency as model completion
-latency. These tests send only synthetic, non-sensitive text.
+This model authorization is separate from the new controller's APIM management
+authorization. `monitoring/` documents the latter. Do not treat historical
+401 latency as model completion latency. Probes use synthetic, non-sensitive text.
 
 ## Client interface
 
@@ -76,10 +82,11 @@ budget reduced by a 250 ms forwarding/return allowance. APIM's outer
 rejected a `timeout-ms` expression above 1000. Executor and caller deadlines,
 not this rounded outer timeout alone, enforce fine-grained total-call bounds.
 
-At most two different candidates are selected for recoverable errors, only
-when more than 2700 ms remains; rewrite and embedding never retry.
-400/401/403 are returned without failover. The logical route is currently:
-primary `eastus2`, enabled `eastus2,sweden`.
+Every business request is forwarded once, to the route's current primary
+(embedding remains separate). Errors/timeouts are returned to the caller;
+only a subsequent control-plane update affects later requests. The initial
+logical route is primary `eastus2`, enabled `eastus2,sweden`. The controller
+quarantines the failed primary and does not automatically fail back.
 
 ## Fault validation
 
@@ -100,24 +107,27 @@ The extended test explicitly changes the live lab route to Sweden and restores
 East US 2, confirming gateway configuration propagation. **This is not proof
 of an Azure Monitor alert automatically changing the route.**
 
-## Monitoring and automation gap
+## Monitoring-driven routing
 
-Gateway native metrics contain request samples. Both APIM diagnostics and
-executor Azure Monitor diagnostics are configured without request/response
-bodies or credentials. Log ingestion may lag initial deployment; the final
-`ApiManagementGatewayLogs` query still returned no rows, so ingestion is not
-claimed as verified.
+Gateway log ingestion was confirmed on 2026-09-15. `ApiManagementGatewayLogs`
+contains `ApiId`, `BackendUrl`, `BackendTime` (milliseconds), and response codes.
+For `/llm`, `/execute/eastus2` and `/execute/sweden` identify the selected backend.
+Single-attempt business policies avoid final-attempt-only attribution ambiguity.
+Request/response bodies and credential headers are not logged.
 
-The deployed metric rule measures aggregate average `BackendDuration` >3200 ms
-over 5 minutes, evaluated each minute. It is an auxiliary lab signal and
-currently has **no action group or route-changing controller attached**.
-It is not per-backend P95 and not a body-idle detector.
+The original aggregate `BackendDuration` metric alert is auxiliary and has no
+actions. The new per-backend log alerts and Action Group are defined in
+`monitoring/`, excluding `/validation` and embedding. Log ingestion, alert
+evaluation, workflow execution and gateway configuration propagation all add
+delay: this is neither a per-request deadline mechanism nor an instantaneous switch.
 
-`routing.py` is a tested reference state machine only, not a deployed
-controller. Completing automation still requires per-purpose/deployment
-telemetry, persistent state/ETags, capacity admission, a scoped controller
-identity, action-group/scheduler wiring, and alert-to-route validation.
-Do not turn it into automatic production writes without these controls.
+`routing.py` remains an early reference only. The Logic App uses real backup
+completion probes, serialized execution, ETag conditional writes, cooldown,
+stale-alert rejection and explicit quarantine. Two successful short probes do
+not prove N-1 capacity. Dedicated MI authorization was verified on 2026-09-15;
+both alerts are now enabled. A real error-alert-to-new-gateway-request drill
+switched East US 2 to Sweden successfully. See `monitoring/drill-20260915.md`.
+Latency-trigger-specific and full business performance acceptance remain separate.
 
 ## Reproduction and operational caution
 
@@ -126,6 +136,8 @@ require an already-authorized Azure CLI session and always specify MCAPS.
 Scripts are for this isolated lab, not general production IaC.
 
 `configure_apim.py` resets route configuration to the initial East US 2 primary.
+Use `use_monitoring_routing.py` instead when migrating the existing business
+policy: it removes retry, preserves Named Values, and leaves `/validation` alone.
 `deploy_executor.py` is an initial deployment script: it generates an executor
 secret and registry pull credential; rerunning it requires updating APIM named
 values with `configure_apim.py` and waiting for propagation. For rolling

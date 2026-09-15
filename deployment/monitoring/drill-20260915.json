@@ -1,0 +1,142 @@
+{
+  "started_at": "2026-09-15T09:15:27.911594+00:00",
+  "scenario": "Five controlled tiny-budget APIM business requests; real gateway error logs, not a Foundry outage",
+  "direct_route_writes": false,
+  "manual_alert_callback": false,
+  "route_before": {
+    "primary": "eastus2",
+    "enabled": [
+      "eastus2",
+      "sweden"
+    ],
+    "version": 1
+  },
+  "requests": [
+    {
+      "at": "2026-09-15T09:15:31.289935+00:00",
+      "status": 504,
+      "elapsed_ms": 926,
+      "backend": "eastus2",
+      "attempts": "1",
+      "executor_error": "total_timeout",
+      "model": null,
+      "content": null
+    },
+    {
+      "at": "2026-09-15T09:15:32.206211+00:00",
+      "status": 504,
+      "elapsed_ms": 916,
+      "backend": "eastus2",
+      "attempts": "1",
+      "executor_error": "total_timeout",
+      "model": null,
+      "content": null
+    },
+    {
+      "at": "2026-09-15T09:15:34.385775+00:00",
+      "status": 504,
+      "elapsed_ms": 2179,
+      "backend": "eastus2",
+      "attempts": "1",
+      "executor_error": "total_timeout",
+      "model": null,
+      "content": null
+    },
+    {
+      "at": "2026-09-15T09:15:35.312244+00:00",
+      "status": 504,
+      "elapsed_ms": 926,
+      "backend": "eastus2",
+      "attempts": "1",
+      "executor_error": "total_timeout",
+      "model": null,
+      "content": null
+    },
+    {
+      "at": "2026-09-15T09:15:36.620437+00:00",
+      "status": 504,
+      "elapsed_ms": 1308,
+      "backend": "eastus2",
+      "attempts": "1",
+      "executor_error": "total_timeout",
+      "model": null,
+      "content": null
+    }
+  ],
+  "runs": [
+    {
+      "id": "08584121430318812745692113026CU01",
+      "status": "Succeeded",
+      "actions": {
+        "Access_check_or_alert": "Succeeded",
+        "Access_route_guard": "Skipped",
+        "Access_write_completed": "Skipped",
+        "AccessRouteUnsafe": "Skipped",
+        "AccessWriteNotCompleted": "Skipped",
+        "Allowlisted_workspace": "Succeeded",
+        "Backup": "Succeeded",
+        "ControlPlaneMismatch": "Skipped",
+        "Cooldown_elapsed": "Succeeded",
+        "CooldownActive": "Skipped",
+        "DryRunNoWrite": "Skipped",
+        "ExpiredBeforeWrite": "Skipped",
+        "Fired_only": "Succeeded",
+        "Fresh_alert": "Succeeded",
+        "New_route": "Succeeded",
+        "NotCurrentOrBackupDisabled": "Skipped",
+        "Parse_alert": "Succeeded",
+        "Parse_route": "Succeeded",
+        "Probe_one": "Succeeded",
+        "Probe_one_status": "Succeeded",
+        "Probe_two": "Succeeded",
+        "Probe_two_status": "Succeeded",
+        "ProbeOneFailed": "Skipped",
+        "ProbeTwoFailed": "Skipped",
+        "Read_access_route": "Skipped",
+        "Read_committed_route": "Succeeded",
+        "Read_route": "Succeeded",
+        "Require_completed_write": "Succeeded",
+        "ResolvedNoOp": "Skipped",
+        "Route_eligible": "Succeeded",
+        "Route_properties_safe": "Succeeded",
+        "StaleAlert": "Skipped",
+        "Still_fresh": "Succeeded",
+        "Switch_enabled": "Succeeded",
+        "Unhealthy_backend": "Succeeded",
+        "UnsafeRoute": "Skipped",
+        "UntrustedWorkspace": "Skipped",
+        "Validate_probe_one": "Succeeded",
+        "Validate_probe_two": "Succeeded",
+        "Verify_access_write": "Skipped",
+        "Verify_control_plane": "Succeeded",
+        "Write_route": "Succeeded",
+        "WriteNotCompleted": "Skipped"
+      }
+    }
+  ],
+  "route_changed_observed_at": "2026-09-15T09:17:46.569049+00:00",
+  "route_after": {
+    "primary": "sweden",
+    "enabled": [
+      "sweden"
+    ],
+    "version": 2,
+    "lastSwitchAt": "2026-09-15T09:17:39.0311001Z",
+    "reason": "Azure Monitor llm-backend-errors quarantined eastus2"
+  },
+  "gateway_requests": [
+    {
+      "at": "2026-09-15T09:17:49.009625+00:00",
+      "status": 200,
+      "elapsed_ms": 2440,
+      "backend": "sweden",
+      "attempts": "1",
+      "executor_error": null,
+      "model": "gpt-5.1-2025-11-13",
+      "content": "OK"
+    }
+  ],
+  "gateway_verified_at": "2026-09-15T09:17:49.010204+00:00",
+  "passed": true,
+  "completed_at": "2026-09-15T09:17:49.010223+00:00"
+}
