@@ -19,8 +19,9 @@ The Logic App has two identities:
 
 `deployment/backends.py` validates `config.json` and generates direct completion
 URLs for `eastus2` and `sweden`. The workflow's `backendUrls` object comes from
-this configuration, never an event-supplied endpoint. APIM and KQL use the same
-mapping. No API key, secure executor parameter or service-principal credential
+this configuration, never an event-supplied endpoint. APIM uses only the two
+origins; deployment names are probe/log-attribution configuration, not request
+rewrites. No API key, secure executor parameter or service-principal credential
 is embedded.
 
 ## Alerts
@@ -41,8 +42,8 @@ embedding are excluded. `BackendId` is useful for diagnostics but not required
 by the query. This is endpoint attribution, not proof of a regional root cause.
 
 The public API is a root wildcard HTTP proxy; ARM `ApiId='llm'` remains unchanged.
-The three exact Azure POST compatibility operations retain deployment mapping;
-other paths are forwarded unchanged. Query `api-version` is forwarded, not replaced, and
+Only seven wildcard operations exist; all paths are forwarded unchanged with
+no deployment aliases or fixed embedding target. Query `api-version` is forwarded, not replaced, and
 is excluded from attribution. Both non-streaming and SSE chat calls enter the
 same population; a post-header stream interruption is not necessarily a 5xx,
 and these rules do not measure SSE idle time or guarantee detection of every
@@ -115,7 +116,7 @@ bash deployment/grant-model-roles.sh
 bash deployment/monitoring/grant-route-role.sh
 ```
 
-The first script grants model calls to the shared UAMI at the three model account
+The first script grants model calls to the shared UAMI at the two current model account
 scopes. The second grants `API Management Service Contributor` only at the
 existing `chat-route` Named Value to the workflow's **system** identity. The
 deployer does not grant roles or supply a privileged credentials fallback.

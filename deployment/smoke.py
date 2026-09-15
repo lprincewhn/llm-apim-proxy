@@ -1,7 +1,6 @@
 """Native Azure OpenAI APIM smoke; synthetic prompts, no route changes or secrets."""
 
 import json
-import math
 import time
 import urllib.error
 import urllib.request
@@ -69,12 +68,10 @@ def run():
         "max_completion_tokens": 32, "reasoning_effort": "none",
     }
     cases = [
-        ("chat-eastus2-alias", "eastus2", chat, API_VERSION, 200),
-        ("chat-sweden-alias", "sweden", chat, API_VERSION, 200),
-        ("chat-stream", "eastus2", {**chat, "stream": True}, API_VERSION, 200),
-        ("embedding", "embedding", {"input": "synthetic connectivity probe"}, API_VERSION, 200),
-        ("invalid-version", "eastus2", chat, "invalid-version", 404),
-        ("invalid-body", "eastus2", {"messages": "not-an-array"}, API_VERSION, 400),
+        ("chat-primary", primary, chat, API_VERSION, 200),
+        ("chat-stream", primary, {**chat, "stream": True}, API_VERSION, 200),
+        ("invalid-version", primary, chat, "invalid-version", 404),
+        ("invalid-body", primary, {"messages": "not-an-array"}, API_VERSION, 400),
         ("v1-chat", "v1", {**chat, "model": backends[primary]["deployment"]}, API_VERSION, 200),
         ("v1-responses", "responses", {
             "model": backends[primary]["deployment"], "input": "Reply only OK",
@@ -83,11 +80,10 @@ def run():
     ]
     results = []
     for name, target, body, version, expected in cases:
-        operation = "embeddings" if target == "embedding" else "chat/completions"
         url = (gateway + "/openai/v1/responses" if target == "responses" else
                gateway + "/openai/v1/chat/completions" if target == "v1" else
                gateway + "/openai/deployments/" + backends[target]["deployment"]
-               + "/" + operation + "?api-version=" + version)
+               + "/chat/completions?api-version=" + version)
         request = urllib.request.Request(
             url, data=json.dumps(body).encode(),
             headers={"Content-Type": "application/json", "api-key": key},
@@ -122,12 +118,6 @@ def run():
                 if expected >= 400:
                     valid = response.status == expected and isinstance(data.get("error"), dict)
                     result["error_code"] = data.get("error", {}).get("code")
-                elif response.status == 200 and target == "embedding":
-                    vector = data.get("data", [{}])[0].get("embedding", [])
-                    result["dimensions"] = len(vector)
-                    valid = len(vector) == 1536 and all(
-                        isinstance(value, (int, float)) and math.isfinite(value) for value in vector
-                    )
                 elif response.status == 200 and target == "responses":
                     result["content"] = "".join(
                         part["text"] for item in data.get("output", [])

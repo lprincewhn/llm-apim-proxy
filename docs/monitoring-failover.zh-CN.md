@@ -10,11 +10,11 @@
 
 ## APIM 直连与鉴权
 
-APIM 用命名 Backend `llm-eastus2`、`llm-sweden`、`llm-embedding` 表示三个部署所在资源，按 `chat-route.primary` 选择聊天后端；embedding 独立，不参与聊天切换。
+APIM 仅保留命名 Backend `llm-eastus2`、`llm-sweden`，所有请求统一按 `chat-route.primary` 选择当前上游；没有独立 embedding 后端或精确操作特例。
 
 对外使用根路径通配代理：GET／POST／PUT／PATCH／DELETE／HEAD／OPTIONS 的任意路径均转发，不再枚举接口，也不限定 Azure URL 格式。一般请求仅切换目标主机，原始路径、body、业务查询参数保留；不读取 JSON、不删除或改写 `model`。模型参数合法性由上游判断，原始错误状态和正文返回客户端；支持 SSE，不缓冲响应。
 
-保留三个精确 POST 入口作为兼容例外：现有 Azure 聊天部署 `gpt-5.1` 和 `svhwb107-gpt51` 都遵循同一 `chat-route`，映射目标部署名；`text-embedding-3-small` 的 Azure embeddings 路径固定到 West US 3。其余路径（包括 `/openai/v1/responses`、`/v1/chat/completions`、`/v1/messages`）不改写，直接送当前主后端。
+URL 中的部署名和 body 中的模型名都不转换，必须在当前后端真实存在。当前 Sweden 聊天部署是 `svhwb107-gpt51`；使用别名或请求该区域未部署的模型会收到上游错误，不会自动转到其他区域。`config.json` 中两地部署名用于控制器直连健康探测及日志归因，不是 APIM 路径映射表。
 
 **地址可透传，不等于后端具备所有协议。** 当前可信后端仍为已有 Foundry，未配置第三方供应商；不支持的接口由后端返回 404／405。不同供应商需要另配可信地址、鉴权、健康探测和监控，不能让调用方提供任意目标 URL。非 JSON／multipart body 同样不做策略解析；不含 CONNECT 隧道、WebSocket 或 gRPC 接入。
 
@@ -22,7 +22,7 @@ APIM 用命名 Backend `llm-eastus2`、`llm-sweden`、`llm-embedding` 表示三�
 
 客户端使用标准 `api-key` 头，值为 APIM 订阅密钥（不是 Foundry Key）。APIM 校验后移除该密钥及客户端 Authorization；`subscription-key` 查询参数也不转发后端。模型鉴权继续由托管身份完成。
 
-APIM 与 Logic App 都绑定现有用户分配托管身份 `id-svhwb107-exec`，复用其三个资源范围的 `Cognitive Services OpenAI User`。**这是沿用历史身份名称，并非保留执行器。** APIM 通过客户端 ID 选择身份；Logic App HTTP 通过身份资源 ID 选择，token audience 为 Cognitive Services。
+APIM 与 Logic App 都绑定现有用户分配托管身份 `id-svhwb107-exec`，复用当前两地上游资源范围的 `Cognitive Services OpenAI User`。**这是沿用历史身份名称，并非保留执行器。** APIM 通过客户端 ID 选择身份；Logic App HTTP 通过身份资源 ID 选择，token audience 为 Cognitive Services。
 
 Logic App 系统身份另有单一 `chat-route` 范围的 APIM 管理权限，用 ARM audience 读写路由。模型权限与管理权限用途不同，不把部署人员凭据放进策略或工作流，不使用模型 API Key。
 

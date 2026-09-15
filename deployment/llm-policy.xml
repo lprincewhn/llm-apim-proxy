@@ -4,37 +4,19 @@
     <rate-limit-by-key calls="30" renewal-period="60" counter-key="@(&quot;svhwb107-&quot; + context.Subscription.Id)" />
     <set-variable name="route" value="{{chat-route}}" />
     <choose>
-      <when condition="@(context.Operation.Id != &quot;native-embedding&quot; &amp;&amp; !((JArray)JObject.Parse((string)context.Variables[&quot;route&quot;])[&quot;enabled&quot;]).Any(item =&gt; (string)item == (string)JObject.Parse((string)context.Variables[&quot;route&quot;])[&quot;primary&quot;]))">
+      <when condition="@(!((JArray)JObject.Parse((string)context.Variables[&quot;route&quot;])[&quot;enabled&quot;]).Any(item =&gt; (string)item == (string)JObject.Parse((string)context.Variables[&quot;route&quot;])[&quot;primary&quot;]))">
         <return-response>
           <set-status code="503" reason="No healthy backends" />
         </return-response>
       </when>
     </choose>
-    <set-variable name="selected" value="@{if (context.Operation.Id == &quot;native-embedding&quot;) { return &quot;embedding&quot;; } return (string)JObject.Parse((string)context.Variables[&quot;route&quot;])[&quot;primary&quot;]; }" />
+    <set-variable name="selected" value="@((string)JObject.Parse((string)context.Variables[&quot;route&quot;])[&quot;primary&quot;])" />
     <choose>
       <when condition="@((string)context.Variables[&quot;selected&quot;] == &quot;eastus2&quot;)">
         <set-backend-service backend-id="llm-eastus2" />
-        <choose>
-          <when condition="@(context.Operation.Id.StartsWith(&quot;native-&quot;))">
-            <rewrite-uri template="/openai/deployments/gpt-5.1/chat/completions" copy-unmatched-params="true" />
-          </when>
-        </choose>
       </when>
       <when condition="@((string)context.Variables[&quot;selected&quot;] == &quot;sweden&quot;)">
         <set-backend-service backend-id="llm-sweden" />
-        <choose>
-          <when condition="@(context.Operation.Id.StartsWith(&quot;native-&quot;))">
-            <rewrite-uri template="/openai/deployments/svhwb107-gpt51/chat/completions" copy-unmatched-params="true" />
-          </when>
-        </choose>
-      </when>
-      <when condition="@((string)context.Variables[&quot;selected&quot;] == &quot;embedding&quot;)">
-        <set-backend-service backend-id="llm-embedding" />
-        <choose>
-          <when condition="@(context.Operation.Id.StartsWith(&quot;native-&quot;))">
-            <rewrite-uri template="/openai/deployments/text-embedding-3-small/embeddings" copy-unmatched-params="true" />
-          </when>
-        </choose>
       </when>
       <otherwise>
         <return-response>

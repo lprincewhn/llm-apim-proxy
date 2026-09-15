@@ -25,10 +25,10 @@ It is attached to APIM and Logic App, not an executor. APIM uses
 requests select the UAMI resource ID and Cognitive Services audience. ARM route
 requests use the workflow's system identity and ARM audience.
 
-Foundry mappings in `config.json`: East US 2 `gpt-5.1`, Sweden
-`svhwb107-gpt51`, West US 3 `text-embedding-3-small`. Named APIM backends are
-`llm-eastus2`, `llm-sweden`, `llm-embedding`. The shared `backends.py` validates
-HTTPS Azure OpenAI origins, fixed IDs and safe deployment names.
+`config.json` contains only East US 2 and Sweden origins. Their deployment names
+(`gpt-5.1` and `svhwb107-gpt51`) are used by direct health probes, log attribution
+and smoke requests, never APIM rewrites. Named APIM backends are `llm-eastus2`
+and `llm-sweden`. The shared `backends.py` validates the origins and probe names.
 
 ## Deployment sequence
 
@@ -59,7 +59,7 @@ The ARM API ID remains `llm` for log attribution. Its public prefix is empty:
 seven method-specific `/*` operations proxy arbitrary paths at the gateway root.
 Configuration refuses to take over an existing root API. Other APIs on this APIM
 with a more-specific prefix still take precedence; the wildcard does not replace them.
-The three native POST compatibility operations take precedence over wildcards.
+There are no exact-path operations or compatibility routing exceptions.
 There is no generated validation API. `llm-policy.xml` is an offline-generated
 snapshot of `configure_apim.build_policy()`; importing the module has no cloud effects.
 
@@ -74,18 +74,10 @@ GET, POST, PUT, PATCH, DELETE, HEAD and OPTIONS accept arbitrary paths, protecte
 by `api-key` containing an **APIM subscription key**; get its value through
 the authorized APIM interface. Credentials are never stored in source or output.
 
-| Path | Routing |
-|---|---|
-| Any path, seven methods | Current primary origin; path/body/query unchanged |
-| POST `/openai/deployments/gpt-5.1/chat/completions` | Compatibility exception: current chat primary/deployment |
-| POST `/openai/deployments/svhwb107-gpt51/chat/completions` | Same compatibility exception |
-| POST `/openai/deployments/text-embedding-3-small/embeddings` | Compatibility exception: fixed West US 3 embedding |
-
-For wildcard operations only the target origin changes. No prefix is added,
+Every request uses the current primary origin; only the target origin changes. No prefix is added,
 removed or inferred: `/v1/chat/completions` stays `/v1/chat/completions`,
 `/openai/v1/responses` stays `/openai/v1/responses`, and `/anything` stays `/anything`.
-For the three exact POST compatibility operations, existing deployment routing
-is preserved so working clients do not break. APIM does **not read or transform the request
+APIM does **not read or transform the request
 body**, remove `model`, impose a messages schema, or replace `api-version`.
 Other business query parameters are preserved, including repeated values.
 
@@ -105,9 +97,9 @@ monitoring rules; it cannot be selected through a caller-supplied URL or Host.
 The current Azure-specific deployment helper deliberately retains its origin
 allowlist. No external providers or credentials were provisioned in this change.
 
-For wildcard v1 calls, `model` must already name a deployment available at the
-current upstream (Sweden: `svhwb107-gpt51`). The proxy never rewrites body model
-names. Safe cross-region failover for such calls requires compatible deployment
+Both URL deployment names and body `model` must already name a deployment available
+at the current upstream (Sweden: `svhwb107-gpt51`). There are no aliases or
+embedding routing exceptions. Safe cross-region failover requires compatible deployment
 names/models on both sides. Stateful files/jobs/response IDs are not replicated
 between regions; forwarding arbitrary APIs does not make them region-portable.
 APIM subscription holders can now reach all upstream data-plane paths allowed
@@ -130,7 +122,7 @@ With an APIM key entered interactively, a native request is:
   printf '\n'
   printf 'api-key: %s\n' "$APIM_KEY" |
     curl --silent --show-error --include --max-time 130 \
-      'https://apim-svhwb107-0915.azure-api.net/openai/deployments/gpt-5.1/chat/completions?api-version=2024-10-21' \
+      'https://apim-svhwb107-0915.azure-api.net/openai/deployments/svhwb107-gpt51/chat/completions?api-version=2024-10-21' \
       --header @- --header 'Content-Type: application/json' \
       --data-raw '{"messages":[{"role":"user","content":"Reply only OK"}],"max_completion_tokens":32,"reasoning_effort":"none","stream":false}'
 )
@@ -138,7 +130,7 @@ With an APIM key entered interactively, a native request is:
 
 For SSE, use `stream:true` and curl `--no-buffer`. With the `AzureOpenAI` SDK,
 set `azure_endpoint` to the gateway root above, `api_key` to the APIM subscription
-key, `api_version` to your supported version, and `model` to `gpt-5.1`.
+key, `api_version` to your supported version, and `model` to `svhwb107-gpt51`.
 The SDK still uses native deployment paths; no custom business API is needed.
 
 The standard OpenAI SDK can use
@@ -156,48 +148,39 @@ API key, authorization header or response body logging is required.
 
 ## Operations and evidence
 
-### Wildcard migration, 2026-09-15 12:00 UTC
+### Pure wildcard cleanup, 2026-09-15
 
-Live calls through the wildcard `/openai/v1/chat/completions` returned 200/OK,
-one attempt (3034ms); existing chat aliases, SSE with `[DONE]` and embedding
-also continued to work. Seven methods on a deliberately nonexistent nested path
-returned backend 404, one attempt each, rather than APIM OperationNotFound.
-POST/PUT/PATCH used non-JSON request bodies. No existing upstream resources were
-created, overwritten or deleted in these probes.
+Removed all three `Azure OpenAI ...` operations and their creation code, request
+deployment rewrites, embedding selection branch, `llm-embedding` backend and
+dedicated embedding configuration/grant-script entry. The deployment script
+retains only idempotent deletion of known retired resources so redeployment
+cannot recreate them. Unrelated operations/backends are not deleted.
 
-At 12:04, `/openai/v1/responses` also returned 200, status `completed`, text
-`OK` (2972ms); `store=false` was sent. Ingested GatewayLogs show wildcard method
-IDs, unchanged nested paths, both repeated `probe` values and `encoded=a%2Fb`.
-The expanded observation-only 15-minute query selected six chat samples and
-zero errors, excluding the seven arbitrary-path 404s and embedding.
-Both rules and `switchEnabled` were re-enabled after access run
-`08584121330157544471243293264CU13`; route/quarantine stayed unchanged.
+Existing Foundry accounts/model deployments and previously granted RBAC are not
+deleted or revoked by this proxy cleanup. The shared model UAMI and controller
+remain necessary. Historical executor-retirement records are snapshots, not
+current endpoint instructions.
+
+At 12:16 UTC the pure proxy returned 200/OK for the actual Sweden deployment
+(3901ms), SSE with four chunks and `[DONE]` (2273ms), v1 chat (2963ms) and
+Responses API (2497ms, `completed`, `store=false`). Invalid query/body requests
+returned backend 404/400. All seven HTTP methods on a nonexistent nested path
+returned backend 404 and one attempt. No real upstream files/jobs were modified.
+
+The previously aliased `gpt-5.1` deployment path and the former dedicated embedding
+path now both go unchanged to Sweden and return backend `404 DeploymentNotFound`.
+This is the intentional removal of routing exceptions, not an APIM route miss.
+Current client examples use the actual `svhwb107-gpt51` deployment instead.
+GatewayLogs record all these calls through `proxy-post` / other wildcard IDs.
+An additional deployment did not recreate the retired operations/backend.
+Both alert rules and `switchEnabled` were restored; access run
+`08584121321001264721224949538CU00` succeeded without changing route content.
 
 Chat alert attribution includes POST requests to the configured deployment chat
 URLs and both origins' `/openai/v1/chat/completions` and `/openai/v1/responses`.
 It does not count arbitrary wildcard paths, file/job operations or embeddings as
 chat health. All forwarded paths still produce GatewayLogs. Existing thresholds,
 quarantine and no-retry behavior remain unchanged.
-
-### Native API migration, 2026-09-15 11:43 UTC
-
-The final live smoke returned 200 for both chat deployment aliases (Sweden,
-2562/2237ms), SSE chat (four data events plus `[DONE]`, 2614ms) and embeddings
-(1536 dimensions, 1906ms). Each forwarded once. An invalid caller `api-version`
-reached Foundry and returned its 404; an invalid original body returned Foundry's
-400 `invalid_type`. The retired `/llm/generate` returned 404 and a native request
-without an APIM key returned 401.
-
-Ingested gateway records retain `ApiId=llm`, use `native-eastus2` /
-`native-sweden` / `native-embedding` operation IDs, and show the configured
-direct backend URLs. The invalid-version record contains the unchanged
-`api-version=invalid-version` and backend 404, confirming query passthrough.
-
-Both alert rules and `switchEnabled` were restored to enabled; unchanged-value
-MI route access run `08584121342016356741430252673CU37` succeeded. Route remains
-Sweden, `enabled=[sweden]`, version 2. No regional failover or recovery was forced.
-Migration-time probes encountered transient 503s before the corrected route
-guard propagated; final results are not an availability or performance SLA.
 
 SSE data is forwarded without policy buffering. Stream interruptions after a
 200 header need client-side handling; existing HTTP-code alerts cannot promise

@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from unittest.mock import patch
 
-from configure_apim import build_policy, configure, native_operations, proxy_operations
+from configure_apim import build_policy, configure, proxy_operations
 from backends import MODEL_IDENTITY_CLIENT_ID, MODEL_IDENTITY_ID, backend_url, load_backends
 from smoke import read_stream
 
@@ -33,10 +33,9 @@ class MonitoringPolicyTests(unittest.TestCase):
         self.assertNotIn("{{executor-", build_policy())
         for name, backend in load_backends().items():
             self.assertIsNotNone(root.find(f".//set-backend-service[@backend-id='llm-{name}']"))
-            self.assertIn("/openai/deployments/" + backend["deployment"], build_policy())
             self.assertIn(backend["endpoint"], backend_url(backend))
 
-    def run_configure(self, initialize_route=False, identity=None):
+    def run_configure(self, initialize_route=False, identity=None, migrated=False):
         writes = []
 
         def arm(method, path, body=None, version=None, headers=None):
@@ -45,8 +44,17 @@ class MonitoringPolicyTests(unittest.TestCase):
                     return {"value": [{"name": "llm", "properties": {"path": "openai"}}]}
                 if path.endswith("/operations"):
                     return {"value": [{"name": name} for name in (
-                        "intent", "rewrite", "generate", "embedding", "native-sweden",
+                        *(() if migrated else (
+                            "intent", "rewrite", "generate", "embedding",
+                            "native-eastus2", "native-sweden", "native-embedding",
+                        )),
+                        *proxy_operations(), "unrelated",
                     )]}
+                if path.endswith("/backends"):
+                    names = ["llm-eastus2", "llm-sweden", "unrelated"]
+                    if not migrated:
+                        names.append("llm-embedding")
+                    return {"value": [{"name": name} for name in names]}
                 return {"identity": identity or {}, "properties": {}}
             writes.append((path, body if method != "DELETE" else {"deleted": True}))
             return {}
@@ -95,13 +103,12 @@ class MonitoringPolicyTests(unittest.TestCase):
     def test_generated_snapshot_matches_source(self):
         self.assertEqual(Path(__file__).with_name("llm-policy.xml").read_text(), build_policy())
 
-    def test_native_body_query_and_stream_passthrough(self):
+    def test_body_query_and_stream_passthrough(self):
         root = ET.fromstring(build_policy())
         self.assertIsNone(root.find(".//set-body"))
         self.assertNotIn("context.Request.Body", build_policy())
         self.assertIsNone(root.find(".//set-query-parameter[@name='api-version']"))
-        self.assertTrue(all(node.get("copy-unmatched-params") == "true"
-                            for node in root.findall(".//rewrite-uri")))
+        self.assertIsNone(root.find(".//rewrite-uri"))
         forward = root.find(".//forward-request")
         self.assertEqual(forward.get("buffer-response"), "false")
         self.assertEqual(forward.get("buffer-request-body"), "false")
@@ -110,30 +117,36 @@ class MonitoringPolicyTests(unittest.TestCase):
         self.assertEqual(root.find(".//set-query-parameter[@name='subscription-key']").get(
             "exists-action"), "delete")
 
-    def test_native_api_replaces_custom_operations(self):
+    def test_pure_proxy_retires_legacy_operations_and_embedding_backend(self):
         writes = self.run_configure()
         api = next(body["properties"] for path, body in writes if path.endswith("/apis/llm"))
         self.assertEqual(api["path"], "")
         self.assertEqual(api["subscriptionKeyParameterNames"]["header"], "api-key")
-        operations = native_operations()
-        self.assertEqual(operations["native-eastus2"]["urlTemplate"],
-                         "/openai/deployments/gpt-5.1/chat/completions")
-        self.assertEqual(operations["native-embedding"]["urlTemplate"],
-                         "/openai/deployments/text-embedding-3-small/embeddings")
+        created = [path.rsplit("/", 1)[1] for path, body in writes
+                   if "/operations/" in path and not body.get("deleted")]
+        self.assertEqual(set(created), set(proxy_operations()))
         removed = [path.rsplit("/", 1)[1] for path, body in writes if body.get("deleted")]
-        self.assertEqual(removed, ["intent", "rewrite", "generate", "embedding"])
-        self.assertNotIn("native-sweden", removed)
+        self.assertEqual(removed, [
+            "intent", "rewrite", "generate", "embedding",
+            "native-eastus2", "native-sweden", "native-embedding", "llm-embedding",
+        ])
+        policy_index = next(i for i, (path, _) in enumerate(writes) if path.endswith("/policies/policy"))
+        first_delete = next(i for i, (_, body) in enumerate(writes) if body.get("deleted"))
+        self.assertLess(policy_index, first_delete)
+        self.assertFalse(any(body.get("deleted") for _, body in self.run_configure(migrated=True)))
 
     def test_wildcards_forward_standard_http_methods_without_path_rewrite(self):
         operations = proxy_operations()
+        self.assertEqual(len(operations), 7)
         wildcards = [op for op in operations.values() if op["urlTemplate"] == "/*"]
         self.assertEqual({op["method"] for op in wildcards},
                          {"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"})
         root = ET.fromstring(build_policy())
-        for when in root.findall(".//when"):
-            if when.find("rewrite-uri") is not None:
-                self.assertEqual(when.get("condition"),
-                                 '@(context.Operation.Id.StartsWith("native-"))')
+        self.assertIsNone(root.find(".//rewrite-uri"))
+        self.assertNotIn("context.Operation.Id", build_policy())
+        self.assertNotIn("embedding", build_policy())
+        self.assertEqual(set(load_backends()), {"eastus2", "sweden"})
+        self.assertIsNone(root.find(".//set-backend-service[@backend-id='llm-embedding']"))
         self.assertNotIn("context.Request.Url.Host", build_policy())
         self.assertNotIn("set-method", build_policy())
 

@@ -1,8 +1,9 @@
 # Direct Foundry migration — 2026-09-15
 
-Historical migration snapshot, before the later native API update.
-The custom operation names and short APIM budgets below have since been retired;
-see the current [native API contract](../README.md#api-contract-and-changed-timeout-behavior).
+Historical executor-retirement snapshot, not the current API configuration.
+The custom operation names, short APIM budgets and dedicated embedding routing
+below have since been retired; see the current
+[pure wildcard API contract](../README.md#api-contract-and-changed-timeout-behavior).
 
 The MCAPS lab now uses `client → APIM → Foundry`, with no model executor.
 The asynchronous control path remains `GatewayLogs → Azure Monitor → Action

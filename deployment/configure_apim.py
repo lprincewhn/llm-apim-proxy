@@ -8,29 +8,13 @@ from azure import APIM, ROOT, arm
 from backends import MODEL_IDENTITY_CLIENT_ID, MODEL_IDENTITY_ID, load_backends
 
 
-def native_operations():
-    return {
-        "native-" + name: {
-            "displayName": "Azure OpenAI " + name,
-            "method": "POST",
-            "urlTemplate": "/openai/deployments/" + backend["deployment"] + "/"
-            + ("embeddings" if backend["kind"] == "embedding" else "chat/completions"),
-            "responses": [],
-        }
-        for name, backend in load_backends().items()
-    }
-
-
 def proxy_operations():
     return {
-        **native_operations(),
-        **{
-            "proxy-" + method.lower(): {
-                "displayName": "Proxy " + method, "method": method,
-                "urlTemplate": "/*", "responses": [],
-            }
-            for method in ("GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS")
-        },
+        "proxy-" + method.lower(): {
+            "displayName": "Proxy " + method, "method": method,
+            "urlTemplate": "/*", "responses": [],
+        }
+        for method in ("GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS")
     }
 
 
@@ -46,32 +30,21 @@ def build_policy():
     ET.SubElement(inbound, "set-variable", {"name": "route", "value": "{{chat-route}}"})
     choose = ET.SubElement(inbound, "choose")
     when = ET.SubElement(choose, "when", {
-        "condition": '@(context.Operation.Id != "native-embedding" && '
-        '!((JArray)JObject.Parse((string)context.Variables["route"])["enabled"]).Any(item => (string)item == '
+        "condition": '@(!((JArray)JObject.Parse((string)context.Variables["route"])["enabled"]).Any(item => (string)item == '
         '(string)JObject.Parse((string)context.Variables["route"])["primary"]))',
     })
     ret = ET.SubElement(when, "return-response")
     ET.SubElement(ret, "set-status", {"code": "503", "reason": "No healthy backends"})
     ET.SubElement(inbound, "set-variable", {
-        "name": "selected", "value": '@{'
-        'if (context.Operation.Id == "native-embedding") { return "embedding"; } '
-        'return (string)JObject.Parse((string)context.Variables["route"])["primary"]; }',
+        "name": "selected",
+        "value": '@((string)JObject.Parse((string)context.Variables["route"])["primary"])',
     })
     targets = ET.SubElement(inbound, "choose")
-    for name, backend_config in backends.items():
+    for name in backends:
         target = ET.SubElement(targets, "when", {
             "condition": f'@((string)context.Variables["selected"] == "{name}")',
         })
         ET.SubElement(target, "set-backend-service", {"backend-id": "llm-" + name})
-        operation = "embeddings" if backend_config["kind"] == "embedding" else "chat/completions"
-        aliases = ET.SubElement(target, "choose")
-        alias = ET.SubElement(aliases, "when", {
-            "condition": '@(context.Operation.Id.StartsWith("native-"))',
-        })
-        ET.SubElement(alias, "rewrite-uri", {
-            "template": "/openai/deployments/" + backend_config["deployment"] + "/" + operation,
-            "copy-unmatched-params": "true",
-        })
     invalid = ET.SubElement(targets, "otherwise")
     invalid_response = ET.SubElement(invalid, "return-response")
     ET.SubElement(invalid_response, "set-status", {"code": "503", "reason": "Unknown route backend"})
@@ -158,9 +131,16 @@ def configure(*, initialize_route=False):
     Path(__file__).with_name("llm-policy.xml").write_text(xml, encoding="utf-8")
     operations = arm("GET", APIM + "/apis/llm/operations")["value"]
     for operation in operations:
-        if operation["name"] in ("intent", "rewrite", "generate", "embedding"):
+        # Retire known legacy operations only; do not delete unrelated additions.
+        if operation["name"] in (
+            "intent", "rewrite", "generate", "embedding",
+            "native-eastus2", "native-sweden", "native-embedding",
+        ):
             arm("DELETE", APIM + "/apis/llm/operations/" + operation["name"],
                 headers={"If-Match": "*"})
+    existing_backends = arm("GET", APIM + "/backends")["value"]
+    if any(backend["name"] == "llm-embedding" for backend in existing_backends):
+        arm("DELETE", APIM + "/backends/llm-embedding", headers={"If-Match": "*"})
     put("/subscriptions/lab-validation", {
         "displayName": "SVHWB107 business client", "scope": "/apis", "state": "active",
     })

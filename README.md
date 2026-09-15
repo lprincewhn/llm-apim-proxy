@@ -10,20 +10,20 @@
 
 对外使用 **网关根路径通配反向代理**：GET／POST／PUT／PATCH／DELETE／HEAD／OPTIONS 的任意路径直接转发，不再逐个登记接口或限定 `/openai/deployments/...`。普通请求只替换目标主机，路径、业务查询参数、body 和 SSE 响应透传。客户端用 `api-key` 头携带 APIM 订阅密钥。
 
-当前上游仍是已有 Foundry 资源。路径能透传不等于上游实现该 API，也不代表 Azure／OpenAI／Anthropic 协议自动互转；`/v1/messages` 等不受上游支持的路径会返回上游错误。三个已存在的 Azure 部署 POST 入口保留精确兼容路由：聊天按区域映射部署名、embedding 走 West US 3，其他请求不做路径改写。
+当前上游仍是已有 Foundry 资源。路径能透传不等于上游实现该 API，也不代表 Azure／OpenAI／Anthropic 协议自动互转；`/v1/messages` 等不受上游支持的路径会返回上游错误。所有路径统一走当前主上游，没有部署名映射或 embedding 固定后端特例。当前 Sweden 的实际聊天部署名为 `svhwb107-gpt51`，调用方必须在 URL 或 body 中使用上游支持的名称。
 
 ## 组件
 
 | 路径 | 用途 |
 |---|---|
 | `deployment/configure_apim.py`、`llm-policy.xml` | APIM 命名后端、托管身份、单次转发策略、GatewayLogs |
-| `deployment/backends.py`、`config.json` | 校验并共享 Foundry endpoint／部署映射，供 APIM、探测和 KQL 使用 |
+| `deployment/backends.py`、`config.json` | 校验两个上游地址；部署名仅供健康探测、日志归因和连通性调用，不用于 APIM 改写 |
 | `deployment/monitoring/` | 告警、Action Group、Logic App、授权、操作命令及测试 |
 | `deployment/grant-model-roles.sh` | APIM／Logic App 共享模型调用身份的资源级授权 |
 | `deployment/smoke.py` | 非敏感短提示词的真实 APIM 连通性检查，不改路由 |
 | `deployment/azure.py` | 显式选择 MCAPS 的 Azure 管理辅助 |
 
-原 `id-svhwb107-exec` 托管身份保留并复用于 APIM 和 Logic App，已有三个模型资源的调用权限；**保留名称不代表保留执行器服务**。Logic App 的系统身份只用于 APIM 路由管理，两种用途分开。
+原 `id-svhwb107-exec` 托管身份保留并复用于 APIM 和 Logic App，复用两个当前上游的模型权限；**保留名称不代表保留执行器服务**。Logic App 的系统身份只用于 APIM 路由管理，两种用途分开。
 
 ## 离线测试
 
