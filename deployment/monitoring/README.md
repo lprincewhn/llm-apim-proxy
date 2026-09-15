@@ -31,7 +31,7 @@ Two scheduled-query rules evaluate a five-minute window every minute:
 | Name | Condition, with at least five eligible requests |
 |---|---|
 | `llm-backend-latency` | Average `BackendTime >= 3200` milliseconds |
-| `llm-backend-errors` | HTTP 429 / 500–599 rate `>= 20%` |
+| `llm-backend-errors` | HTTP 404 / 429 / 500–599 rate `>= 20%` |
 
 Queries filter `_ResourceId` and `ApiId='llm'`, strip the query string from
 `BackendUrl`, then match the **complete configured HTTPS origin and deployment
@@ -54,6 +54,15 @@ either field excludes that sample from both health-alert populations, rather
 than initiating failover for an authorization configuration problem. Such errors
 need separate operational attention. Missing backend responses may still be
 counted through the gateway's 5xx status. No prompt/answer logging is needed.
+
+404 responses on the eligible inference paths now count toward the same error
+alert and guarded switch workflow, including `DeploymentNotFound`. Arbitrary
+missing paths, files/jobs and embeddings remain outside this population.
+The rule uses HTTP status, not the response body: an invalid `api-version` on
+an eligible path may also count as 404. Run negative smoke requests with alerts
+disabled to avoid test-induced switching; no special test-traffic bypass exists.
+An alert still needs an enabled, healthy standby and the normal cooldown checks.
+Adding 404 neither re-enables quarantined backends nor retries the failed request.
 
 ## Failover workflow
 

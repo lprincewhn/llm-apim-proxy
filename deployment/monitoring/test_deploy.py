@@ -276,6 +276,19 @@ class WdlFixture:
 
 
 class WorkflowTests(unittest.TestCase):
+    def test_error_alert_uses_same_guarded_switch_path(self):
+        for primary in deploy.BACKENDS:
+            payload = event(primary)
+            payload["data"]["essentials"]["alertRule"] = "llm-backend-errors"
+            fixture = WdlFixture(payload=payload)
+            fixture.properties["value"] = json.dumps({**fixture.route, "primary": primary})
+            self.assertEqual(fixture.run(), "Succeeded")
+            self.assertEqual(len(fixture.writes), 1)
+            self.assertEqual(len(fixture.probe_requests), 2)
+            updated = json.loads(fixture.properties["value"])
+            self.assertNotEqual(updated["primary"], primary)
+            self.assertIn("llm-backend-errors", updated["reason"])
+
     def test_switch_both_directions_and_preserve_unrelated_route_fields(self):
         for primary, backup in (("eastus2", "sweden"), ("sweden", "eastus2")):
             with self.subTest(primary=primary):
@@ -364,6 +377,7 @@ class WorkflowTests(unittest.TestCase):
         bad = [
             (401, {}),
             (403, {}),
+            (404, {}),
             (500, {}),
             (429, {}),
             (202, {}),
@@ -534,8 +548,8 @@ class TemplateTests(unittest.TestCase):
         self.assertIn("ErrorRatePct >= 20.0", deploy.alert_query("errors"))
         self.assertIn("toint(ResponseCode)", deploy.alert_query("errors"))
         self.assertIn("toint(BackendResponseCode)", deploy.alert_query("errors"))
-        self.assertIn("GatewayStatus == 429", deploy.alert_query("errors"))
-        self.assertIn("BackendStatus == 429", deploy.alert_query("errors"))
+        self.assertIn("GatewayStatus in (404, 429)", deploy.alert_query("errors"))
+        self.assertIn("BackendStatus in (404, 429)", deploy.alert_query("errors"))
         self.assertIn("between (500 .. 599)", deploy.alert_query("errors"))
         for kind in ("latency", "errors"):
             query = deploy.alert_query(kind)

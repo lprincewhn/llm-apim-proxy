@@ -143,6 +143,10 @@ include `"model":"gpt-5.1"` in the original JSON body. No api-version is
 required by that upstream v1 API.
 
 All attempts are single requests. Timeout/error responses do not reroute themselves.
+The error alert includes 404, 429 and 5xx on eligible inference paths. Disable
+alerts before running negative smoke cases: an invalid api-version 404 can count
+toward failover just like a missing deployment. Arbitrary nonexistent wildcard
+paths remain excluded from inference health alerts.
 Logs must distinguish backend responses from gateway failures; no prompt, token,
 API key, authorization header or response body logging is required.
 
