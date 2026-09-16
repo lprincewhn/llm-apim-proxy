@@ -1,0 +1,7120 @@
+{
+  "experiment": "SVHWB-124-B",
+  "events": [
+    {
+      "event": "started",
+      "at": "2026-09-16T02:48:06.415783+00:00"
+    },
+    {
+      "event": "a_alerts_enabled",
+      "at": "2026-09-16T02:48:08.715734+00:00",
+      "enabled": false
+    },
+    {
+      "event": "both_backends_healthy",
+      "at": "2026-09-16T02:48:30.273247+00:00"
+    },
+    {
+      "event": "manual_route_preparation_or_recovery",
+      "at": "2026-09-16T02:48:33.267963+00:00",
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "event": "native_200_preflight_started",
+      "at": "2026-09-16T02:49:19.535394+00:00"
+    },
+    {
+      "event": "native_200_preflight_passed",
+      "at": "2026-09-16T02:52:12.871234+00:00",
+      "run_id": "08584120797706585405054506603CU03"
+    },
+    {
+      "event": "b_enabled_a_disabled",
+      "at": "2026-09-16T02:52:26.910619+00:00",
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "event": "delete_submitted",
+      "at": "2026-09-16T02:52:26.911749+00:00"
+    },
+    {
+      "event": "delete_response_received",
+      "at": "2026-09-16T02:52:29.360591+00:00"
+    },
+    {
+      "event": "deployment_list_after_delete",
+      "at": "2026-09-16T02:52:30.566383+00:00",
+      "absent": true
+    },
+    {
+      "event": "first_client_404",
+      "at": "2026-09-16T02:57:01.763522+00:00",
+      "request_start": "2026-09-16T02:57:00.577826+00:00",
+      "request_end": "2026-09-16T02:57:01.761223+00:00"
+    },
+    {
+      "event": "backup_success",
+      "at": "2026-09-16T03:12:53.932705+00:00",
+      "request_start": "2026-09-16T03:12:51.917732+00:00",
+      "request_end": "2026-09-16T03:12:53.924488+00:00"
+    },
+    {
+      "event": "automatic_switch_observed",
+      "at": "2026-09-16T03:13:53.882398+00:00",
+      "consecutive_backup": 13
+    },
+    {
+      "event": "b_disabled_original_controller_probe_only",
+      "at": "2026-09-16T03:13:59.456105+00:00"
+    },
+    {
+      "event": "east_deployment_recreated",
+      "at": "2026-09-16T03:14:01.441172+00:00"
+    },
+    {
+      "event": "manual_route_preparation_or_recovery",
+      "at": "2026-09-16T03:14:23.972428+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 18,
+        "lastSwitchAt": "2026-09-16T03:12:41.0017950Z",
+        "reason": "SVHWB-124 healthy standby restored; original Sweden primary"
+      }
+    },
+    {
+      "event": "restoration_complete",
+      "at": "2026-09-16T03:14:33.206006+00:00",
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 18,
+        "lastSwitchAt": "2026-09-16T03:12:41.0017950Z",
+        "reason": "SVHWB-124 healthy standby restored; original Sweden primary"
+      },
+      "switchEnabled": true,
+      "a_enabled": {
+        "llm-backend-latency": true,
+        "llm-backend-errors": true
+      },
+      "b_rule_deleted": true
+    }
+  ],
+  "requests": [
+    {
+      "start": "2026-09-16T02:48:33.919432+00:00",
+      "end": "2026-09-16T02:48:35.783131+00:00",
+      "phase": "baseline",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1863.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:48:40.783886+00:00",
+      "end": "2026-09-16T02:48:43.043883+00:00",
+      "phase": "baseline",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2260.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:48:48.044701+00:00",
+      "end": "2026-09-16T02:48:50.183082+00:00",
+      "phase": "baseline",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2138.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:48:55.183915+00:00",
+      "end": "2026-09-16T02:48:56.789069+00:00",
+      "phase": "baseline",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1605.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:49:01.790033+00:00",
+      "end": "2026-09-16T02:49:03.338143+00:00",
+      "phase": "baseline",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1548.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:49:19.536020+00:00",
+      "end": "2026-09-16T02:49:22.246976+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2711.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:49:24.536187+00:00",
+      "end": "2026-09-16T02:49:26.347149+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1810.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:49:29.536360+00:00",
+      "end": "2026-09-16T02:49:31.402030+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1865.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:49:34.536482+00:00",
+      "end": "2026-09-16T02:49:36.284445+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1748.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:49:39.536594+00:00",
+      "end": "2026-09-16T02:49:41.462728+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1926.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:49:44.536782+00:00",
+      "end": "2026-09-16T02:49:46.141435+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1604.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:49:49.536881+00:00",
+      "end": "2026-09-16T02:49:51.234814+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1697.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:49:54.536988+00:00",
+      "end": "2026-09-16T02:49:56.405936+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1868.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:49:59.537093+00:00",
+      "end": "2026-09-16T02:50:01.340509+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1803.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:50:04.537334+00:00",
+      "end": "2026-09-16T02:50:06.533255+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1996.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:50:09.537445+00:00",
+      "end": "2026-09-16T02:50:11.625756+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2088.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:50:14.537612+00:00",
+      "end": "2026-09-16T02:50:17.177948+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2640.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:50:19.537717+00:00",
+      "end": "2026-09-16T02:50:21.063454+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1525.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:50:24.537814+00:00",
+      "end": "2026-09-16T02:50:27.017425+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2479.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:50:29.537982+00:00",
+      "end": "2026-09-16T02:50:31.622233+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2084.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:50:34.538175+00:00",
+      "end": "2026-09-16T02:50:36.448249+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1910.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:50:39.538391+00:00",
+      "end": "2026-09-16T02:50:41.790404+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2252.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:50:44.538952+00:00",
+      "end": "2026-09-16T02:50:47.041496+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2502.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:50:49.539059+00:00",
+      "end": "2026-09-16T02:50:51.289714+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1750.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:50:54.539166+00:00",
+      "end": "2026-09-16T02:50:56.440047+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1900.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:50:59.539305+00:00",
+      "end": "2026-09-16T02:51:02.322818+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2783.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:51:04.539399+00:00",
+      "end": "2026-09-16T02:51:06.350970+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1811.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:51:09.539517+00:00",
+      "end": "2026-09-16T02:51:11.849332+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2309.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:51:14.539619+00:00",
+      "end": "2026-09-16T02:51:16.906146+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2366.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:51:19.539725+00:00",
+      "end": "2026-09-16T02:51:21.161190+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1621.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:51:24.539827+00:00",
+      "end": "2026-09-16T02:51:26.522473+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1982.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:51:29.539919+00:00",
+      "end": "2026-09-16T02:51:31.533153+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1993.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:51:34.540077+00:00",
+      "end": "2026-09-16T02:51:36.339641+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1799.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:51:39.540183+00:00",
+      "end": "2026-09-16T02:51:40.970486+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1430.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:51:44.540333+00:00",
+      "end": "2026-09-16T02:51:46.214371+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1674.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:51:49.540430+00:00",
+      "end": "2026-09-16T02:51:51.354941+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1814.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:51:54.540534+00:00",
+      "end": "2026-09-16T02:51:56.254251+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1713.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:51:59.540633+00:00",
+      "end": "2026-09-16T02:52:01.833975+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2293.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:52:04.540740+00:00",
+      "end": "2026-09-16T02:52:07.265543+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2724.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:52:09.540862+00:00",
+      "end": "2026-09-16T02:52:11.304324+00:00",
+      "phase": "preflight",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1763.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:52:30.567437+00:00",
+      "end": "2026-09-16T02:52:32.901518+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2334.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:52:35.567647+00:00",
+      "end": "2026-09-16T02:52:38.268534+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2700.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:52:40.567817+00:00",
+      "end": "2026-09-16T02:52:42.541849+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1974.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:52:45.568050+00:00",
+      "end": "2026-09-16T02:52:47.321345+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1753.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:52:50.568232+00:00",
+      "end": "2026-09-16T02:52:52.692158+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2123.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:52:55.568334+00:00",
+      "end": "2026-09-16T02:52:57.294551+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1726.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:53:00.568446+00:00",
+      "end": "2026-09-16T02:53:02.389470+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1821.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:53:05.568566+00:00",
+      "end": "2026-09-16T02:53:07.407881+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1839.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:53:10.568684+00:00",
+      "end": "2026-09-16T02:53:12.691069+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2122.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:53:15.568781+00:00",
+      "end": "2026-09-16T02:53:16.901786+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1333.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:53:20.568899+00:00",
+      "end": "2026-09-16T02:53:22.558221+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1989.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:53:25.569041+00:00",
+      "end": "2026-09-16T02:53:28.056545+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2487.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:53:30.569190+00:00",
+      "end": "2026-09-16T02:53:32.294427+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1725.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:53:35.569376+00:00",
+      "end": "2026-09-16T02:53:37.578909+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2009.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:53:40.569560+00:00",
+      "end": "2026-09-16T02:53:42.013529+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1444.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:53:45.569697+00:00",
+      "end": "2026-09-16T02:53:47.345999+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1776.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:53:50.569813+00:00",
+      "end": "2026-09-16T02:53:52.632419+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2062.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:53:55.569944+00:00",
+      "end": "2026-09-16T02:53:57.540752+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1970.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:54:00.570126+00:00",
+      "end": "2026-09-16T02:54:02.589818+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2019.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:54:05.570234+00:00",
+      "end": "2026-09-16T02:54:07.337809+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1767.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:54:10.570423+00:00",
+      "end": "2026-09-16T02:54:12.367671+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1797.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:54:15.570623+00:00",
+      "end": "2026-09-16T02:54:17.262007+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1691.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:54:20.570749+00:00",
+      "end": "2026-09-16T02:54:22.223790+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1653.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:54:25.570929+00:00",
+      "end": "2026-09-16T02:54:27.445536+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1874.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:54:30.571065+00:00",
+      "end": "2026-09-16T02:54:32.332467+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1761.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:54:35.571165+00:00",
+      "end": "2026-09-16T02:54:36.957843+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1386.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:54:40.571332+00:00",
+      "end": "2026-09-16T02:54:42.581863+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2010.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:54:45.571556+00:00",
+      "end": "2026-09-16T02:54:47.548032+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1976.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:54:50.571776+00:00",
+      "end": "2026-09-16T02:54:52.547522+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1975.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:54:55.571961+00:00",
+      "end": "2026-09-16T02:54:57.068600+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1496.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:55:00.575374+00:00",
+      "end": "2026-09-16T02:55:02.725428+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2150.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:55:05.575471+00:00",
+      "end": "2026-09-16T02:55:07.099679+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1524.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:55:10.575569+00:00",
+      "end": "2026-09-16T02:55:12.121007+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1545.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:55:15.575640+00:00",
+      "end": "2026-09-16T02:55:17.093643+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1518.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:55:20.575739+00:00",
+      "end": "2026-09-16T02:55:22.246457+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1670.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:55:25.575833+00:00",
+      "end": "2026-09-16T02:55:27.814581+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2238.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:55:30.575953+00:00",
+      "end": "2026-09-16T02:55:31.965425+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1389.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:55:35.576051+00:00",
+      "end": "2026-09-16T02:55:37.306725+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1730.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:55:40.576149+00:00",
+      "end": "2026-09-16T02:55:43.424103+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2848.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:55:45.576251+00:00",
+      "end": "2026-09-16T02:55:47.647725+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2071.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:55:50.576357+00:00",
+      "end": "2026-09-16T02:55:52.781223+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2204.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:55:55.576450+00:00",
+      "end": "2026-09-16T02:55:57.471097+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1894.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:56:00.576553+00:00",
+      "end": "2026-09-16T02:56:02.129726+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1553.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:56:05.576653+00:00",
+      "end": "2026-09-16T02:56:07.501895+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1925.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:56:10.576752+00:00",
+      "end": "2026-09-16T02:56:12.467134+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1890.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:56:15.576849+00:00",
+      "end": "2026-09-16T02:56:17.447830+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1871.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:56:20.576953+00:00",
+      "end": "2026-09-16T02:56:22.254238+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1677.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:56:25.577048+00:00",
+      "end": "2026-09-16T02:56:27.164382+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1587.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:56:30.577141+00:00",
+      "end": "2026-09-16T02:56:32.468422+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1891.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:56:35.577245+00:00",
+      "end": "2026-09-16T02:56:37.277992+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1700.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:56:40.577347+00:00",
+      "end": "2026-09-16T02:56:42.412972+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1835.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:56:45.577451+00:00",
+      "end": "2026-09-16T02:56:47.864776+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2287.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:56:50.577617+00:00",
+      "end": "2026-09-16T02:56:52.156225+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1578.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:56:55.577730+00:00",
+      "end": "2026-09-16T02:56:57.375095+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1797.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:57:00.577826+00:00",
+      "end": "2026-09-16T02:57:01.761223+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1183.5,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T02:57:05.577931+00:00",
+      "end": "2026-09-16T02:57:08.021896+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2444.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:57:10.578102+00:00",
+      "end": "2026-09-16T02:57:12.598966+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2020.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:57:15.578213+00:00",
+      "end": "2026-09-16T02:57:17.205116+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1626.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:57:20.578312+00:00",
+      "end": "2026-09-16T02:57:22.370865+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1792.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:57:25.578416+00:00",
+      "end": "2026-09-16T02:57:27.273150+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1694.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:57:30.578519+00:00",
+      "end": "2026-09-16T02:57:32.401568+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1823.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:57:35.578690+00:00",
+      "end": "2026-09-16T02:57:37.162929+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1584.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:57:40.578802+00:00",
+      "end": "2026-09-16T02:57:42.478121+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1899.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:57:45.578911+00:00",
+      "end": "2026-09-16T02:57:47.243209+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1664.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:57:50.579013+00:00",
+      "end": "2026-09-16T02:57:52.362646+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1783.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:57:55.579117+00:00",
+      "end": "2026-09-16T02:57:57.132527+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1553.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:58:00.579217+00:00",
+      "end": "2026-09-16T02:58:02.224113+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1644.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:58:05.579327+00:00",
+      "end": "2026-09-16T02:58:07.300197+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1720.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:58:10.579423+00:00",
+      "end": "2026-09-16T02:58:12.056962+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1477.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:58:15.579528+00:00",
+      "end": "2026-09-16T02:58:17.203102+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1623.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:58:20.579625+00:00",
+      "end": "2026-09-16T02:58:22.244590+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1665.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:58:25.579723+00:00",
+      "end": "2026-09-16T02:58:27.603940+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2024.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:58:30.579820+00:00",
+      "end": "2026-09-16T02:58:32.079598+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1499.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:58:35.579926+00:00",
+      "end": "2026-09-16T02:58:37.045885+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1466.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:58:40.580025+00:00",
+      "end": "2026-09-16T02:58:42.890381+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2310.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:58:45.580122+00:00",
+      "end": "2026-09-16T02:58:47.841724+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2261.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:58:50.580233+00:00",
+      "end": "2026-09-16T02:58:52.250200+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1669.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:58:55.580327+00:00",
+      "end": "2026-09-16T02:58:57.178186+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1597.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:59:00.580424+00:00",
+      "end": "2026-09-16T02:59:02.028059+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1447.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:59:05.580629+00:00",
+      "end": "2026-09-16T02:59:07.435857+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1855.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:59:10.580734+00:00",
+      "end": "2026-09-16T02:59:12.654225+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2073.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:59:15.580834+00:00",
+      "end": "2026-09-16T02:59:17.223768+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1642.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:59:20.581013+00:00",
+      "end": "2026-09-16T02:59:22.507958+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1926.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:59:25.581190+00:00",
+      "end": "2026-09-16T02:59:27.126232+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1545.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:59:30.581312+00:00",
+      "end": "2026-09-16T02:59:33.189505+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2608.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:59:35.581499+00:00",
+      "end": "2026-09-16T02:59:37.884996+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2303.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:59:40.581596+00:00",
+      "end": "2026-09-16T02:59:42.179735+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1598.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:59:45.581780+00:00",
+      "end": "2026-09-16T02:59:47.071443+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1489.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:59:50.581960+00:00",
+      "end": "2026-09-16T02:59:52.358103+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1776.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T02:59:55.582155+00:00",
+      "end": "2026-09-16T02:59:57.581573+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1999.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:00:00.582304+00:00",
+      "end": "2026-09-16T03:00:02.593914+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2011.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:00:05.582497+00:00",
+      "end": "2026-09-16T03:00:07.310033+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1727.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:00:21.537518+00:00",
+      "end": "2026-09-16T03:00:23.103161+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1565.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:00:26.537627+00:00",
+      "end": "2026-09-16T03:00:28.285255+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1747.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:00:31.537863+00:00",
+      "end": "2026-09-16T03:00:34.286949+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2749.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:00:36.538046+00:00",
+      "end": "2026-09-16T03:00:38.416435+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1878.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:00:41.538235+00:00",
+      "end": "2026-09-16T03:00:43.492112+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1953.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:00:46.538419+00:00",
+      "end": "2026-09-16T03:00:48.477175+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1938.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:00:51.539143+00:00",
+      "end": "2026-09-16T03:00:53.602650+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2063.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:00:56.539231+00:00",
+      "end": "2026-09-16T03:00:58.148451+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1609.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:01:01.539334+00:00",
+      "end": "2026-09-16T03:01:03.265958+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1726.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:01:06.539440+00:00",
+      "end": "2026-09-16T03:01:08.600724+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2061.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:01:11.539541+00:00",
+      "end": "2026-09-16T03:01:13.257998+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1718.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:01:16.539655+00:00",
+      "end": "2026-09-16T03:01:18.492738+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1953.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:01:21.539756+00:00",
+      "end": "2026-09-16T03:01:23.773892+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2234.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:01:26.539888+00:00",
+      "end": "2026-09-16T03:01:28.340416+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1800.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:01:31.539984+00:00",
+      "end": "2026-09-16T03:01:33.148221+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1608.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:01:36.540081+00:00",
+      "end": "2026-09-16T03:01:38.663859+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2123.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:01:41.540180+00:00",
+      "end": "2026-09-16T03:01:43.613111+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2072.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:01:46.540336+00:00",
+      "end": "2026-09-16T03:01:48.250828+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1710.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:01:51.540439+00:00",
+      "end": "2026-09-16T03:01:53.039791+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1499.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:01:56.540573+00:00",
+      "end": "2026-09-16T03:01:58.354426+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1813.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:02:01.540752+00:00",
+      "end": "2026-09-16T03:02:03.858573+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2317.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:02:06.540866+00:00",
+      "end": "2026-09-16T03:02:08.146438+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1605.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:02:11.541041+00:00",
+      "end": "2026-09-16T03:02:13.115897+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1574.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:02:16.541151+00:00",
+      "end": "2026-09-16T03:02:18.573906+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2032.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:02:21.541250+00:00",
+      "end": "2026-09-16T03:02:23.449567+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1908.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:02:26.541355+00:00",
+      "end": "2026-09-16T03:02:28.000071+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1458.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:02:31.541447+00:00",
+      "end": "2026-09-16T03:02:33.415823+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1874.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:02:36.541543+00:00",
+      "end": "2026-09-16T03:02:38.302933+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1761.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:02:41.541653+00:00",
+      "end": "2026-09-16T03:02:43.208835+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1667.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:02:46.541784+00:00",
+      "end": "2026-09-16T03:02:48.311627+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1769.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:02:51.541966+00:00",
+      "end": "2026-09-16T03:02:53.309179+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1767.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:02:56.542146+00:00",
+      "end": "2026-09-16T03:02:58.273007+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1730.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:03:01.542304+00:00",
+      "end": "2026-09-16T03:03:03.224933+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1682.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:03:06.542438+00:00",
+      "end": "2026-09-16T03:03:09.059903+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2517.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:03:11.542541+00:00",
+      "end": "2026-09-16T03:03:12.925482+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1383.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:03:16.542747+00:00",
+      "end": "2026-09-16T03:03:18.490060+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1947.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:03:21.542925+00:00",
+      "end": "2026-09-16T03:03:23.332667+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1789.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:03:26.543041+00:00",
+      "end": "2026-09-16T03:03:28.073331+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1530.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:03:31.543145+00:00",
+      "end": "2026-09-16T03:03:33.487649+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1944.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:03:36.543323+00:00",
+      "end": "2026-09-16T03:03:38.091309+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1548.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:03:41.543514+00:00",
+      "end": "2026-09-16T03:03:43.355638+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1812.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:03:46.543713+00:00",
+      "end": "2026-09-16T03:03:48.278863+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1735.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:03:51.543817+00:00",
+      "end": "2026-09-16T03:03:53.175945+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1632.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:03:56.543995+00:00",
+      "end": "2026-09-16T03:03:58.249954+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1706.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:04:01.544110+00:00",
+      "end": "2026-09-16T03:04:03.303119+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1759.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:04:06.544341+00:00",
+      "end": "2026-09-16T03:04:08.499212+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1954.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:04:11.544458+00:00",
+      "end": "2026-09-16T03:04:13.496217+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1951.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:04:16.544561+00:00",
+      "end": "2026-09-16T03:04:17.955744+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1411.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:04:21.544659+00:00",
+      "end": "2026-09-16T03:04:23.727478+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2182.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:04:26.544754+00:00",
+      "end": "2026-09-16T03:04:29.357158+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2812.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:04:31.544941+00:00",
+      "end": "2026-09-16T03:04:33.136619+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1591.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:04:36.545117+00:00",
+      "end": "2026-09-16T03:04:38.413371+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1868.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:04:41.545313+00:00",
+      "end": "2026-09-16T03:04:43.147433+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1602.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:04:46.545494+00:00",
+      "end": "2026-09-16T03:04:48.115753+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1570.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:04:51.545688+00:00",
+      "end": "2026-09-16T03:04:53.392346+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1846.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:04:56.545874+00:00",
+      "end": "2026-09-16T03:04:58.399325+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1853.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:05:01.547328+00:00",
+      "end": "2026-09-16T03:05:03.433240+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1886.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:05:06.547433+00:00",
+      "end": "2026-09-16T03:05:08.217586+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1670.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:05:11.547636+00:00",
+      "end": "2026-09-16T03:05:13.702148+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2154.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:05:16.547746+00:00",
+      "end": "2026-09-16T03:05:18.130539+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1582.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:05:21.547852+00:00",
+      "end": "2026-09-16T03:05:23.247695+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1699.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:05:26.547949+00:00",
+      "end": "2026-09-16T03:05:28.676060+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2128.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:05:31.548183+00:00",
+      "end": "2026-09-16T03:05:33.678458+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2130.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:05:36.548306+00:00",
+      "end": "2026-09-16T03:05:38.244546+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1696.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:05:41.548485+00:00",
+      "end": "2026-09-16T03:05:43.302465+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1754.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:05:46.548584+00:00",
+      "end": "2026-09-16T03:05:48.512572+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1964.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:05:51.548689+00:00",
+      "end": "2026-09-16T03:05:53.255316+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1706.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:05:56.548863+00:00",
+      "end": "2026-09-16T03:05:58.119991+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1571.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:06:01.548971+00:00",
+      "end": "2026-09-16T03:06:03.244193+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1695.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:06:06.549074+00:00",
+      "end": "2026-09-16T03:06:09.454493+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2905.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:06:11.549250+00:00",
+      "end": "2026-09-16T03:06:13.219517+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1670.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:06:16.549355+00:00",
+      "end": "2026-09-16T03:06:19.059160+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2509.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:06:21.549447+00:00",
+      "end": "2026-09-16T03:06:23.808887+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2259.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:06:26.549548+00:00",
+      "end": "2026-09-16T03:06:29.365096+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2815.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:06:31.549643+00:00",
+      "end": "2026-09-16T03:06:33.660019+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2110.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:06:36.549737+00:00",
+      "end": "2026-09-16T03:06:39.035621+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2485.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:06:41.549926+00:00",
+      "end": "2026-09-16T03:06:43.134043+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1584.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:06:46.550030+00:00",
+      "end": "2026-09-16T03:06:48.124146+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1574.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:06:51.550132+00:00",
+      "end": "2026-09-16T03:06:53.272799+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1722.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:06:56.550241+00:00",
+      "end": "2026-09-16T03:06:58.238632+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1688.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:07:01.550343+00:00",
+      "end": "2026-09-16T03:07:03.703506+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2153.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:07:06.550444+00:00",
+      "end": "2026-09-16T03:07:08.217381+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1666.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:07:11.550583+00:00",
+      "end": "2026-09-16T03:07:13.359778+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1809.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:07:16.551530+00:00",
+      "end": "2026-09-16T03:07:17.706177+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1154.7,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:07:21.551640+00:00",
+      "end": "2026-09-16T03:07:23.561799+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2010.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:07:26.551745+00:00",
+      "end": "2026-09-16T03:07:27.942020+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1390.3,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:07:31.551859+00:00",
+      "end": "2026-09-16T03:07:33.391131+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1839.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:07:36.552028+00:00",
+      "end": "2026-09-16T03:07:38.449200+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1897.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:07:41.552209+00:00",
+      "end": "2026-09-16T03:07:43.494535+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1942.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:07:46.552307+00:00",
+      "end": "2026-09-16T03:07:48.420345+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1868.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:07:51.552414+00:00",
+      "end": "2026-09-16T03:07:53.187751+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1635.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:07:56.552512+00:00",
+      "end": "2026-09-16T03:07:58.553750+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2001.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:08:01.552692+00:00",
+      "end": "2026-09-16T03:08:03.064928+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1512.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:08:06.552865+00:00",
+      "end": "2026-09-16T03:08:07.706699+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1153.9,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:08:11.552967+00:00",
+      "end": "2026-09-16T03:08:13.283157+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1730.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:08:16.553148+00:00",
+      "end": "2026-09-16T03:08:18.793050+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2239.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:08:21.553342+00:00",
+      "end": "2026-09-16T03:08:23.275676+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1722.4,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:08:26.553443+00:00",
+      "end": "2026-09-16T03:08:28.465225+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1911.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:08:31.553547+00:00",
+      "end": "2026-09-16T03:08:33.302147+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1748.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:08:36.553647+00:00",
+      "end": "2026-09-16T03:08:38.684221+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2130.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:08:41.553750+00:00",
+      "end": "2026-09-16T03:08:43.383114+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1829.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:08:46.553958+00:00",
+      "end": "2026-09-16T03:08:48.291930+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1738.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:08:51.554081+00:00",
+      "end": "2026-09-16T03:08:52.724471+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1170.4,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:08:56.554193+00:00",
+      "end": "2026-09-16T03:08:58.307224+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1753.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:09:01.554312+00:00",
+      "end": "2026-09-16T03:09:02.963444+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1409.1,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:09:06.554432+00:00",
+      "end": "2026-09-16T03:09:08.442440+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1888.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:09:11.554550+00:00",
+      "end": "2026-09-16T03:09:14.073520+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2519.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:09:16.554729+00:00",
+      "end": "2026-09-16T03:09:18.311961+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1757.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:09:21.554823+00:00",
+      "end": "2026-09-16T03:09:23.864799+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2310.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:09:26.554920+00:00",
+      "end": "2026-09-16T03:09:27.696978+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1142.1,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:09:31.555013+00:00",
+      "end": "2026-09-16T03:09:33.134797+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1579.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:09:36.555119+00:00",
+      "end": "2026-09-16T03:09:39.321760+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2766.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:09:41.555314+00:00",
+      "end": "2026-09-16T03:09:43.819538+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2264.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:09:46.555436+00:00",
+      "end": "2026-09-16T03:09:48.408001+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1852.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:09:51.555603+00:00",
+      "end": "2026-09-16T03:09:52.719464+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1163.9,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:09:56.555783+00:00",
+      "end": "2026-09-16T03:09:57.943454+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1387.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:10:01.555897+00:00",
+      "end": "2026-09-16T03:10:03.198218+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1642.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:10:11.912663+00:00",
+      "end": "2026-09-16T03:10:13.540474+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1627.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:10:16.912853+00:00",
+      "end": "2026-09-16T03:10:18.848049+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1935.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:10:21.913020+00:00",
+      "end": "2026-09-16T03:10:23.781354+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1868.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:10:26.913217+00:00",
+      "end": "2026-09-16T03:10:29.620472+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2707.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:10:31.913391+00:00",
+      "end": "2026-09-16T03:10:34.454483+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2541.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:10:36.913572+00:00",
+      "end": "2026-09-16T03:10:38.306650+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1393.1,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:10:41.913698+00:00",
+      "end": "2026-09-16T03:10:43.389052+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1475.4,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:10:46.913905+00:00",
+      "end": "2026-09-16T03:10:48.561915+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1648.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:10:51.914028+00:00",
+      "end": "2026-09-16T03:10:53.670623+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1756.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:10:56.914241+00:00",
+      "end": "2026-09-16T03:10:58.379563+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1465.3,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:11:01.914408+00:00",
+      "end": "2026-09-16T03:11:03.359418+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1445.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:11:06.914602+00:00",
+      "end": "2026-09-16T03:11:08.198414+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1283.8,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:11:11.914723+00:00",
+      "end": "2026-09-16T03:11:14.614372+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2699.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:11:16.914893+00:00",
+      "end": "2026-09-16T03:11:18.177110+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1262.2,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:11:21.915034+00:00",
+      "end": "2026-09-16T03:11:23.650585+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1735.6,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:11:26.915220+00:00",
+      "end": "2026-09-16T03:11:28.395892+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1480.7,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:11:31.915352+00:00",
+      "end": "2026-09-16T03:11:33.101240+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1185.9,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:11:36.915551+00:00",
+      "end": "2026-09-16T03:11:38.631780+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1716.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:11:41.915666+00:00",
+      "end": "2026-09-16T03:11:43.657589+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1741.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:11:46.915816+00:00",
+      "end": "2026-09-16T03:11:48.608105+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1692.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:11:51.916003+00:00",
+      "end": "2026-09-16T03:11:53.841499+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1925.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:11:56.916108+00:00",
+      "end": "2026-09-16T03:11:58.248690+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1332.6,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:12:01.916205+00:00",
+      "end": "2026-09-16T03:12:03.511508+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1595.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:12:06.916349+00:00",
+      "end": "2026-09-16T03:12:08.211448+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1295.1,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:12:11.916514+00:00",
+      "end": "2026-09-16T03:12:13.766889+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1850.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:12:16.916739+00:00",
+      "end": "2026-09-16T03:12:18.649181+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1732.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:12:21.916850+00:00",
+      "end": "2026-09-16T03:12:23.559718+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1642.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:12:26.916963+00:00",
+      "end": "2026-09-16T03:12:28.103221+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1186.3,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:12:31.917080+00:00",
+      "end": "2026-09-16T03:12:33.219457+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1302.4,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:12:36.917327+00:00",
+      "end": "2026-09-16T03:12:39.022106+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 2104.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:12:41.917511+00:00",
+      "end": "2026-09-16T03:12:43.279768+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1362.3,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:12:46.917632+00:00",
+      "end": "2026-09-16T03:12:48.428626+00:00",
+      "phase": "deletion",
+      "status": 404,
+      "backend": "eastus2",
+      "attempts": "1",
+      "duration_ms": 1511.0,
+      "valid_ok": false,
+      "error_code": "user_error"
+    },
+    {
+      "start": "2026-09-16T03:12:51.917732+00:00",
+      "end": "2026-09-16T03:12:53.924488+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "duration_ms": 2006.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:12:56.917840+00:00",
+      "end": "2026-09-16T03:12:58.655861+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "duration_ms": 1738.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:13:01.917954+00:00",
+      "end": "2026-09-16T03:13:03.700965+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "duration_ms": 1783.0,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:13:06.918130+00:00",
+      "end": "2026-09-16T03:13:08.540596+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "duration_ms": 1622.5,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:13:11.918242+00:00",
+      "end": "2026-09-16T03:13:13.822684+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "duration_ms": 1904.4,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:13:16.918420+00:00",
+      "end": "2026-09-16T03:13:18.679201+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "duration_ms": 1760.8,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:13:21.918527+00:00",
+      "end": "2026-09-16T03:13:23.651424+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "duration_ms": 1732.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:13:26.918727+00:00",
+      "end": "2026-09-16T03:13:29.191792+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "duration_ms": 2273.1,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:13:31.918910+00:00",
+      "end": "2026-09-16T03:13:33.695112+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "duration_ms": 1776.2,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:13:36.919013+00:00",
+      "end": "2026-09-16T03:13:38.685900+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "duration_ms": 1766.9,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:13:41.919117+00:00",
+      "end": "2026-09-16T03:13:43.662380+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "duration_ms": 1743.3,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:13:46.919221+00:00",
+      "end": "2026-09-16T03:13:48.545875+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "duration_ms": 1626.7,
+      "valid_ok": true,
+      "error_code": null
+    },
+    {
+      "start": "2026-09-16T03:13:51.919319+00:00",
+      "end": "2026-09-16T03:13:53.874843+00:00",
+      "phase": "deletion",
+      "status": 200,
+      "backend": "sweden",
+      "attempts": "1",
+      "duration_ms": 1955.5,
+      "valid_ok": true,
+      "error_code": null
+    }
+  ],
+  "observations": [
+    {
+      "at": "2026-09-16T02:52:32.902747+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            }
+          ]
+        }
+      ],
+      "runs": [],
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "at": "2026-09-16T02:53:37.580414+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            }
+          ]
+        }
+      ],
+      "runs": [],
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "at": "2026-09-16T02:54:42.583494+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:53:00Z",
+              "total": 6
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            }
+          ]
+        }
+      ],
+      "runs": [],
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "at": "2026-09-16T02:55:47.649868+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:53:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:54:00Z",
+              "total": 7
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            }
+          ]
+        }
+      ],
+      "runs": [],
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "at": "2026-09-16T02:56:52.158360+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:53:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:54:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:55:00Z",
+              "total": 7
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            }
+          ]
+        }
+      ],
+      "runs": [],
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "at": "2026-09-16T02:57:57.138026+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:53:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:54:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:55:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:56:00Z",
+              "total": 12
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            }
+          ]
+        }
+      ],
+      "runs": [],
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "at": "2026-09-16T02:59:02.031651+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:53:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:54:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:55:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:56:00Z",
+              "total": 12
+            },
+            {
+              "timeStamp": "2026-09-16T02:57:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 6
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 1
+            }
+          ]
+        }
+      ],
+      "runs": [],
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "at": "2026-09-16T03:00:07.312935+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:53:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:54:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:55:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:56:00Z",
+              "total": 12
+            },
+            {
+              "timeStamp": "2026-09-16T02:57:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:59:00Z",
+              "total": 10
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 1
+            }
+          ]
+        }
+      ],
+      "runs": [],
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "at": "2026-09-16T03:01:23.777209+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:53:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:54:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:55:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:56:00Z",
+              "total": 12
+            },
+            {
+              "timeStamp": "2026-09-16T02:57:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:59:00Z",
+              "total": 10
+            },
+            {
+              "timeStamp": "2026-09-16T03:00:00Z",
+              "total": 8
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 1
+            }
+          ]
+        }
+      ],
+      "runs": [],
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "at": "2026-09-16T03:02:28.004458+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:53:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:54:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:55:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:56:00Z",
+              "total": 12
+            },
+            {
+              "timeStamp": "2026-09-16T02:57:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:59:00Z",
+              "total": 10
+            },
+            {
+              "timeStamp": "2026-09-16T03:00:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:01:00Z",
+              "total": 7
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 1
+            }
+          ]
+        }
+      ],
+      "runs": [],
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "at": "2026-09-16T03:03:33.497462+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:53:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:54:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:55:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:56:00Z",
+              "total": 12
+            },
+            {
+              "timeStamp": "2026-09-16T02:57:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:59:00Z",
+              "total": 10
+            },
+            {
+              "timeStamp": "2026-09-16T03:00:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:01:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T03:02:00Z",
+              "total": 8
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 1
+            }
+          ]
+        }
+      ],
+      "runs": [],
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "at": "2026-09-16T03:04:38.418469+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:53:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:54:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:55:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:56:00Z",
+              "total": 12
+            },
+            {
+              "timeStamp": "2026-09-16T02:57:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:59:00Z",
+              "total": 10
+            },
+            {
+              "timeStamp": "2026-09-16T03:00:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:01:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T03:02:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:03:00Z",
+              "total": 8
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 1
+            }
+          ]
+        }
+      ],
+      "runs": [],
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "at": "2026-09-16T03:05:43.311850+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:53:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:54:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:55:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:56:00Z",
+              "total": 12
+            },
+            {
+              "timeStamp": "2026-09-16T02:57:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:59:00Z",
+              "total": 10
+            },
+            {
+              "timeStamp": "2026-09-16T03:00:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:01:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T03:02:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:03:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:04:00Z",
+              "total": 8
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 1
+            }
+          ]
+        }
+      ],
+      "runs": [],
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "at": "2026-09-16T03:06:48.129155+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:53:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:54:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:55:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:56:00Z",
+              "total": 12
+            },
+            {
+              "timeStamp": "2026-09-16T02:57:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:59:00Z",
+              "total": 10
+            },
+            {
+              "timeStamp": "2026-09-16T03:00:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:01:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T03:02:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:03:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:04:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:05:00Z",
+              "total": 8
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 1
+            }
+          ]
+        }
+      ],
+      "runs": [],
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "at": "2026-09-16T03:07:53.193547+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:53:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:54:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:55:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:56:00Z",
+              "total": 12
+            },
+            {
+              "timeStamp": "2026-09-16T02:57:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:59:00Z",
+              "total": 10
+            },
+            {
+              "timeStamp": "2026-09-16T03:00:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:01:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T03:02:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:03:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:04:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:05:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:06:00Z",
+              "total": 8
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 1
+            }
+          ]
+        }
+      ],
+      "runs": [],
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "at": "2026-09-16T03:08:58.313140+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:53:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:54:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:55:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:56:00Z",
+              "total": 12
+            },
+            {
+              "timeStamp": "2026-09-16T02:57:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:59:00Z",
+              "total": 10
+            },
+            {
+              "timeStamp": "2026-09-16T03:00:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:01:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T03:02:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:03:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:04:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:05:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:06:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:07:00Z",
+              "total": 6
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 1
+            }
+          ]
+        }
+      ],
+      "runs": [],
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "at": "2026-09-16T03:10:03.205157+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:53:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:54:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:55:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:56:00Z",
+              "total": 12
+            },
+            {
+              "timeStamp": "2026-09-16T02:57:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:59:00Z",
+              "total": 10
+            },
+            {
+              "timeStamp": "2026-09-16T03:00:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:01:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T03:02:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:03:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:04:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:05:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:06:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:07:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T03:08:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T03:09:00Z",
+              "total": 5
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 1
+            },
+            {
+              "timeStamp": "2026-09-16T03:08:00Z",
+              "total": 1
+            },
+            {
+              "timeStamp": "2026-09-16T03:09:00Z",
+              "total": 3
+            }
+          ]
+        }
+      ],
+      "runs": [],
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "at": "2026-09-16T03:11:14.620840+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:53:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:54:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:55:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:56:00Z",
+              "total": 12
+            },
+            {
+              "timeStamp": "2026-09-16T02:57:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:59:00Z",
+              "total": 10
+            },
+            {
+              "timeStamp": "2026-09-16T03:00:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:01:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T03:02:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:03:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:04:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:05:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:06:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:07:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T03:08:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T03:09:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T03:10:00Z",
+              "total": 6
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 1
+            },
+            {
+              "timeStamp": "2026-09-16T03:08:00Z",
+              "total": 1
+            },
+            {
+              "timeStamp": "2026-09-16T03:09:00Z",
+              "total": 3
+            },
+            {
+              "timeStamp": "2026-09-16T03:10:00Z",
+              "total": 3
+            }
+          ]
+        }
+      ],
+      "runs": [],
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "at": "2026-09-16T03:12:18.657215+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:53:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:54:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:55:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:56:00Z",
+              "total": 12
+            },
+            {
+              "timeStamp": "2026-09-16T02:57:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:59:00Z",
+              "total": 10
+            },
+            {
+              "timeStamp": "2026-09-16T03:00:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:01:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T03:02:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:03:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:04:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:05:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:06:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:07:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T03:08:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T03:09:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T03:10:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T03:11:00Z",
+              "total": 5
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 1
+            },
+            {
+              "timeStamp": "2026-09-16T03:08:00Z",
+              "total": 1
+            },
+            {
+              "timeStamp": "2026-09-16T03:09:00Z",
+              "total": 3
+            },
+            {
+              "timeStamp": "2026-09-16T03:10:00Z",
+              "total": 3
+            },
+            {
+              "timeStamp": "2026-09-16T03:11:00Z",
+              "total": 1
+            }
+          ]
+        }
+      ],
+      "runs": [],
+      "route": {
+        "primary": "eastus2",
+        "enabled": [
+          "eastus2",
+          "sweden"
+        ],
+        "version": 16,
+        "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+        "reason": "SVHWB-124 same-region A/B preparation"
+      }
+    },
+    {
+      "at": "2026-09-16T03:13:23.658748+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:53:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:54:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:55:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:56:00Z",
+              "total": 12
+            },
+            {
+              "timeStamp": "2026-09-16T02:57:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:59:00Z",
+              "total": 10
+            },
+            {
+              "timeStamp": "2026-09-16T03:00:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:01:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T03:02:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:03:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:04:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:05:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:06:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:07:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T03:08:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T03:09:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T03:10:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T03:11:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T03:12:00Z",
+              "total": 4
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 1
+            },
+            {
+              "timeStamp": "2026-09-16T03:08:00Z",
+              "total": 1
+            },
+            {
+              "timeStamp": "2026-09-16T03:09:00Z",
+              "total": 3
+            },
+            {
+              "timeStamp": "2026-09-16T03:10:00Z",
+              "total": 3
+            },
+            {
+              "timeStamp": "2026-09-16T03:11:00Z",
+              "total": 1
+            },
+            {
+              "timeStamp": "2026-09-16T03:12:00Z",
+              "total": 2
+            }
+          ]
+        }
+      ],
+      "runs": [
+        {
+          "id": "08584120785292943058207791674CU12",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:36.1939453Z",
+          "endTime": "2026-09-16T03:12:41.7505714Z"
+        }
+      ],
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden"
+        ],
+        "version": 17,
+        "lastSwitchAt": "2026-09-16T03:12:41.0017950Z",
+        "reason": "Azure Monitor svhwb124-foundry-404-r3 quarantined eastus2"
+      }
+    },
+    {
+      "at": "2026-09-16T03:13:53.889662+00:00",
+      "metrics": [
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "200"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:49:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T02:50:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:51:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T02:52:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:53:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:54:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:55:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T02:56:00Z",
+              "total": 12
+            },
+            {
+              "timeStamp": "2026-09-16T02:57:00Z",
+              "total": 9
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T02:59:00Z",
+              "total": 10
+            },
+            {
+              "timeStamp": "2026-09-16T03:00:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:01:00Z",
+              "total": 7
+            },
+            {
+              "timeStamp": "2026-09-16T03:02:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:03:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:04:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:05:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:06:00Z",
+              "total": 8
+            },
+            {
+              "timeStamp": "2026-09-16T03:07:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T03:08:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T03:09:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T03:10:00Z",
+              "total": 6
+            },
+            {
+              "timeStamp": "2026-09-16T03:11:00Z",
+              "total": 5
+            },
+            {
+              "timeStamp": "2026-09-16T03:12:00Z",
+              "total": 4
+            }
+          ]
+        },
+        {
+          "dimensions": [
+            {
+              "name": {
+                "value": "apiname",
+                "localizedValue": "apiname"
+              },
+              "value": "OpenAI"
+            },
+            {
+              "name": {
+                "value": "modeldeploymentname",
+                "localizedValue": "modeldeploymentname"
+              },
+              "value": "gpt-5.1"
+            },
+            {
+              "name": {
+                "value": "operationname",
+                "localizedValue": "operationname"
+              },
+              "value": "chatcompletions_create"
+            },
+            {
+              "name": {
+                "value": "statuscode",
+                "localizedValue": "statuscode"
+              },
+              "value": "404"
+            }
+          ],
+          "points": [
+            {
+              "timeStamp": "2026-09-16T02:47:00Z",
+              "total": 2
+            },
+            {
+              "timeStamp": "2026-09-16T02:58:00Z",
+              "total": 1
+            },
+            {
+              "timeStamp": "2026-09-16T03:08:00Z",
+              "total": 1
+            },
+            {
+              "timeStamp": "2026-09-16T03:09:00Z",
+              "total": 3
+            },
+            {
+              "timeStamp": "2026-09-16T03:10:00Z",
+              "total": 3
+            },
+            {
+              "timeStamp": "2026-09-16T03:11:00Z",
+              "total": 1
+            },
+            {
+              "timeStamp": "2026-09-16T03:12:00Z",
+              "total": 2
+            }
+          ]
+        }
+      ],
+      "runs": [
+        {
+          "id": "08584120785292943058207791674CU12",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:36.1939453Z",
+          "endTime": "2026-09-16T03:12:41.7505714Z"
+        }
+      ],
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden"
+        ],
+        "version": 17,
+        "lastSwitchAt": "2026-09-16T03:12:41.0017950Z",
+        "reason": "Azure Monitor svhwb124-foundry-404-r3 quarantined eastus2"
+      }
+    }
+  ],
+  "initial": {
+    "route": {
+      "primary": "sweden",
+      "enabled": [
+        "sweden",
+        "eastus2"
+      ],
+      "version": 15,
+      "lastSwitchAt": "2026-09-16T00:04:00.5763313Z",
+      "reason": "SVHWB-124 healthy standby restored; original Sweden primary"
+    },
+    "deployment": {
+      "sku": {
+        "name": "GlobalStandard",
+        "capacity": 150
+      },
+      "properties": {
+        "model": {
+          "format": "OpenAI",
+          "name": "gpt-5.1",
+          "version": "2025-11-13"
+        },
+        "raiPolicyName": "Microsoft.DefaultV2",
+        "versionUpgradeOption": "OnceNewDefaultVersionAvailable"
+      }
+    }
+  },
+  "b_rule": {
+    "location": "global",
+    "tags": {
+      "issue": "SVHWB-124",
+      "purpose": "temporary-ab-experiment"
+    },
+    "properties": {
+      "description": "SVHWB-124 B: Foundry deployment chat 404 count >=5/5m; not error rate.",
+      "severity": 2,
+      "enabled": false,
+      "scopes": [
+        "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/jump-server_group/providers/Microsoft.CognitiveServices/accounts/svhw-openai-eastus2"
+      ],
+      "evaluationFrequency": "PT1M",
+      "windowSize": "PT5M",
+      "autoMitigate": true,
+      "criteria": {
+        "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+        "allOf": [
+          {
+            "name": "DeploymentChat404",
+            "metricNamespace": "Microsoft.CognitiveServices/accounts",
+            "metricName": "AzureOpenAIRequests",
+            "operator": "GreaterThanOrEqual",
+            "threshold": 5,
+            "timeAggregation": "Total",
+            "criterionType": "StaticThresholdCriterion",
+            "dimensions": [
+              {
+                "name": "ApiName",
+                "operator": "Include",
+                "values": [
+                  "OpenAI"
+                ]
+              },
+              {
+                "name": "ModelDeploymentName",
+                "operator": "Include",
+                "values": [
+                  "gpt-5.1"
+                ]
+              },
+              {
+                "name": "OperationName",
+                "operator": "Include",
+                "values": [
+                  "chatcompletions_create"
+                ]
+              },
+              {
+                "name": "StatusCode",
+                "operator": "Include",
+                "values": [
+                  "404"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "actionGroupId": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/actionGroups/llm-monitored-failover"
+        }
+      ]
+    }
+  },
+  "workflow_runs": [
+    {
+      "id": "08584120785292943058207791674CU12",
+      "status": "Succeeded",
+      "startTime": "2026-09-16T03:12:36.1939453Z",
+      "endTime": "2026-09-16T03:12:41.7505714Z",
+      "actions": [
+        {
+          "name": "Access_check_or_alert",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:36.4984944Z",
+          "endTime": "2026-09-16T03:12:41.7294647Z",
+          "code": "NotSpecified"
+        },
+        {
+          "name": "Access_route_guard",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:36.7550365Z",
+          "endTime": "2026-09-16T03:12:36.755475Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "Access_write_completed",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:36.7056054Z",
+          "endTime": "2026-09-16T03:12:36.7059475Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "AccessRouteUnsafe",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:36.7304563Z",
+          "endTime": "2026-09-16T03:12:36.7309693Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "AccessWriteNotCompleted",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:36.6836655Z",
+          "endTime": "2026-09-16T03:12:36.6842303Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "Allowlisted_workspace",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:37.1987518Z",
+          "endTime": "2026-09-16T03:12:37.2517027Z",
+          "code": "NotSpecified"
+        },
+        {
+          "name": "Backup",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:37.8422065Z",
+          "endTime": "2026-09-16T03:12:37.8429646Z",
+          "code": "OK"
+        },
+        {
+          "name": "ControlPlaneMismatch",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:41.6526761Z",
+          "endTime": "2026-09-16T03:12:41.6545224Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "Cooldown_elapsed",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:38.1513509Z",
+          "endTime": "2026-09-16T03:12:38.201639Z",
+          "code": "NotSpecified"
+        },
+        {
+          "name": "CooldownActive",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:38.1746038Z",
+          "endTime": "2026-09-16T03:12:38.1752403Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "DryRunNoWrite",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:40.8762292Z",
+          "endTime": "2026-09-16T03:12:40.8769135Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "ExpiredBeforeWrite",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:40.9548032Z",
+          "endTime": "2026-09-16T03:12:40.9554856Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "Fired_only",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:37.2787646Z",
+          "endTime": "2026-09-16T03:12:37.3471385Z",
+          "code": "NotSpecified"
+        },
+        {
+          "name": "Fresh_alert",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:37.371788Z",
+          "endTime": "2026-09-16T03:12:37.485672Z",
+          "code": "NotSpecified"
+        },
+        {
+          "name": "Health_check_or_alert",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:36.7832942Z",
+          "endTime": "2026-09-16T03:12:41.7041248Z",
+          "code": "NotSpecified"
+        },
+        {
+          "name": "Health_check_probe_only",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:36.8731608Z",
+          "endTime": "2026-09-16T03:12:36.8735073Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "Health_probe_one",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:36.8970968Z",
+          "endTime": "2026-09-16T03:12:36.8976602Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "Health_probe_one_status",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:36.9871631Z",
+          "endTime": "2026-09-16T03:12:36.9874553Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "Health_probe_two",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:37.035707Z",
+          "endTime": "2026-09-16T03:12:37.0363271Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "Health_probe_two_status",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:37.1069511Z",
+          "endTime": "2026-09-16T03:12:37.1072937Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "HealthCheckRequiresProbeOnly",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:36.8524707Z",
+          "endTime": "2026-09-16T03:12:36.8529468Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "HealthProbeOneFailed",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:36.9649681Z",
+          "endTime": "2026-09-16T03:12:36.9654741Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "HealthProbeTwoFailed",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:37.0840932Z",
+          "endTime": "2026-09-16T03:12:37.0846463Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "New_route",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:41.001084Z",
+          "endTime": "2026-09-16T03:12:41.0020975Z",
+          "code": "OK"
+        },
+        {
+          "name": "NotCurrentOrBackupDisabled",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:37.8953449Z",
+          "endTime": "2026-09-16T03:12:37.8959056Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "Parse_alert",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:37.1716888Z",
+          "endTime": "2026-09-16T03:12:37.1754479Z",
+          "code": "OK"
+        },
+        {
+          "name": "Parse_health_check",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:36.8086808Z",
+          "endTime": "2026-09-16T03:12:36.8092171Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "Parse_route",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:37.8182081Z",
+          "endTime": "2026-09-16T03:12:37.819276Z",
+          "code": "OK"
+        },
+        {
+          "name": "Probe_one",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:38.2274553Z",
+          "endTime": "2026-09-16T03:12:39.7310963Z",
+          "code": "OK"
+        },
+        {
+          "name": "Probe_one_status",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:39.7544803Z",
+          "endTime": "2026-09-16T03:12:39.8051322Z",
+          "code": "NotSpecified"
+        },
+        {
+          "name": "Probe_two",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:39.8551193Z",
+          "endTime": "2026-09-16T03:12:40.7272302Z",
+          "code": "OK"
+        },
+        {
+          "name": "Probe_two_status",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:40.7570854Z",
+          "endTime": "2026-09-16T03:12:40.8071071Z",
+          "code": "NotSpecified"
+        },
+        {
+          "name": "ProbeOneFailed",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:39.7834398Z",
+          "endTime": "2026-09-16T03:12:39.7840165Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "ProbeTwoFailed",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:40.779511Z",
+          "endTime": "2026-09-16T03:12:40.7801902Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "Read_access_route",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:36.5541548Z",
+          "endTime": "2026-09-16T03:12:36.554646Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "Read_committed_route",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:41.4076653Z",
+          "endTime": "2026-09-16T03:12:41.5997393Z",
+          "code": "OK"
+        },
+        {
+          "name": "Read_route",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:37.5300452Z",
+          "endTime": "2026-09-16T03:12:37.717592Z",
+          "code": "OK"
+        },
+        {
+          "name": "Require_completed_write",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:41.3314349Z",
+          "endTime": "2026-09-16T03:12:41.386634Z",
+          "code": "NotSpecified"
+        },
+        {
+          "name": "ResolvedNoOp",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:37.3078941Z",
+          "endTime": "2026-09-16T03:12:37.3085639Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "Route_eligible",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:37.8709417Z",
+          "endTime": "2026-09-16T03:12:37.9175276Z",
+          "code": "NotSpecified"
+        },
+        {
+          "name": "Route_properties_safe",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:37.7407028Z",
+          "endTime": "2026-09-16T03:12:37.7875982Z",
+          "code": "NotSpecified"
+        },
+        {
+          "name": "StaleAlert",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:37.3994553Z",
+          "endTime": "2026-09-16T03:12:37.4003598Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "Still_fresh",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:40.9242614Z",
+          "endTime": "2026-09-16T03:12:40.979831Z",
+          "code": "NotSpecified"
+        },
+        {
+          "name": "Switch_enabled",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:40.8520736Z",
+          "endTime": "2026-09-16T03:12:40.8986034Z",
+          "code": "NotSpecified"
+        },
+        {
+          "name": "Unhealthy_backend",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:37.506372Z",
+          "endTime": "2026-09-16T03:12:37.5071618Z",
+          "code": "OK"
+        },
+        {
+          "name": "UnsafeRoute",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:37.7657676Z",
+          "endTime": "2026-09-16T03:12:37.7662748Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "UntrustedMetricSource",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:37.2243349Z",
+          "endTime": "2026-09-16T03:12:37.2250653Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "Validate_health_probe_one",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:37.013732Z",
+          "endTime": "2026-09-16T03:12:37.0141997Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "Validate_health_probe_two",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:37.1375417Z",
+          "endTime": "2026-09-16T03:12:37.1391006Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "Validate_probe_one",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:39.8279161Z",
+          "endTime": "2026-09-16T03:12:39.8295176Z",
+          "code": "OK"
+        },
+        {
+          "name": "Validate_probe_two",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:40.8270485Z",
+          "endTime": "2026-09-16T03:12:40.8282038Z",
+          "code": "OK"
+        },
+        {
+          "name": "Verify_access_write",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:36.6291616Z",
+          "endTime": "2026-09-16T03:12:36.6297402Z",
+          "code": "ActionSkipped"
+        },
+        {
+          "name": "Verify_control_plane",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:41.6260805Z",
+          "endTime": "2026-09-16T03:12:41.6792656Z",
+          "code": "NotSpecified"
+        },
+        {
+          "name": "Write_route",
+          "status": "Succeeded",
+          "startTime": "2026-09-16T03:12:41.0770341Z",
+          "endTime": "2026-09-16T03:12:41.3054342Z",
+          "code": "OK"
+        },
+        {
+          "name": "WriteNotCompleted",
+          "status": "Skipped",
+          "startTime": "2026-09-16T03:12:41.3615366Z",
+          "endTime": "2026-09-16T03:12:41.3622744Z",
+          "code": "ActionSkipped"
+        }
+      ]
+    }
+  ],
+  "final": {
+    "route": {
+      "primary": "sweden",
+      "enabled": [
+        "sweden",
+        "eastus2"
+      ],
+      "version": 18,
+      "lastSwitchAt": "2026-09-16T03:12:41.0017950Z",
+      "reason": "SVHWB-124 healthy standby restored; original Sweden primary"
+    },
+    "switchEnabled": true,
+    "a_enabled": {
+      "llm-backend-latency": true,
+      "llm-backend-errors": true
+    },
+    "b_rule_deleted": true
+  }
+}

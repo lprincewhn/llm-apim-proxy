@@ -1,0 +1,50 @@
+{
+  "id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/scheduledQueryRules/svhwb124-apim-errors-aligned-shadow",
+  "created_rule": {
+    "location": "eastus2",
+    "kind": "LogAlert",
+    "properties": {
+      "displayName": "svhwb124-apim-errors-aligned-shadow",
+      "description": "SVHWB-124 same-traffic A shadow; production error query plus experiment start bound; no actions.",
+      "enabled": true,
+      "severity": 2,
+      "evaluationFrequency": "PT1M",
+      "windowSize": "PT5M",
+      "scopes": [
+        "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.OperationalInsights/workspaces/law-svhwb107-0915"
+      ],
+      "autoMitigate": true,
+      "skipQueryValidation": false,
+      "criteria": {
+        "allOf": [
+          {
+            "query": "ApiManagementGatewayLogs\n| where TimeGenerated >= datetime(2026-09-16T03:38:55Z)\n| where TimeGenerated >= ago(5m)\n| where _ResourceId =~ '/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.ApiManagement/service/apim-svhwb107-0915' and ApiId == 'llm'\n| where Method == 'POST'\n| extend BackendRequestUrl = tostring(split(tostring(BackendUrl), \"?\")[0])\n| extend Backend = case(BackendRequestUrl == 'https://svhw-openai-eastus2.openai.azure.com/openai/deployments/gpt-5.1/chat/completions', 'eastus2', BackendRequestUrl == 'https://svhw-openai-eastus2.openai.azure.com/openai/v1/chat/completions', 'eastus2', BackendRequestUrl == 'https://svhw-openai-eastus2.openai.azure.com/openai/v1/responses', 'eastus2', BackendRequestUrl == 'https://svhw2-swedencentral.openai.azure.com/openai/deployments/gpt-5.1/chat/completions', 'sweden', BackendRequestUrl == 'https://svhw2-swedencentral.openai.azure.com/openai/v1/chat/completions', 'sweden', BackendRequestUrl == 'https://svhw2-swedencentral.openai.azure.com/openai/v1/responses', 'sweden', '')\n| where Backend in ('eastus2', 'sweden')\n| extend GatewayStatus = coalesce(toint(ResponseCode), 0),\n    BackendStatus = coalesce(toint(BackendResponseCode), 0)\n| where GatewayStatus !in (401, 403) and BackendStatus !in (401, 403)\n| summarize Samples = count(), AverageBackendMs = avg(todouble(BackendTime)),\n    ErrorCount = countif(GatewayStatus in (404, 429) or GatewayStatus between (500 .. 599)\n        or BackendStatus in (404, 429) or BackendStatus between (500 .. 599))\n    by Backend\n| extend ErrorRatePct = 100.0 * ErrorCount / Samples\n| extend ViolationCount = iff(Samples >= 5 and ErrorRatePct >= 20.0, 1, 0)\n| project Backend, ViolationCount",
+            "timeAggregation": "Maximum",
+            "metricMeasureColumn": "ViolationCount",
+            "operator": "GreaterThan",
+            "threshold": 0,
+            "dimensions": [
+              {
+                "name": "Backend",
+                "operator": "Include",
+                "values": [
+                  "eastus2",
+                  "sweden"
+                ]
+              }
+            ],
+            "failingPeriods": {
+              "numberOfEvaluationPeriods": 1,
+              "minFailingPeriodsToAlert": 1
+            }
+          }
+        ]
+      },
+      "actions": {
+        "actionGroups": []
+      }
+    }
+  },
+  "created_at": "2026-09-16T03:53:59.2079002Z",
+  "old_shadow_excluded": "Initial replay evaluated 03:11-03:16, before this deletion. Deleted and replaced with experiment lower bound."
+}

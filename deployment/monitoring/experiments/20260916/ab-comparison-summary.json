@@ -1,0 +1,133 @@
+{
+  "A": {
+    "source_issue": "SVHWB-107",
+    "source_attachment": "01a0a78b-4b30-7c8f-bdae-e3aee67b9dc1",
+    "durations_seconds": {
+      "delete_success_to_first404": 1129.889467,
+      "first404_to_first_backup200": 445.768322,
+      "delete_success_to_first_backup200": 1575.657789,
+      "first404_to_alert_fired": 424.43534,
+      "alert_fired_to_first_backup200": 21.332982,
+      "route_write_completed_to_first_backup200": 13.075328
+    }
+  },
+  "B": {
+    "rule": "svhwb124-foundry-404-r3",
+    "alert_id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourcegroups/jump-server_group/providers/microsoft.cognitiveservices/accounts/svhw-openai-eastus2/providers/Microsoft.AlertsManagement/alerts/251b22d5-eef8-4ba8-9462-31813790f000",
+    "run_id": "08584120785292943058207791674CU12",
+    "timestamps": {
+      "delete_succeeded": "2026-09-16T02:52:29.3411877Z",
+      "first_client_404": "2026-09-16T02:57:01.761223+00:00",
+      "second_client_404": "2026-09-16T03:07:17.706177+00:00",
+      "alert_record_fired": "2026-09-16T03:12:34.7219457Z",
+      "controller_started": "2026-09-16T03:12:36.1939453Z",
+      "route_write_completed": "2026-09-16T03:12:41.3054342Z",
+      "first_backup_200": "2026-09-16T03:12:53.924488+00:00"
+    },
+    "durations_seconds": {
+      "delete_success_to_first404": 272.420036,
+      "first404_to_alert_fired": 932.960722,
+      "first404_to_first_backup200": 952.163265,
+      "delete_success_to_first_backup200": 1224.583301,
+      "alert_fired_to_first_backup200": 19.202543,
+      "alert_fired_to_route_write_completed": 6.583489,
+      "route_write_completed_to_first_backup200": 12.619054,
+      "gap_between_first_two_errors": 615.944954
+    },
+    "counts": {
+      "eastus2_200": 219,
+      "eastus2_404": 22,
+      "sweden_200": 13
+    },
+    "alert_condition": {
+      "allOf": [
+        {
+          "dimensions": [
+            {
+              "name": "ApiName",
+              "operator": null,
+              "type": null,
+              "value": "OpenAI",
+              "values": null
+            },
+            {
+              "name": "ModelDeploymentName",
+              "operator": null,
+              "type": null,
+              "value": "gpt-5.1",
+              "values": null
+            },
+            {
+              "name": "OperationName",
+              "operator": null,
+              "type": null,
+              "value": "chatcompletions_create",
+              "values": null
+            },
+            {
+              "name": "StatusCode",
+              "operator": null,
+              "type": null,
+              "value": "404",
+              "values": null
+            }
+          ],
+          "metricName": "AzureOpenAIRequests",
+          "metricNamespace": "microsoft.cognitiveservices/accounts",
+          "metricValue": 7.0,
+          "operator": "GreaterThanOrEqual",
+          "threshold": "5",
+          "timeAggregation": "Total",
+          "webTestName": null
+        }
+      ],
+      "staticThresholdFailingPeriods": {
+        "minFailingPeriodsToAlert": 0,
+        "numberOfEvaluationPeriods": 0
+      },
+      "windowEndTime": "2026-09-16T03:10:20.443Z",
+      "windowSize": "PT5M",
+      "windowStartTime": "2026-09-16T03:05:20.443Z"
+    },
+    "retrospective_client_thresholds": {
+      "B_count5": {
+        "client_response_time": "2026-09-16T03:08:52.724471+00:00",
+        "samples": 61,
+        "errors": 5,
+        "note": "Retrospective client window only; NOT a real alert evaluation timestamp."
+      },
+      "A_ratio20": {
+        "client_response_time": "2026-09-16T03:11:08.198414+00:00",
+        "samples": 60,
+        "errors": 12,
+        "note": "Retrospective client window only; NOT a real alert evaluation timestamp."
+      }
+    },
+    "final": {
+      "route": {
+        "primary": "sweden",
+        "enabled": [
+          "sweden",
+          "eastus2"
+        ],
+        "version": 18,
+        "lastSwitchAt": "2026-09-16T03:12:41.0017950Z",
+        "reason": "SVHWB-124 healthy standby restored; original Sweden primary"
+      },
+      "switchEnabled": true,
+      "a_enabled": {
+        "llm-backend-latency": true,
+        "llm-backend-errors": true
+      },
+      "b_rule_deleted": true
+    }
+  },
+  "limitations": [
+    "A: combined 404/429/5xx rate >=20%, minimum 5 eligible samples; B: 404 count >=5.",
+    "One completed B and one historical A; not randomized or same-time identical fault traces.",
+    "Foundry metrics include non-APIM callers; APIM logs and metrics need not share a denominator.",
+    "Prior aborted, ingress-failed and censored B attempts are retained, not counted as successful switches.",
+    "Deletion propagation, sparse/intermittent errors and one-minute telemetry buckets confound raw timings.",
+    "All manual preparation/recovery route changes are separate from the observed automatic switch."
+  ]
+}

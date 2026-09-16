@@ -1,0 +1,77 @@
+[
+  {
+    "dimensions": [
+      "ApiName",
+      "OperationName",
+      "Region",
+      "StreamType",
+      "ModelDeploymentName",
+      "ModelName",
+      "ModelVersion",
+      "StatusCode"
+    ],
+    "grain": "PT1M",
+    "name": "TimeToResponse",
+    "unit": "MilliSeconds"
+  },
+  {
+    "dimensions": [
+      "ApiName",
+      "OperationName",
+      "Region",
+      "StreamType",
+      "ModelDeploymentName",
+      "ModelName",
+      "ModelVersion"
+    ],
+    "grain": "PT1M",
+    "name": "NormalizedTimeBetweenTokens",
+    "unit": "MilliSeconds"
+  },
+  {
+    "dimensions": [
+      "ApiName",
+      "OperationName",
+      "Region",
+      "StreamType",
+      "ModelDeploymentName",
+      "ModelName",
+      "ModelVersion"
+    ],
+    "grain": "PT1M",
+    "name": "TimeToLastByte",
+    "unit": "MilliSeconds"
+  },
+  {
+    "dimensions": [
+      "ApiName",
+      "OperationName",
+      "Region",
+      "StreamType",
+      "ModelDeploymentName",
+      "ModelName",
+      "ModelVersion"
+    ],
+    "grain": "PT1M",
+    "name": "NormalizedTimeToFirstToken",
+    "unit": "MilliSeconds"
+  },
+  {
+    "dimensions": [
+      "ApiName",
+      "OperationName",
+      "Region",
+      "StreamType",
+      "ModelDeploymentName",
+      "ModelName",
+      "ModelVersion",
+      "StatusCode",
+      "IsSpillover",
+      "ServiceTierRequest",
+      "ServiceTierResponse"
+    ],
+    "grain": "PT1M",
+    "name": "AzureOpenAIRequests",
+    "unit": "Count"
+  }
+]

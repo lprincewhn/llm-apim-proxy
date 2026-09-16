@@ -1,0 +1,127 @@
+{
+  "formula": {
+    "numerator": "sum(404, 429, 500..599)",
+    "denominator": "sum(all status-code series except 401 and 403)",
+    "threshold_pct": 20,
+    "minimum_samples": 5,
+    "source_window_minutes": 5,
+    "collector_target_seconds": 60,
+    "azure_alert_evaluation": "PT1M",
+    "azure_derived_signal_window": "PT1M; five-minute source window already calculated",
+    "ratio_undefined_when_denominator_zero": true
+  },
+  "architecture": "Foundry AzureOpenAIRequests status series -> foreground collector metric math -> temporary Application Insights custom metrics -> Azure Monitor metric alert -> existing Action Group/Logic App",
+  "timestamps": {
+    "delete_succeeded": "2026-09-16T03:38:55.4506473Z",
+    "first_client_404": "2026-09-16T03:54:02.748010+00:00",
+    "first_computed_violation_query": "2026-09-16T03:57:29.204399+00:00",
+    "first_computed_violation_published": "2026-09-16T03:57:33.924423+00:00",
+    "B_alert_fired": "2026-09-16T03:59:39.6432568Z",
+    "A_same_traffic_shadow_fired": "2026-09-16T04:00:48.8530197Z",
+    "controller_start": "2026-09-16T03:59:41.4491295Z",
+    "route_write_completed": "2026-09-16T03:59:46.6611873Z",
+    "first_backup_200": "2026-09-16T03:59:55.798542+00:00"
+  },
+  "durations_seconds": {
+    "delete_to_first404": 907.297363,
+    "first404_to_B_alert": 336.895246,
+    "first404_to_A_shadow_alert": 406.105009,
+    "B_alert_lead_over_A_shadow": 69.209763,
+    "first404_to_backup200": 353.050532,
+    "delete_to_backup200": 1260.347895,
+    "B_alert_to_backup200": 16.155286,
+    "B_alert_to_write": 7.017931,
+    "write_to_backup200": 9.137355,
+    "computed_published_to_B_alert": 125.718833
+  },
+  "first_violation": {
+    "queried_at": "2026-09-16T03:57:29.204399+00:00",
+    "published_at": "2026-09-16T03:57:33.924423+00:00",
+    "window_start": "2026-09-16T03:52:00+00:00",
+    "window_end": "2026-09-16T03:57:00+00:00",
+    "by_status": {
+      "200": 31,
+      "404": 8
+    },
+    "eligible_samples": 39,
+    "errors": 8,
+    "error_rate_pct": 20.512820512820515,
+    "violation": 1
+  },
+  "counts": {
+    "eastus2_200": 214,
+    "eastus2_404": 28,
+    "sweden_200": 13
+  },
+  "run_id": "08584120757040407137170110078CU32",
+  "B_alert_id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourcegroups/rg-svhwb107-apim-lab/providers/microsoft.insights/components/svhwb124-metric-math/providers/Microsoft.AlertsManagement/alerts/f5f9d576-ef2d-44ef-b2b8-60680faff000",
+  "A_shadow_alert_id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourcegroups/rg-svhwb107-apim-lab/providers/microsoft.operationalinsights/workspaces/law-svhwb107-0915/providers/Microsoft.AlertsManagement/alerts/715d1b73-4add-8280-e13f-4330e6860004",
+  "calculation_snapshots_recomputed": 28,
+  "matched_APIM_window": [
+    {
+      "BackendResponseCode": "200",
+      "ResponseCode": "200",
+      "Samples": "47",
+      "TableName": "PrimaryResult"
+    },
+    {
+      "BackendResponseCode": "404",
+      "ResponseCode": "404",
+      "Samples": "10",
+      "TableName": "PrimaryResult"
+    }
+  ],
+  "late_Foundry_window": {
+    "window_start": "2026-09-16T03:52:00+00:00",
+    "window_end": "2026-09-16T03:57:00+00:00",
+    "by_status": {
+      "200": 31,
+      "404": 8
+    },
+    "eligible_samples": 39,
+    "errors": 8,
+    "error_rate_pct": 20.512820512820515,
+    "violation": 1
+  },
+  "historical_A_seconds": {
+    "delete_success_to_first404": 1129.889467,
+    "first404_to_first_backup200": 445.768322,
+    "delete_success_to_first_backup200": 1575.657789,
+    "first404_to_alert_fired": 424.43534,
+    "alert_fired_to_first_backup200": 21.332982,
+    "route_write_completed_to_first_backup200": 13.075328
+  },
+  "final": {
+    "route": {
+      "primary": "sweden",
+      "enabled": [
+        "sweden",
+        "eastus2"
+      ],
+      "version": 21,
+      "lastSwitchAt": "2026-09-16T03:59:46.3926931Z",
+      "reason": "SVHWB-124 healthy standby restored; original Sweden primary"
+    },
+    "switchEnabled": true,
+    "a_enabled": {
+      "llm-backend-latency": true,
+      "llm-backend-errors": true
+    },
+    "b_rule_deleted": true
+  },
+  "cleanup": {
+    "recorded_at": "2026-09-16T04:02:42.903995+00:00",
+    "remaining_temporary_query_rules": [],
+    "remaining_temporary_metric_rules": [],
+    "remaining_temporary_components": []
+  },
+  "limits": [
+    "Only the error rule is aligned/tested; no new latency/SSE/429/5xx fault injection.",
+    "Same formula is not identical sample population: Foundry metrics cannot isolate APIM-only calls or gateway-only errors.",
+    "Same 03:52-03:57 window: live and later Foundry counts 31 successes+8 errors; APIM logs 47 successes+10 errors.",
+    "The collector and custom-metric ingestion stage are included in B, not free or zero-latency.",
+    "A shadow has no actions: its real alert timing is measured, not a hypothetical route-switch time.",
+    "Initial unbounded A shadow replayed pre-experiment data; excluded and replaced before the first fault.",
+    "Single trial; no general speed guarantee or recovery SLA."
+  ]
+}
