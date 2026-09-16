@@ -60,11 +60,19 @@ session-state semantics; it is not enabled by registering a backend.
 
 On 2026-09-16, `llm-proxy` and its secret named value were registered in the
 existing APIM. The authenticated `gpt-5.1` Responses request returned
-`503 NO_HEALTHY_BACKEND`; model availability is still blocked at the proxy.
-The upstream handoff lists eight other model deployments, not `gpt-5.1`.
+`503 NO_HEALTHY_BACKEND`; model availability was blocked at the proxy.
+The upstream handoff then listed eight other model deployments, not `gpt-5.1`.
 No other model was substituted. The live route was preserved at version 21,
 Sweden primary and East US 2 enabled standby. These are recorded observations,
 not a claim that proxy inference is ready or a live status feed.
+
+At 11:39 UTC on the same day, after the operator added `gpt-5.1`, direct
+`POST /v1/responses` requests using the APIM-stored upstream key succeeded:
+JSON returned HTTP 200 / `completed` / `OK` in 1445 ms; SSE returned HTTP 200
+and nine events including `response.completed` / `OK` in 1284 ms. Both reported
+model `gpt-5.1`. The upstream model blocker is resolved. This revalidation did
+not route traffic through APIM: the business policy still does not select
+`llm-proxy`, the route remains version 21, and no resource configuration changed.
 
 ## Deployment sequence
 
