@@ -1,0 +1,383 @@
+[
+  {
+    "id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourcegroups/jump-server_group/providers/microsoft.cognitiveservices/accounts/svhw-openai-eastus2/providers/Microsoft.AlertsManagement/alerts/251b22d5-eef8-4ba8-9462-31813790f000",
+    "name": "svhwb124-foundry-404-r3",
+    "properties": {
+      "context": {
+        "context": {
+          "condition": {
+            "allOf": [
+              {
+                "dimensions": [
+                  {
+                    "name": "ApiName",
+                    "operator": null,
+                    "type": null,
+                    "value": "OpenAI",
+                    "values": null
+                  },
+                  {
+                    "name": "ModelDeploymentName",
+                    "operator": null,
+                    "type": null,
+                    "value": "gpt-5.1",
+                    "values": null
+                  },
+                  {
+                    "name": "OperationName",
+                    "operator": null,
+                    "type": null,
+                    "value": "chatcompletions_create",
+                    "values": null
+                  },
+                  {
+                    "name": "StatusCode",
+                    "operator": null,
+                    "type": null,
+                    "value": "404",
+                    "values": null
+                  }
+                ],
+                "metricName": "AzureOpenAIRequests",
+                "metricNamespace": "microsoft.cognitiveservices/accounts",
+                "metricValue": 7.0,
+                "operator": "GreaterThanOrEqual",
+                "threshold": "5",
+                "timeAggregation": "Total",
+                "webTestName": null
+              }
+            ],
+            "staticThresholdFailingPeriods": {
+              "minFailingPeriodsToAlert": 0,
+              "numberOfEvaluationPeriods": 0
+            },
+            "windowEndTime": "2026-09-16T03:10:20.443Z",
+            "windowSize": "PT5M",
+            "windowStartTime": "2026-09-16T03:05:20.443Z"
+          },
+          "conditionType": "SingleResourceMultipleMetricCriteria",
+          "description": "SVHWB-124 B: Foundry deployment chat 404 count >=5/5m; not error rate.",
+          "id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/metricAlerts/svhwb124-foundry-404-r3",
+          "name": "svhwb124-foundry-404-r3",
+          "portalLink": "https://portal.azure.com/#resource/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/jump-server_group/providers/Microsoft.CognitiveServices/accounts/svhw-openai-eastus2",
+          "resourceGroupName": "jump-server_group",
+          "resourceId": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/jump-server_group/providers/Microsoft.CognitiveServices/accounts/svhw-openai-eastus2",
+          "resourceName": "svhw-openai-eastus2",
+          "resourceType": "Microsoft.CognitiveServices/accounts",
+          "severity": "2",
+          "subscriptionId": "10564893-ecc3-4a6d-b505-53bcbe89dd8e",
+          "timestamp": "2026-09-16T03:12:20.4591534Z"
+        },
+        "properties": null,
+        "status": "Activated",
+        "version": "2.0"
+      },
+      "essentials": {
+        "actionStatus": {
+          "isSuppressed": false
+        },
+        "alertRule": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/metricAlerts/svhwb124-foundry-404-r3",
+        "alertState": "New",
+        "description": "SVHWB-124 B: Foundry deployment chat 404 count >=5/5m; not error rate.",
+        "lastModifiedDateTime": "2026-09-16T03:12:34.7219457Z",
+        "lastModifiedUserName": "System",
+        "monitorCondition": "Fired",
+        "monitorService": "Platform",
+        "severity": "Sev2",
+        "signalType": "Metric",
+        "sourceCreatedId": "10564893-ecc3-4a6d-b505-53bcbe89dd8e_rg-svhwb107-apim-lab_Microsoft.Insights_metricAlerts_svhwb124-foundry-404-r3_1797869757",
+        "startDateTime": "2026-09-16T03:12:34.7219457Z",
+        "targetResource": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourcegroups/jump-server_group/providers/microsoft.cognitiveservices/accounts/svhw-openai-eastus2",
+        "targetResourceGroup": "jump-server_group",
+        "targetResourceName": "svhw-openai-eastus2",
+        "targetResourceType": "microsoft.cognitiveservices/accounts"
+      }
+    }
+  },
+  {
+    "id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourcegroups/jump-server_group/providers/microsoft.cognitiveservices/accounts/svhw-openai-eastus2/providers/Microsoft.AlertsManagement/alerts/0f70406d-85dd-4988-99f9-9792b6bef000",
+    "name": "svhwb124-foundry-404-r3",
+    "properties": {
+      "context": {
+        "context": {
+          "condition": {
+            "allOf": [
+              {
+                "dimensions": [
+                  {
+                    "name": "ApiName",
+                    "operator": null,
+                    "type": null,
+                    "value": "OpenAI",
+                    "values": null
+                  },
+                  {
+                    "name": "ModelDeploymentName",
+                    "operator": null,
+                    "type": null,
+                    "value": "gpt-5.1",
+                    "values": null
+                  },
+                  {
+                    "name": "OperationName",
+                    "operator": null,
+                    "type": null,
+                    "value": "chatcompletions_create",
+                    "values": null
+                  },
+                  {
+                    "name": "StatusCode",
+                    "operator": null,
+                    "type": null,
+                    "value": "200",
+                    "values": null
+                  }
+                ],
+                "metricName": "AzureOpenAIRequests",
+                "metricNamespace": "microsoft.cognitiveservices/accounts",
+                "metricValue": 19.0,
+                "operator": "GreaterThanOrEqual",
+                "threshold": "5",
+                "timeAggregation": "Total",
+                "webTestName": null
+              }
+            ],
+            "staticThresholdFailingPeriods": {
+              "minFailingPeriodsToAlert": 0,
+              "numberOfEvaluationPeriods": 0
+            },
+            "windowEndTime": "2026-09-16T02:49:45.2Z",
+            "windowSize": "PT5M",
+            "windowStartTime": "2026-09-16T02:44:45.2Z"
+          },
+          "conditionType": "SingleResourceMultipleMetricCriteria",
+          "description": "SVHWB-124 B: Foundry deployment chat 404 count >=5/5m; not error rate.",
+          "id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/metricAlerts/svhwb124-foundry-404-r3",
+          "name": "svhwb124-foundry-404-r3",
+          "portalLink": "https://portal.azure.com/#resource/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/jump-server_group/providers/Microsoft.CognitiveServices/accounts/svhw-openai-eastus2",
+          "resourceGroupName": "jump-server_group",
+          "resourceId": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/jump-server_group/providers/Microsoft.CognitiveServices/accounts/svhw-openai-eastus2",
+          "resourceName": "svhw-openai-eastus2",
+          "resourceType": "Microsoft.CognitiveServices/accounts",
+          "severity": "2",
+          "subscriptionId": "10564893-ecc3-4a6d-b505-53bcbe89dd8e",
+          "timestamp": "2026-09-16T02:51:45.3253103Z"
+        },
+        "properties": null,
+        "status": "Activated",
+        "version": "2.0"
+      },
+      "essentials": {
+        "actionStatus": {
+          "isSuppressed": false
+        },
+        "alertRule": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/metricAlerts/svhwb124-foundry-404-r3",
+        "alertState": "New",
+        "description": "SVHWB-124 B: Foundry deployment chat 404 count >=5/5m; not error rate.",
+        "lastModifiedDateTime": "2026-09-16T02:51:53.3327457Z",
+        "lastModifiedUserName": "System",
+        "monitorCondition": "Fired",
+        "monitorService": "Platform",
+        "severity": "Sev2",
+        "signalType": "Metric",
+        "sourceCreatedId": "10564893-ecc3-4a6d-b505-53bcbe89dd8e_rg-svhwb107-apim-lab_Microsoft.Insights_metricAlerts_svhwb124-foundry-404-r3_1797867583",
+        "startDateTime": "2026-09-16T02:51:53.3327457Z",
+        "targetResource": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourcegroups/jump-server_group/providers/microsoft.cognitiveservices/accounts/svhw-openai-eastus2",
+        "targetResourceGroup": "jump-server_group",
+        "targetResourceName": "svhw-openai-eastus2",
+        "targetResourceType": "microsoft.cognitiveservices/accounts"
+      }
+    }
+  },
+  {
+    "id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourcegroups/jump-server_group/providers/microsoft.cognitiveservices/accounts/svhw-openai-eastus2/providers/Microsoft.AlertsManagement/alerts/18f888fa-45ae-41e0-8918-bb9ff0b4f000",
+    "name": "svhwb124-foundry-404",
+    "properties": {
+      "context": {
+        "context": {
+          "condition": {
+            "allOf": [
+              {
+                "dimensions": [
+                  {
+                    "name": "ApiName",
+                    "operator": null,
+                    "type": null,
+                    "value": "OpenAI",
+                    "values": null
+                  },
+                  {
+                    "name": "ModelDeploymentName",
+                    "operator": null,
+                    "type": null,
+                    "value": "gpt-5.1",
+                    "values": null
+                  },
+                  {
+                    "name": "OperationName",
+                    "operator": null,
+                    "type": null,
+                    "value": "chatcompletions_create",
+                    "values": null
+                  },
+                  {
+                    "name": "StatusCode",
+                    "operator": null,
+                    "type": null,
+                    "value": "404",
+                    "values": null
+                  }
+                ],
+                "metricName": "AzureOpenAIRequests",
+                "metricNamespace": "microsoft.cognitiveservices/accounts",
+                "metricValue": 5.0,
+                "operator": "GreaterThanOrEqual",
+                "threshold": "5",
+                "timeAggregation": "Total",
+                "webTestName": null
+              }
+            ],
+            "staticThresholdFailingPeriods": {
+              "minFailingPeriodsToAlert": 0,
+              "numberOfEvaluationPeriods": 0
+            },
+            "windowEndTime": "2026-09-16T02:13:12.972Z",
+            "windowSize": "PT5M",
+            "windowStartTime": "2026-09-16T02:08:12.972Z"
+          },
+          "conditionType": "SingleResourceMultipleMetricCriteria",
+          "description": "SVHWB-124 B: Foundry deployment chat 404 count >=5/5m; not error rate.",
+          "id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/metricAlerts/svhwb124-foundry-404",
+          "name": "svhwb124-foundry-404",
+          "portalLink": "https://portal.azure.com/#resource/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/jump-server_group/providers/Microsoft.CognitiveServices/accounts/svhw-openai-eastus2",
+          "resourceGroupName": "jump-server_group",
+          "resourceId": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/jump-server_group/providers/Microsoft.CognitiveServices/accounts/svhw-openai-eastus2",
+          "resourceName": "svhw-openai-eastus2",
+          "resourceType": "Microsoft.CognitiveServices/accounts",
+          "severity": "2",
+          "subscriptionId": "10564893-ecc3-4a6d-b505-53bcbe89dd8e",
+          "timestamp": "2026-09-16T02:15:13.0038591Z"
+        },
+        "properties": null,
+        "status": "Activated",
+        "version": "2.0"
+      },
+      "essentials": {
+        "actionStatus": {
+          "isSuppressed": false
+        },
+        "alertRule": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/metricAlerts/svhwb124-foundry-404",
+        "alertState": "New",
+        "description": "SVHWB-124 B: Foundry deployment chat 404 count >=5/5m; not error rate.",
+        "lastModifiedDateTime": "2026-09-16T02:30:32.5093023Z",
+        "lastModifiedUserName": "System",
+        "monitorCondition": "Resolved",
+        "monitorConditionResolvedDateTime": "2026-09-16T02:30:32.7414324Z",
+        "monitorService": "Platform",
+        "severity": "Sev2",
+        "signalType": "Metric",
+        "sourceCreatedId": "10564893-ecc3-4a6d-b505-53bcbe89dd8e_rg-svhwb107-apim-lab_Microsoft.Insights_metricAlerts_svhwb124-foundry-404_1797869757",
+        "startDateTime": "2026-09-16T02:15:26.0468941Z",
+        "targetResource": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourcegroups/jump-server_group/providers/microsoft.cognitiveservices/accounts/svhw-openai-eastus2",
+        "targetResourceGroup": "jump-server_group",
+        "targetResourceName": "svhw-openai-eastus2",
+        "targetResourceType": "microsoft.cognitiveservices/accounts"
+      }
+    }
+  },
+  {
+    "id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourcegroups/jump-server_group/providers/microsoft.cognitiveservices/accounts/svhw-openai-eastus2/providers/Microsoft.AlertsManagement/alerts/316ed014-db3a-4a6d-891e-5a063275f000",
+    "name": "svhwb124-foundry-404",
+    "properties": {
+      "context": {
+        "context": {
+          "condition": {
+            "allOf": [
+              {
+                "dimensions": [
+                  {
+                    "name": "ApiName",
+                    "operator": null,
+                    "type": null,
+                    "value": "OpenAI",
+                    "values": null
+                  },
+                  {
+                    "name": "ModelDeploymentName",
+                    "operator": null,
+                    "type": null,
+                    "value": "gpt-5.1",
+                    "values": null
+                  },
+                  {
+                    "name": "OperationName",
+                    "operator": null,
+                    "type": null,
+                    "value": "chatcompletions_create",
+                    "values": null
+                  },
+                  {
+                    "name": "StatusCode",
+                    "operator": null,
+                    "type": null,
+                    "value": "200",
+                    "values": null
+                  }
+                ],
+                "metricName": "AzureOpenAIRequests",
+                "metricNamespace": "microsoft.cognitiveservices/accounts",
+                "metricValue": 8.0,
+                "operator": "GreaterThanOrEqual",
+                "threshold": "5",
+                "timeAggregation": "Total",
+                "webTestName": null
+              }
+            ],
+            "staticThresholdFailingPeriods": {
+              "minFailingPeriodsToAlert": 0,
+              "numberOfEvaluationPeriods": 0
+            },
+            "windowEndTime": "2026-09-16T02:23:22.811Z",
+            "windowSize": "PT5M",
+            "windowStartTime": "2026-09-16T02:18:22.811Z"
+          },
+          "conditionType": "SingleResourceMultipleMetricCriteria",
+          "description": "SVHWB-124 B: Foundry deployment chat 404 count >=5/5m; not error rate.",
+          "id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/metricAlerts/svhwb124-foundry-404",
+          "name": "svhwb124-foundry-404",
+          "portalLink": "https://portal.azure.com/#resource/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/jump-server_group/providers/Microsoft.CognitiveServices/accounts/svhw-openai-eastus2",
+          "resourceGroupName": "jump-server_group",
+          "resourceId": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/jump-server_group/providers/Microsoft.CognitiveServices/accounts/svhw-openai-eastus2",
+          "resourceName": "svhw-openai-eastus2",
+          "resourceType": "Microsoft.CognitiveServices/accounts",
+          "severity": "2",
+          "subscriptionId": "10564893-ecc3-4a6d-b505-53bcbe89dd8e",
+          "timestamp": "2026-09-16T02:25:22.8430907Z"
+        },
+        "properties": null,
+        "status": "Activated",
+        "version": "2.0"
+      },
+      "essentials": {
+        "actionStatus": {
+          "isSuppressed": false
+        },
+        "alertRule": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/metricAlerts/svhwb124-foundry-404",
+        "alertState": "New",
+        "description": "SVHWB-124 B: Foundry deployment chat 404 count >=5/5m; not error rate.",
+        "lastModifiedDateTime": "2026-09-16T02:25:32.2978071Z",
+        "lastModifiedUserName": "System",
+        "monitorCondition": "Fired",
+        "monitorService": "Platform",
+        "severity": "Sev2",
+        "signalType": "Metric",
+        "sourceCreatedId": "10564893-ecc3-4a6d-b505-53bcbe89dd8e_rg-svhwb107-apim-lab_Microsoft.Insights_metricAlerts_svhwb124-foundry-404_1797867583",
+        "startDateTime": "2026-09-16T02:25:32.2978071Z",
+        "targetResource": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourcegroups/jump-server_group/providers/microsoft.cognitiveservices/accounts/svhw-openai-eastus2",
+        "targetResourceGroup": "jump-server_group",
+        "targetResourceName": "svhw-openai-eastus2",
+        "targetResourceType": "microsoft.cognitiveservices/accounts"
+      }
+    }
+  }
+]

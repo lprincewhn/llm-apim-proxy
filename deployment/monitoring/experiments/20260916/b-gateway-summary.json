@@ -1,0 +1,32 @@
+[
+  {
+    "AverageBackendMs": "869.5342465753424",
+    "BackendResponseCode": "200",
+    "BackendUrl": "https://svhw-openai-eastus2.openai.azure.com/openai/deployments/gpt-5.1/chat/completions?api-version=2024-10-21",
+    "First": "2026-09-16T02:52:31.3577436Z",
+    "Last": "2026-09-16T03:12:37.7140074Z",
+    "ResponseCode": "200",
+    "Samples": "219",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "AverageBackendMs": "390.40909090909093",
+    "BackendResponseCode": "404",
+    "BackendUrl": "https://svhw-openai-eastus2.openai.azure.com/openai/deployments/gpt-5.1/chat/completions?api-version=2024-10-21",
+    "First": "2026-09-16T02:57:01.3730272Z",
+    "Last": "2026-09-16T03:12:47.7441833Z",
+    "ResponseCode": "404",
+    "Samples": "22",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "AverageBackendMs": "908.8461538461538",
+    "BackendResponseCode": "200",
+    "BackendUrl": "https://svhw2-swedencentral.openai.azure.com/openai/deployments/gpt-5.1/chat/completions?api-version=2024-10-21",
+    "First": "2026-09-16T03:12:52.7111825Z",
+    "Last": "2026-09-16T03:13:52.7245062Z",
+    "ResponseCode": "200",
+    "Samples": "13",
+    "TableName": "PrimaryResult"
+  }
+]

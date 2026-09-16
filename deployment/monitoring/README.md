@@ -1,5 +1,11 @@
 # Direct Foundry monitoring controller
 
+For the 2026-09-16 live APIM-log versus Foundry-metric experiment, see the
+[A/B report](../../docs/apim-vs-foundry-metrics-20260916.zh-CN.md).
+`metric_experiment.py` is an offline, opt-in experiment definition, not part of
+the default production deployment. The temporary metric rules were removed
+after the drill; the original APIM-log controller remains the production path.
+
 The controller implements **APIM gateway logs → Azure Monitor → Action Group →
 Logic App direct backup probes → conditional APIM route write → future requests**.
 There is no executor, executor key, Container App endpoint or intermediary probe.
