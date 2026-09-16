@@ -12,6 +12,11 @@
 
 当前上游仍是已有 Foundry 资源。路径能透传不等于上游实现该 API，也不代表 Azure／OpenAI／Anthropic 协议自动互转；`/v1/messages` 等不受上游支持的路径会返回上游错误。所有路径统一走当前主上游，没有部署名映射或 embedding 固定后端特例。East US 2 和 Sweden 的聊天部署名统一为 `gpt-5.1`，URL 或 body 均使用这个实际部署名。
 
+另提供 `deployment/configure_proxy.py` 注册 `llm-proxy` 后端
+（`https://proxy.svhw.tech`，secret Named Value 提供上游 `api-key`，
+`/v1/responses` 使用 `gpt-5.1`）。**仅注册资源，不改变当前业务路由或自动切换池**；
+接入边界见[部署手册](deployment/README.md#optional-registered-session-proxy-backend)。
+
 ## 组件
 
 | 路径 | 用途 |
@@ -30,7 +35,7 @@
 Python 3.12，无第三方依赖、不调用 Azure：
 
 ```bash
-(cd deployment && python3 -m unittest test_monitoring_policy -v)
+(cd deployment && python3 -m unittest test_monitoring_policy test_configure_proxy -v)
 python3 -m unittest discover -s deployment/monitoring -p 'test_*.py' -v
 ```
 

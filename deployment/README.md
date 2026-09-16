@@ -30,6 +30,50 @@ requests use the workflow's system identity and ARM audience.
 and smoke requests, never APIM rewrites. Named APIM backends are `llm-eastus2`
 and `llm-sweden`. The shared `backends.py` validates the origins and probe names.
 
+## Optional registered session-proxy backend
+
+`python3 deployment/configure_proxy.py --key-stdin` registers `llm-proxy` at
+`https://proxy.svhw.tech`, taking its upstream API key only from standard input.
+It stores the key in the secret APIM named value `proxy-api-key` and configures
+the backend `api-key` header with a named-value reference, not a plaintext key.
+Never put the key in command arguments, source, comments or logs. Without
+`--key-stdin`, the command reuses the existing secret. Certificate and hostname
+validation remain enabled.
+
+This is **backend registration only**. Neither this command nor subsequent
+`configure_apim.py` runs select it as the current primary, change `chat-route`,
+or add it to the two-Foundry automatic failover pool. Existing configuration
+does not delete this separately registered backend. The business policy still
+selects only East US 2 and Sweden.
+
+The intended request is `POST /v1/responses` with body `model: "gpt-5.1"`.
+The proxy must have a healthy backend for that exact model before it can serve
+this request; backend registration does not provision a model inside the proxy.
+It is not an Azure deployment-path chat endpoint. Its `/sessions` API has
+proxy-owned session state. No model/path rewrite or protocol conversion is
+introduced here. Using it for business traffic needs a separately configured
+policy that removes the caller's APIM key, selects this backend, and does not
+apply Foundry managed-identity authentication. Do not merely add `proxy` to
+`chat-route`: the existing policy/controller intentionally reject it.
+Automatic failover would additionally need compatible paths, probes and
+session-state semantics; it is not enabled by registering a backend.
+
+On 2026-09-16, `llm-proxy` and its secret named value were registered in the
+existing APIM. The authenticated `gpt-5.1` Responses request returned
+`503 NO_HEALTHY_BACKEND`; model availability was blocked at the proxy.
+The upstream handoff then listed eight other model deployments, not `gpt-5.1`.
+No other model was substituted. The live route was preserved at version 21,
+Sweden primary and East US 2 enabled standby. These are recorded observations,
+not a claim that proxy inference is ready or a live status feed.
+
+At 11:39 UTC on the same day, after the operator added `gpt-5.1`, direct
+`POST /v1/responses` requests using the APIM-stored upstream key succeeded:
+JSON returned HTTP 200 / `completed` / `OK` in 1445 ms; SSE returned HTTP 200
+and nine events including `response.completed` / `OK` in 1284 ms. Both reported
+model `gpt-5.1`. The upstream model blocker is resolved. This revalidation did
+not route traffic through APIM: the business policy still does not select
+`llm-proxy`, the route remains version 21, and no resource configuration changed.
+
 ## Deployment sequence
 
 These scripts operate on existing lab prerequisites, not a new subscription.
