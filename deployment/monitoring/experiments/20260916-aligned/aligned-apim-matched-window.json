@@ -1,0 +1,14 @@
+[
+  {
+    "BackendResponseCode": "200",
+    "ResponseCode": "200",
+    "Samples": "47",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "BackendResponseCode": "404",
+    "ResponseCode": "404",
+    "Samples": "10",
+    "TableName": "PrimaryResult"
+  }
+]

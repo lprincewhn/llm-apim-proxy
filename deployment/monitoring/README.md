@@ -2,6 +2,13 @@
 
 For the 2026-09-16 live APIM-log versus Foundry-metric experiment, see the
 [A/B report](../../docs/apim-vs-foundry-metrics-20260916.zh-CN.md).
+The subsequent [aligned error-rate drill](../../docs/apim-vs-foundry-aligned-20260916.zh-CN.md)
+uses `aligned_metric_experiment.py` to sum Foundry status-code metric series,
+exclude 401/403, require at least five eligible requests, and apply the same
+20% combined 404/429/5xx threshold over five minutes. Its temporary collector
+publishes derived custom metrics through an isolated Application Insights
+component; that extra ingestion stage is included in the measured B latency.
+Neither experiment is a permanently deployed collector or a default alert path.
 `metric_experiment.py` is an offline, opt-in experiment definition, not part of
 the default production deployment. The temporary metric rules were removed
 after the drill; the original APIM-log controller remains the production path.

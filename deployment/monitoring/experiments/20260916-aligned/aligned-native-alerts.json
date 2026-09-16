@@ -1,0 +1,288 @@
+[
+  {
+    "id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourcegroups/rg-svhwb107-apim-lab/providers/microsoft.operationalinsights/workspaces/law-svhwb107-0915/providers/Microsoft.AlertsManagement/alerts/715d1b73-4add-8280-e13f-4330e6860004",
+    "name": "svhwb124-apim-errors-aligned-shadow",
+    "properties": {
+      "context": {
+        "context": {
+          "condition": {
+            "allOf": [
+              {
+                "dimensions": [
+                  {
+                    "name": "Backend",
+                    "value": "eastus2"
+                  }
+                ],
+                "event": null,
+                "failingPeriods": {
+                  "minFailingPeriodsToAlert": 1,
+                  "numberOfEvaluationPeriods": 1
+                },
+                "linkToFilteredSearchResultsAPI": "https://api.loganalytics.io/v1/workspaces/e279a397-bc1f-48b2-91f0-d57443bacaca/query?query=ApiManagementGatewayLogs%0A%7C%20where%20TimeGenerated%20%3E%3D%20datetime%282026-09-16T03%3A38%3A55Z%29%0A%7C%20where%20TimeGenerated%20%3E%3D%20%28datetime%282026-09-16T03%3A57%3A46.0000000Z%29%20-%205m%29%0A%7C%20where%20_ResourceId%20%3D~%20%27%2Fsubscriptions%2F10564893-ecc3-4a6d-b505-53bcbe89dd8e%2FresourceGroups%2Frg-svhwb107-apim-lab%2Fproviders%2FMicrosoft.ApiManagement%2Fservice%2Fapim-svhwb107-0915%27%20and%20ApiId%20%3D%3D%20%27llm%27%0A%7C%20where%20Method%20%3D%3D%20%27POST%27%0A%7C%20extend%20BackendRequestUrl%20%3D%20tostring%28split%28tostring%28BackendUrl%29%2C%20%22%3F%22%29%5B0%5D%29%0A%7C%20extend%20Backend%20%3D%20case%28BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw-openai-eastus2.openai.azure.com%2Fopenai%2Fdeployments%2Fgpt-5.1%2Fchat%2Fcompletions%27%2C%20%27eastus2%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw-openai-eastus2.openai.azure.com%2Fopenai%2Fv1%2Fchat%2Fcompletions%27%2C%20%27eastus2%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw-openai-eastus2.openai.azure.com%2Fopenai%2Fv1%2Fresponses%27%2C%20%27eastus2%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw2-swedencentral.openai.azure.com%2Fopenai%2Fdeployments%2Fgpt-5.1%2Fchat%2Fcompletions%27%2C%20%27sweden%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw2-swedencentral.openai.azure.com%2Fopenai%2Fv1%2Fchat%2Fcompletions%27%2C%20%27sweden%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw2-swedencentral.openai.azure.com%2Fopenai%2Fv1%2Fresponses%27%2C%20%27sweden%27%2C%20%27%27%29%0A%7C%20where%20Backend%20in%20%28%27eastus2%27%2C%20%27sweden%27%29%0A%7C%20extend%20GatewayStatus%20%3D%20coalesce%28toint%28ResponseCode%29%2C%200%29%2C%0A%20%20%20%20BackendStatus%20%3D%20coalesce%28toint%28BackendResponseCode%29%2C%200%29%0A%7C%20where%20GatewayStatus%20%21in%20%28401%2C%20403%29%20and%20BackendStatus%20%21in%20%28401%2C%20403%29%0A%7C%20summarize%20Samples%20%3D%20count%28%29%2C%20AverageBackendMs%20%3D%20avg%28todouble%28BackendTime%29%29%2C%0A%20%20%20%20ErrorCount%20%3D%20countif%28GatewayStatus%20in%20%28404%2C%20429%29%20or%20GatewayStatus%20between%20%28500%20..%20599%29%0A%20%20%20%20%20%20%20%20or%20BackendStatus%20in%20%28404%2C%20429%29%20or%20BackendStatus%20between%20%28500%20..%20599%29%29%0A%20%20%20%20by%20Backend%0A%7C%20extend%20ErrorRatePct%20%3D%20100.0%20%2A%20ErrorCount%20%2F%20Samples%0A%7C%20extend%20ViolationCount%20%3D%20iff%28Samples%20%3E%3D%205%20and%20ErrorRatePct%20%3E%3D%2020.0%2C%201%2C%200%29%0A%7C%20project%20Backend%2C%20ViolationCount%7C%20where%20Backend%20in%20%28%40%27eastus2%27%2C%20%40%27sweden%27%29%0D%0A%7C%20extend%20TimeGenerated%20%3D%20column_ifexists%28%27TimeGenerated%27%2C%20datetime%282026-09-16T03%3A52%3A46.0000000Z%29%29%7C%20summarize%20AggregatedValue%20%3D%20max%28ViolationCount%29%20by%20bin_at%28TimeGenerated%2C%205m%2C%20datetime%282026-09-16T03%3A57%3A46.0000000Z%29%29%2C%20Backend%7C%20where%20todouble%28AggregatedValue%29%20%3E%200%7C%20where%20tostring%28Backend%29%20%3D%3D%20%40%27eastus2%27&timespan=2026-09-16T03%3a52%3a46.0000000Z%2f2026-09-16T03%3a57%3a46.0000000Z",
+                "linkToFilteredSearchResultsUI": "https://portal.azure.com#@16b3c013-d300-468d-ac64-7eda0820b6d3/blade/Microsoft_Azure_Monitoring_Logs/LogsBlade/source/Alerts.EmailLinks/scope/%7B%22resources%22%3A%5B%7B%22resourceId%22%3A%22%2Fsubscriptions%2F10564893-ecc3-4a6d-b505-53bcbe89dd8e%2FresourceGroups%2Frg-svhwb107-apim-lab%2Fproviders%2FMicrosoft.OperationalInsights%2Fworkspaces%2Flaw-svhwb107-0915%22%7D%5D%7D/q/eJy9Vd9P2zAQfkfa%2F%2BDxkmRqEvdHCkUqo0MTmrRqCBgPTBNykmvqLYkz22kBTfvbd27StAH6MI3NL4ntu%2B%2F77nz2TQo%2BZTlLIINcnzENS3b%2FUSRq7ydZzkECueIZnEEOEvdicjwmMf5oXLR7tDd06cjtDq9o%2F6h%2FeBQEN85uP3uHY3BwNBh6tBo3DnFJkG1gbi9AiVJG8CEm41%2FE8lUZqkjyQnORK79Lg%2BHgcNR3IYr67oANYzcMaOAG%2FTAK4XAUx4fgyxriTIqyUL5MXLWYL8MuPXBZwTM3ZaFfSLHgMUjlT3kkhRIz7U22c%2BMrkAsegb9yaQDoqBtYhOUxQWujcUysNM2sJoAp6Lmo1s8%2FXV6ZDbjTgA7vWPQdvxfwowSlP8uUjIkWSkueJ7YqUq7tZlrbopHTIftv950v9KvzBAoBIqbAfgYZ6edaF%2BrI9412VxSQM%2B4CU7pUPa%2BaeuyhlOBFIvOrBT%2BGIhX3Jn7lJ4V2A6%2FrR3OmfbQpUlgdgtUhVo2Dvy%2FHvfivVFgkBTLAH3P0XLWEGPIIkyRZ%2BteprNBelHpHJv8NUyuRDYVlbe70ulp5TuytVK%2BNt%2Bq6fpAuNUMbU92CpaAiwIvBc21f1FSnIga8F9Tp7BEcNf4urybaR86NvjbrayNzQLsdMqB9Z3XV2wRtA0RRZZYxyR%2BAXDKT8EpDidTIM1ngk5hADTE1e2yRoLRYlGHa3F3zfDp1PO%2BlFPLUAKyB%2BMxui6wkDFBCb%2BQQIR%2FFEIJeAqBNQCnxPBKMRs4K2gy0bgf0BKy9%2FRxYhRber003R7gSf4FqziMjv0upR8mb7Zj8dZo2TtdcpMzU6TpqPpvZ62RiLwlWx9CCxtUeQndItz5LfNG%2FAW7UijqPQJ8rxpOtajxpyvHVRle7qZnDSMssv%2BUzuONKK9tqGSDKrp7Xa%2FU8Z7tmJkkiITH%2B1ywtAVkydme3xTsm1SHPb5m2W5QdbJ67WdudFouxDn6di6YIH2lwyDGhG6N2T3LMY7HJ3G8%3D/prettify/1/timespan/2026-09-16T03%3a52%3a46.0000000Z%2f2026-09-16T03%3a57%3a46.0000000Z",
+                "linkToSearchResultsAPI": "https://api.loganalytics.io/v1/workspaces/e279a397-bc1f-48b2-91f0-d57443bacaca/query?query=ApiManagementGatewayLogs%0A%7C%20where%20TimeGenerated%20%3E%3D%20datetime%282026-09-16T03%3A38%3A55Z%29%0A%7C%20where%20TimeGenerated%20%3E%3D%20%28datetime%282026-09-16T03%3A57%3A46.0000000Z%29%20-%205m%29%0A%7C%20where%20_ResourceId%20%3D~%20%27%2Fsubscriptions%2F10564893-ecc3-4a6d-b505-53bcbe89dd8e%2FresourceGroups%2Frg-svhwb107-apim-lab%2Fproviders%2FMicrosoft.ApiManagement%2Fservice%2Fapim-svhwb107-0915%27%20and%20ApiId%20%3D%3D%20%27llm%27%0A%7C%20where%20Method%20%3D%3D%20%27POST%27%0A%7C%20extend%20BackendRequestUrl%20%3D%20tostring%28split%28tostring%28BackendUrl%29%2C%20%22%3F%22%29%5B0%5D%29%0A%7C%20extend%20Backend%20%3D%20case%28BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw-openai-eastus2.openai.azure.com%2Fopenai%2Fdeployments%2Fgpt-5.1%2Fchat%2Fcompletions%27%2C%20%27eastus2%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw-openai-eastus2.openai.azure.com%2Fopenai%2Fv1%2Fchat%2Fcompletions%27%2C%20%27eastus2%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw-openai-eastus2.openai.azure.com%2Fopenai%2Fv1%2Fresponses%27%2C%20%27eastus2%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw2-swedencentral.openai.azure.com%2Fopenai%2Fdeployments%2Fgpt-5.1%2Fchat%2Fcompletions%27%2C%20%27sweden%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw2-swedencentral.openai.azure.com%2Fopenai%2Fv1%2Fchat%2Fcompletions%27%2C%20%27sweden%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw2-swedencentral.openai.azure.com%2Fopenai%2Fv1%2Fresponses%27%2C%20%27sweden%27%2C%20%27%27%29%0A%7C%20where%20Backend%20in%20%28%27eastus2%27%2C%20%27sweden%27%29%0A%7C%20extend%20GatewayStatus%20%3D%20coalesce%28toint%28ResponseCode%29%2C%200%29%2C%0A%20%20%20%20BackendStatus%20%3D%20coalesce%28toint%28BackendResponseCode%29%2C%200%29%0A%7C%20where%20GatewayStatus%20%21in%20%28401%2C%20403%29%20and%20BackendStatus%20%21in%20%28401%2C%20403%29%0A%7C%20summarize%20Samples%20%3D%20count%28%29%2C%20AverageBackendMs%20%3D%20avg%28todouble%28BackendTime%29%29%2C%0A%20%20%20%20ErrorCount%20%3D%20countif%28GatewayStatus%20in%20%28404%2C%20429%29%20or%20GatewayStatus%20between%20%28500%20..%20599%29%0A%20%20%20%20%20%20%20%20or%20BackendStatus%20in%20%28404%2C%20429%29%20or%20BackendStatus%20between%20%28500%20..%20599%29%29%0A%20%20%20%20by%20Backend%0A%7C%20extend%20ErrorRatePct%20%3D%20100.0%20%2A%20ErrorCount%20%2F%20Samples%0A%7C%20extend%20ViolationCount%20%3D%20iff%28Samples%20%3E%3D%205%20and%20ErrorRatePct%20%3E%3D%2020.0%2C%201%2C%200%29%0A%7C%20project%20Backend%2C%20ViolationCount%7C%20where%20Backend%20in%20%28%40%27eastus2%27%2C%20%40%27sweden%27%29%0D%0A%7C%20extend%20TimeGenerated%20%3D%20column_ifexists%28%27TimeGenerated%27%2C%20datetime%282026-09-16T03%3A52%3A46.0000000Z%29%29%7C%20summarize%20AggregatedValue%20%3D%20max%28ViolationCount%29%20by%20bin_at%28TimeGenerated%2C%205m%2C%20datetime%282026-09-16T03%3A57%3A46.0000000Z%29%29%2C%20Backend&timespan=2026-09-16T03%3a52%3a46.0000000Z%2f2026-09-16T03%3a57%3a46.0000000Z",
+                "linkToSearchResultsUI": "https://portal.azure.com#@16b3c013-d300-468d-ac64-7eda0820b6d3/blade/Microsoft_Azure_Monitoring_Logs/LogsBlade/source/Alerts.EmailLinks/scope/%7B%22resources%22%3A%5B%7B%22resourceId%22%3A%22%2Fsubscriptions%2F10564893-ecc3-4a6d-b505-53bcbe89dd8e%2FresourceGroups%2Frg-svhwb107-apim-lab%2Fproviders%2FMicrosoft.OperationalInsights%2Fworkspaces%2Flaw-svhwb107-0915%22%7D%5D%7D/q/eJy9VVFvmzAQfq%2B0%2F%2BD1BZgCmCSkSaRszaapmrRoVdr1odNUGbgQb4CZbZK2mvbbdwRCQts8TOvmF7B9933fnc%2B%2Bac5nLGMxpJDpM6Zhze4%2Bilgd%2FSTrJUgglzyFM8hA4l5EXk9IhD8aF80u7Q5sOrK9wSXtjXvDse9fW4f9zAOO%2Fsm4P3BoNa4tYhM%2F3cHczEGJQobwISKTX8RwVRGoUPJcc5Ep16P%2BoD8c9WwIw57dZ4PIDnzq234vCAMYjqJoCK6sIc6kKHLlythWq%2BU68OiJzXKe2gkL3FyKFY9AKnfGQymUWGhnup8bV4Fc8RDcjUsDQEeebxCWRQStS40TYiRJajQBzEAvRbV%2B%2FunistyAWw3o8JaF3%2FE7hx8FKP1ZJmRCtFBa8iw2VZ5wbTbT2haNrA45fnNsfaFfrUdQCBAyBeYTyEi%2F1DpXY9cttdsih4xxG5jSheo61dRh94UEJxSpWy24EeSJuCvjV26ca9t3PDdcMu2iTZ7A5hCMDjFqHPx9Pu7Vf6XCIsmRAf6Yo2urNUSQhZgkyZK%2FTmWF9qzUBzL5b5haiWwoDGN3p7fVyjNi7qV6a7xX1%2FWDdKEZ2pTVLVgCKgS8GDzT5rymeiciwHtBrc4RwVHjH%2FJqon3g3Ohrs74sZfap1yF92rM2V71N0DZAFFWkKZP8HsgFKxNeaSiQGnmmK3wSY6ghZuUeW8UoLRJFkDR3t3w%2BrTqe91IK%2Ba4E2ALxhdkWWUnoo4TuyCJCPoghAL0GQBufUuI4xB%2BNrA10OdC6HdAjsPb2U2AVWnC3Nd0d4Ub8HNWch6V8j1KHklf7MbnbNO2crrhIWFmn26j5YmFuk4m9xN8cQwsaV7sI3SFefZb4on8D3KgVdR6APlWMp3vVeNqU44udrnZTKw8jKdLshi%2FgliutTKNlgCiHel631fOs%2FZqZxrGEuPS%2FYkkByJKyW7Mt3ipTHfDshmmzRdnB5nmYtd1psRjr4H8D/prettify/1/timespan/2026-09-16T03%3a52%3a46.0000000Z%2f2026-09-16T03%3a57%3a46.0000000Z",
+                "metricMeasureColumn": "ViolationCount",
+                "metricValue": 1.0,
+                "operator": "GreaterThan",
+                "searchQuery": "ApiManagementGatewayLogs\n| where TimeGenerated >= datetime(2026-09-16T03:38:55Z)\n| where TimeGenerated >= ago(5m)\n| where _ResourceId =~ '/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.ApiManagement/service/apim-svhwb107-0915' and ApiId == 'llm'\n| where Method == 'POST'\n| extend BackendRequestUrl = tostring(split(tostring(BackendUrl), \"?\")[0])\n| extend Backend = case(BackendRequestUrl == 'https://svhw-openai-eastus2.openai.azure.com/openai/deployments/gpt-5.1/chat/completions', 'eastus2', BackendRequestUrl == 'https://svhw-openai-eastus2.openai.azure.com/openai/v1/chat/completions', 'eastus2', BackendRequestUrl == 'https://svhw-openai-eastus2.openai.azure.com/openai/v1/responses', 'eastus2', BackendRequestUrl == 'https://svhw2-swedencentral.openai.azure.com/openai/deployments/gpt-5.1/chat/completions', 'sweden', BackendRequestUrl == 'https://svhw2-swedencentral.openai.azure.com/openai/v1/chat/completions', 'sweden', BackendRequestUrl == 'https://svhw2-swedencentral.openai.azure.com/openai/v1/responses', 'sweden', '')\n| where Backend in ('eastus2', 'sweden')\n| extend GatewayStatus = coalesce(toint(ResponseCode), 0),\n    BackendStatus = coalesce(toint(BackendResponseCode), 0)\n| where GatewayStatus !in (401, 403) and BackendStatus !in (401, 403)\n| summarize Samples = count(), AverageBackendMs = avg(todouble(BackendTime)),\n    ErrorCount = countif(GatewayStatus in (404, 429) or GatewayStatus between (500 .. 599)\n        or BackendStatus in (404, 429) or BackendStatus between (500 .. 599))\n    by Backend\n| extend ErrorRatePct = 100.0 * ErrorCount / Samples\n| extend ViolationCount = iff(Samples >= 5 and ErrorRatePct >= 20.0, 1, 0)\n| project Backend, ViolationCount",
+                "targetResourceTypes": null,
+                "threshold": "0",
+                "timeAggregation": "Maximum"
+              }
+            ],
+            "windowEndTime": "2026-09-16T03:57:46Z",
+            "windowSize": "PT5M",
+            "windowStartTime": "2026-09-16T03:52:46Z"
+          },
+          "conditionType": "LogQueryCriteria",
+          "description": "SVHWB-124 same-traffic A shadow; production error query plus experiment start bound; no actions.",
+          "id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/microsoft.insights/scheduledqueryrules/svhwb124-apim-errors-aligned-shadow",
+          "name": "svhwb124-apim-errors-aligned-shadow",
+          "portalLink": "https://portal.azure.com/#resource//subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.OperationalInsights/workspaces/law-svhwb107-0915",
+          "resourceGroupName": "rg-svhwb107-apim-lab",
+          "resourceId": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.OperationalInsights/workspaces/law-svhwb107-0915",
+          "resourceName": "law-svhwb107-0915",
+          "resourceType": "Microsoft.OperationalInsights/workspaces",
+          "severity": "2",
+          "subscriptionId": "10564893-ecc3-4a6d-b505-53bcbe89dd8e",
+          "timestamp": "2026-09-16T04:00:48.8532802Z"
+        },
+        "properties": null,
+        "status": "Activated",
+        "version": "2023-12-01"
+      },
+      "essentials": {
+        "actionStatus": {
+          "isSuppressed": false
+        },
+        "alertRule": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/microsoft.insights/scheduledqueryrules/svhwb124-apim-errors-aligned-shadow",
+        "alertState": "New",
+        "description": "SVHWB-124 same-traffic A shadow; production error query plus experiment start bound; no actions.",
+        "lastModifiedDateTime": "2026-09-16T04:00:48.8530197Z",
+        "lastModifiedUserName": "System",
+        "monitorCondition": "Fired",
+        "monitorService": "Log Alerts V2",
+        "severity": "Sev2",
+        "signalType": "Log",
+        "sourceCreatedId": "a68919a8-de5c-10b4-3e99-11d8f365f6d7",
+        "startDateTime": "2026-09-16T04:00:48.8530197Z",
+        "targetResource": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourcegroups/rg-svhwb107-apim-lab/providers/microsoft.operationalinsights/workspaces/law-svhwb107-0915",
+        "targetResourceGroup": "rg-svhwb107-apim-lab",
+        "targetResourceName": "law-svhwb107-0915",
+        "targetResourceType": "microsoft.operationalinsights/workspaces"
+      }
+    }
+  },
+  {
+    "id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourcegroups/rg-svhwb107-apim-lab/providers/microsoft.operationalinsights/workspaces/law-svhwb107-0915/providers/Microsoft.AlertsManagement/alerts/c40a3399-a2f1-cafc-dfc1-d9ab31240004",
+    "name": "svhwb124-apim-errors-shadow",
+    "properties": {
+      "context": {
+        "context": {
+          "condition": {
+            "allOf": [
+              {
+                "dimensions": [
+                  {
+                    "name": "Backend",
+                    "value": "eastus2"
+                  }
+                ],
+                "event": null,
+                "failingPeriods": {
+                  "minFailingPeriodsToAlert": 1,
+                  "numberOfEvaluationPeriods": 1
+                },
+                "linkToFilteredSearchResultsAPI": "https://api.loganalytics.io/v1/workspaces/e279a397-bc1f-48b2-91f0-d57443bacaca/query?query=ApiManagementGatewayLogs%0A%7C%20where%20TimeGenerated%20%3E%3D%20%28datetime%282026-09-16T03%3A16%3A39.0000000Z%29%20-%205m%29%0A%7C%20where%20_ResourceId%20%3D~%20%27%2Fsubscriptions%2F10564893-ecc3-4a6d-b505-53bcbe89dd8e%2FresourceGroups%2Frg-svhwb107-apim-lab%2Fproviders%2FMicrosoft.ApiManagement%2Fservice%2Fapim-svhwb107-0915%27%20and%20ApiId%20%3D%3D%20%27llm%27%0A%7C%20where%20Method%20%3D%3D%20%27POST%27%0A%7C%20extend%20BackendRequestUrl%20%3D%20tostring%28split%28tostring%28BackendUrl%29%2C%20%22%3F%22%29%5B0%5D%29%0A%7C%20extend%20Backend%20%3D%20case%28BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw-openai-eastus2.openai.azure.com%2Fopenai%2Fdeployments%2Fgpt-5.1%2Fchat%2Fcompletions%27%2C%20%27eastus2%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw-openai-eastus2.openai.azure.com%2Fopenai%2Fv1%2Fchat%2Fcompletions%27%2C%20%27eastus2%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw-openai-eastus2.openai.azure.com%2Fopenai%2Fv1%2Fresponses%27%2C%20%27eastus2%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw2-swedencentral.openai.azure.com%2Fopenai%2Fdeployments%2Fgpt-5.1%2Fchat%2Fcompletions%27%2C%20%27sweden%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw2-swedencentral.openai.azure.com%2Fopenai%2Fv1%2Fchat%2Fcompletions%27%2C%20%27sweden%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw2-swedencentral.openai.azure.com%2Fopenai%2Fv1%2Fresponses%27%2C%20%27sweden%27%2C%20%27%27%29%0A%7C%20where%20Backend%20in%20%28%27eastus2%27%2C%20%27sweden%27%29%0A%7C%20extend%20GatewayStatus%20%3D%20coalesce%28toint%28ResponseCode%29%2C%200%29%2C%0A%20%20%20%20BackendStatus%20%3D%20coalesce%28toint%28BackendResponseCode%29%2C%200%29%0A%7C%20where%20GatewayStatus%20%21in%20%28401%2C%20403%29%20and%20BackendStatus%20%21in%20%28401%2C%20403%29%0A%7C%20summarize%20Samples%20%3D%20count%28%29%2C%20AverageBackendMs%20%3D%20avg%28todouble%28BackendTime%29%29%2C%0A%20%20%20%20ErrorCount%20%3D%20countif%28GatewayStatus%20in%20%28404%2C%20429%29%20or%20GatewayStatus%20between%20%28500%20..%20599%29%0A%20%20%20%20%20%20%20%20or%20BackendStatus%20in%20%28404%2C%20429%29%20or%20BackendStatus%20between%20%28500%20..%20599%29%29%0A%20%20%20%20by%20Backend%0A%7C%20extend%20ErrorRatePct%20%3D%20100.0%20%2A%20ErrorCount%20%2F%20Samples%0A%7C%20extend%20ViolationCount%20%3D%20iff%28Samples%20%3E%3D%205%20and%20ErrorRatePct%20%3E%3D%2020.0%2C%201%2C%200%29%0A%7C%20project%20Backend%2C%20ViolationCount%7C%20where%20Backend%20in%20%28%40%27eastus2%27%2C%20%40%27sweden%27%29%0D%0A%7C%20extend%20TimeGenerated%20%3D%20column_ifexists%28%27TimeGenerated%27%2C%20datetime%282026-09-16T03%3A11%3A39.0000000Z%29%29%7C%20summarize%20AggregatedValue%20%3D%20max%28ViolationCount%29%20by%20bin_at%28TimeGenerated%2C%205m%2C%20datetime%282026-09-16T03%3A16%3A39.0000000Z%29%29%2C%20Backend%7C%20where%20todouble%28AggregatedValue%29%20%3E%200%7C%20where%20tostring%28Backend%29%20%3D%3D%20%40%27eastus2%27&timespan=2026-09-16T03%3a11%3a39.0000000Z%2f2026-09-16T03%3a16%3a39.0000000Z",
+                "linkToFilteredSearchResultsUI": "https://portal.azure.com#@16b3c013-d300-468d-ac64-7eda0820b6d3/blade/Microsoft_Azure_Monitoring_Logs/LogsBlade/source/Alerts.EmailLinks/scope/%7B%22resources%22%3A%5B%7B%22resourceId%22%3A%22%2Fsubscriptions%2F10564893-ecc3-4a6d-b505-53bcbe89dd8e%2FresourceGroups%2Frg-svhwb107-apim-lab%2Fproviders%2FMicrosoft.OperationalInsights%2Fworkspaces%2Flaw-svhwb107-0915%22%7D%5D%7D/q/eJy9VdFu0zAUfZ%2FEP5i9JEFN4rRNWSd1bExoQqJi6sYeQGhyktvUkMTBdtptQnw7122aNt36gBjkJYl9fM6519e%2BZyUfs4KlkEOhL5iGBbv%2FIFJ18JMsZiCBXPMcLqAAiXMJORkRO8EvjaN2l3YHLh26weCa9o6DwXFv6NHV89khLglzp6G5nYASlYzhfUJGv4jlqypSseSl5qJQfkDDQf9o2HMhjntunw0SNwpp6Ia9KI7gaJgkR%2BDLmuJCiqpUvkxdNZ8tooC%2BdlnJczdjkV9KMecJSOWPeSyFElPtnW3H6CuQcx6Dv1zSENBhEFqEFQlBtPE4IlaW5VYTwBj0TKzGLz9eXZsJuNOAC96y%2BDu%2BJ%2FCjAqU%2FyYyMiBZKS16ktiozru3mt8YiyOmQwzeHzhf61XlEhQQxU2A%2FwYzyM61Ldez7xrsrSigYd4EpXamut%2Fr12EMlwYtF7q8G%2FATKTNyb%2BJWfltoNvcCPZ0z7iCkzWG6C1SFWzYOfz6c9%2F69SWCQlKsAfa3RdtYAEihiTJFn216lcsT2r9J5M%2FhulViIbCcvanOl1tfKC2FupXoO36rq%2BWK40Q4ypbsEyUDHgweCFtie11LlIAM8FdToHBJ%2Baf9%2BqJtqdxY2%2FtupLY7NPgw7p056zPOptgTYAWVSV50zyByBXzCR85aFCadQ5m%2BOVmEJNMTZzbJ6itURUUdacXXN9OnU876QU8twQrIn41G6bXFnoo4Xu0CFC7sQQgV4AICaklHgeCYdDZ0ltHkS3A3pE1p5%2BimzFFt2voZstXJqfoJvL2NgPKPUoebUdk79O02bRDRcZM3W6jppPp%2FY6mdhLwuU2tKhxtIvUHRLUe4k3%2BjfAidpRZ4f0qWI83arG06YcX2x8tZua2YysyotbPoU7rrSyrRYAWfb1vKDV85ztmjlLUwmpWX%2FDsgpQJWd3dtu8Y1Id8eKWabsl2cHmuV%2B13WmxGOvg17loinDHg0NOCN2A2j3JMZfFJnO%2FAQ%3D%3D/prettify/1/timespan/2026-09-16T03%3a11%3a39.0000000Z%2f2026-09-16T03%3a16%3a39.0000000Z",
+                "linkToSearchResultsAPI": "https://api.loganalytics.io/v1/workspaces/e279a397-bc1f-48b2-91f0-d57443bacaca/query?query=ApiManagementGatewayLogs%0A%7C%20where%20TimeGenerated%20%3E%3D%20%28datetime%282026-09-16T03%3A16%3A39.0000000Z%29%20-%205m%29%0A%7C%20where%20_ResourceId%20%3D~%20%27%2Fsubscriptions%2F10564893-ecc3-4a6d-b505-53bcbe89dd8e%2FresourceGroups%2Frg-svhwb107-apim-lab%2Fproviders%2FMicrosoft.ApiManagement%2Fservice%2Fapim-svhwb107-0915%27%20and%20ApiId%20%3D%3D%20%27llm%27%0A%7C%20where%20Method%20%3D%3D%20%27POST%27%0A%7C%20extend%20BackendRequestUrl%20%3D%20tostring%28split%28tostring%28BackendUrl%29%2C%20%22%3F%22%29%5B0%5D%29%0A%7C%20extend%20Backend%20%3D%20case%28BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw-openai-eastus2.openai.azure.com%2Fopenai%2Fdeployments%2Fgpt-5.1%2Fchat%2Fcompletions%27%2C%20%27eastus2%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw-openai-eastus2.openai.azure.com%2Fopenai%2Fv1%2Fchat%2Fcompletions%27%2C%20%27eastus2%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw-openai-eastus2.openai.azure.com%2Fopenai%2Fv1%2Fresponses%27%2C%20%27eastus2%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw2-swedencentral.openai.azure.com%2Fopenai%2Fdeployments%2Fgpt-5.1%2Fchat%2Fcompletions%27%2C%20%27sweden%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw2-swedencentral.openai.azure.com%2Fopenai%2Fv1%2Fchat%2Fcompletions%27%2C%20%27sweden%27%2C%20BackendRequestUrl%20%3D%3D%20%27https%3A%2F%2Fsvhw2-swedencentral.openai.azure.com%2Fopenai%2Fv1%2Fresponses%27%2C%20%27sweden%27%2C%20%27%27%29%0A%7C%20where%20Backend%20in%20%28%27eastus2%27%2C%20%27sweden%27%29%0A%7C%20extend%20GatewayStatus%20%3D%20coalesce%28toint%28ResponseCode%29%2C%200%29%2C%0A%20%20%20%20BackendStatus%20%3D%20coalesce%28toint%28BackendResponseCode%29%2C%200%29%0A%7C%20where%20GatewayStatus%20%21in%20%28401%2C%20403%29%20and%20BackendStatus%20%21in%20%28401%2C%20403%29%0A%7C%20summarize%20Samples%20%3D%20count%28%29%2C%20AverageBackendMs%20%3D%20avg%28todouble%28BackendTime%29%29%2C%0A%20%20%20%20ErrorCount%20%3D%20countif%28GatewayStatus%20in%20%28404%2C%20429%29%20or%20GatewayStatus%20between%20%28500%20..%20599%29%0A%20%20%20%20%20%20%20%20or%20BackendStatus%20in%20%28404%2C%20429%29%20or%20BackendStatus%20between%20%28500%20..%20599%29%29%0A%20%20%20%20by%20Backend%0A%7C%20extend%20ErrorRatePct%20%3D%20100.0%20%2A%20ErrorCount%20%2F%20Samples%0A%7C%20extend%20ViolationCount%20%3D%20iff%28Samples%20%3E%3D%205%20and%20ErrorRatePct%20%3E%3D%2020.0%2C%201%2C%200%29%0A%7C%20project%20Backend%2C%20ViolationCount%7C%20where%20Backend%20in%20%28%40%27eastus2%27%2C%20%40%27sweden%27%29%0D%0A%7C%20extend%20TimeGenerated%20%3D%20column_ifexists%28%27TimeGenerated%27%2C%20datetime%282026-09-16T03%3A11%3A39.0000000Z%29%29%7C%20summarize%20AggregatedValue%20%3D%20max%28ViolationCount%29%20by%20bin_at%28TimeGenerated%2C%205m%2C%20datetime%282026-09-16T03%3A16%3A39.0000000Z%29%29%2C%20Backend&timespan=2026-09-16T03%3a11%3a39.0000000Z%2f2026-09-16T03%3a16%3a39.0000000Z",
+                "linkToSearchResultsUI": "https://portal.azure.com#@16b3c013-d300-468d-ac64-7eda0820b6d3/blade/Microsoft_Azure_Monitoring_Logs/LogsBlade/source/Alerts.EmailLinks/scope/%7B%22resources%22%3A%5B%7B%22resourceId%22%3A%22%2Fsubscriptions%2F10564893-ecc3-4a6d-b505-53bcbe89dd8e%2FresourceGroups%2Frg-svhwb107-apim-lab%2Fproviders%2FMicrosoft.OperationalInsights%2Fworkspaces%2Flaw-svhwb107-0915%22%7D%5D%7D/q/eJy9VVFv0zAQfp%2FEfzB7SYKaxGmbsk4qbCA0IVExdWMPIDQ5yTU1JHGwnXabEL%2Bdc5OmzbY%2BIAZ%2BSWzffd9357PvtORTVrAUcij0GdOwYrcfRKoOfpLVAiSQS57DGRQgcS8hrybETvBP46rdp%2F2RS8duMLqkg%2BNgdDwYe7Qenx3ikjB3WpjrGShRyRjeJ2Tyi1i%2BqiIVS15qLgrlBzQcDY%2FGAxfieOAO2Shxo5CGbjiI4giOxklyBL5sIM6kqErly9RVy8UqCuhLl5U8dzMW%2BaUUS56AVP6Ux1IoMdfe6W6MvgK55DH4a5cWgI6D0CKsSAhaG40TYmVZbrUBTEEvRL1%2B%2FvHi0mzAjQZ0eMPi7%2FidwY8KlP4kMzIhWigteZHaqsy4tttpY4tGTo8cvj50vtCvzgMoBIiZAvsRZKRfaF2qY9832l1RQsG4C0zpSvW9euqxu0qCF4vcrxf8BMpM3Jr4lZ%2BW2g29wI8XTPtoU2awPgSrR6wGB3%2Bfjnv5X6mwSEpkgD%2Fm6LtqBQkUMSZJsuyvU1mjPSn1nkz%2BG6ZOIlsKy9re6U218oLYO6neGO%2FUdfOwXGiGNqa6BctAxYAXgxfanjVUb0UCeC%2Bo0zsgOBr8fV5ttPecW31d1udG5pAGPTKkA2d91bsEXQNEUVWeM8nvgFwwk%2FBaQ4XUyHO6xCcxhQZiavbYMkVpiaiirL275vl0mnjeSSnkWwOwAeJzuyuyljBECf2xQ4S8F0MEegWANiGlxPNIOB47a2gz0Lob0AOw7vZjYDVadLsx3R7hWvwM1ZzHRn5AqUfJi92Y%2FE2atk5XXGTM1Okmaj6f25tkYi8J18fQgcbVPkL3SNCcJb7o3wA3GkW9e6CPFePJTjWetOX4bKur29TMYWRVXlzzOdxwpZVtdQwQZV%2FPCzo9z9mtmdM0lZAa%2FyuWVYAsObuxu%2BIdk%2BqIF9dM2x3KHjbP%2FazdTovF2AT%2FGw%3D%3D/prettify/1/timespan/2026-09-16T03%3a11%3a39.0000000Z%2f2026-09-16T03%3a16%3a39.0000000Z",
+                "metricMeasureColumn": "ViolationCount",
+                "metricValue": 1.0,
+                "operator": "GreaterThan",
+                "searchQuery": "ApiManagementGatewayLogs\n| where TimeGenerated >= ago(5m)\n| where _ResourceId =~ '/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.ApiManagement/service/apim-svhwb107-0915' and ApiId == 'llm'\n| where Method == 'POST'\n| extend BackendRequestUrl = tostring(split(tostring(BackendUrl), \"?\")[0])\n| extend Backend = case(BackendRequestUrl == 'https://svhw-openai-eastus2.openai.azure.com/openai/deployments/gpt-5.1/chat/completions', 'eastus2', BackendRequestUrl == 'https://svhw-openai-eastus2.openai.azure.com/openai/v1/chat/completions', 'eastus2', BackendRequestUrl == 'https://svhw-openai-eastus2.openai.azure.com/openai/v1/responses', 'eastus2', BackendRequestUrl == 'https://svhw2-swedencentral.openai.azure.com/openai/deployments/gpt-5.1/chat/completions', 'sweden', BackendRequestUrl == 'https://svhw2-swedencentral.openai.azure.com/openai/v1/chat/completions', 'sweden', BackendRequestUrl == 'https://svhw2-swedencentral.openai.azure.com/openai/v1/responses', 'sweden', '')\n| where Backend in ('eastus2', 'sweden')\n| extend GatewayStatus = coalesce(toint(ResponseCode), 0),\n    BackendStatus = coalesce(toint(BackendResponseCode), 0)\n| where GatewayStatus !in (401, 403) and BackendStatus !in (401, 403)\n| summarize Samples = count(), AverageBackendMs = avg(todouble(BackendTime)),\n    ErrorCount = countif(GatewayStatus in (404, 429) or GatewayStatus between (500 .. 599)\n        or BackendStatus in (404, 429) or BackendStatus between (500 .. 599))\n    by Backend\n| extend ErrorRatePct = 100.0 * ErrorCount / Samples\n| extend ViolationCount = iff(Samples >= 5 and ErrorRatePct >= 20.0, 1, 0)\n| project Backend, ViolationCount",
+                "targetResourceTypes": null,
+                "threshold": "0",
+                "timeAggregation": "Maximum"
+              }
+            ],
+            "windowEndTime": "2026-09-16T03:16:39Z",
+            "windowSize": "PT5M",
+            "windowStartTime": "2026-09-16T03:11:39Z"
+          },
+          "conditionType": "LogQueryCriteria",
+          "description": "SVHWB-124 same-traffic A shadow; exact production error query; no action groups or route writes.",
+          "id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/microsoft.insights/scheduledqueryrules/svhwb124-apim-errors-shadow",
+          "name": "svhwb124-apim-errors-shadow",
+          "portalLink": "https://portal.azure.com/#resource//subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.OperationalInsights/workspaces/law-svhwb107-0915",
+          "resourceGroupName": "rg-svhwb107-apim-lab",
+          "resourceId": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.OperationalInsights/workspaces/law-svhwb107-0915",
+          "resourceName": "law-svhwb107-0915",
+          "resourceType": "Microsoft.OperationalInsights/workspaces",
+          "severity": "2",
+          "subscriptionId": "10564893-ecc3-4a6d-b505-53bcbe89dd8e",
+          "timestamp": "2026-09-16T03:49:41.7702201Z"
+        },
+        "properties": null,
+        "status": "Activated",
+        "version": "2023-12-01"
+      },
+      "essentials": {
+        "actionStatus": {
+          "isSuppressed": false
+        },
+        "alertRule": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/microsoft.insights/scheduledqueryrules/svhwb124-apim-errors-shadow",
+        "alertState": "New",
+        "description": "SVHWB-124 same-traffic A shadow; exact production error query; no action groups or route writes.",
+        "lastModifiedDateTime": "2026-09-16T04:00:42.7439636Z",
+        "lastModifiedUserName": "System",
+        "monitorCondition": "Resolved",
+        "monitorConditionResolvedDateTime": "2026-09-16T04:00:42.8159016Z",
+        "monitorService": "Log Alerts V2",
+        "severity": "Sev2",
+        "signalType": "Log",
+        "sourceCreatedId": "379a1e19-87ac-4185-8e4b-d3b4a5a0b3c6",
+        "startDateTime": "2026-09-16T03:49:41.7699652Z",
+        "targetResource": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourcegroups/rg-svhwb107-apim-lab/providers/microsoft.operationalinsights/workspaces/law-svhwb107-0915",
+        "targetResourceGroup": "rg-svhwb107-apim-lab",
+        "targetResourceName": "law-svhwb107-0915",
+        "targetResourceType": "microsoft.operationalinsights/workspaces"
+      }
+    }
+  },
+  {
+    "id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourcegroups/rg-svhwb107-apim-lab/providers/microsoft.insights/components/svhwb124-metric-math/providers/Microsoft.AlertsManagement/alerts/f5f9d576-ef2d-44ef-b2b8-60680faff000",
+    "name": "svhwb124-foundry-error-rate",
+    "properties": {
+      "context": {
+        "context": {
+          "condition": {
+            "allOf": [
+              {
+                "dimensions": [],
+                "metricName": "ViolationCount",
+                "metricNamespace": "Azure.ApplicationInsights",
+                "metricValue": 1.0,
+                "operator": "GreaterThanOrEqual",
+                "threshold": "1",
+                "timeAggregation": "Maximum",
+                "webTestName": null
+              }
+            ],
+            "staticThresholdFailingPeriods": {
+              "minFailingPeriodsToAlert": 0,
+              "numberOfEvaluationPeriods": 0
+            },
+            "windowEndTime": "2026-09-16T03:57:22.902Z",
+            "windowSize": "PT1M",
+            "windowStartTime": "2026-09-16T03:56:22.902Z"
+          },
+          "conditionType": "SingleResourceMultipleMetricCriteria",
+          "description": "SVHWB-124 aligned Foundry: (404+429+5xx)/(all-401-403)>=20%, N>=5, rolling5m.",
+          "id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/metricAlerts/svhwb124-foundry-error-rate",
+          "name": "svhwb124-foundry-error-rate",
+          "portalLink": "https://portal.azure.com/#resource/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/components/svhwb124-metric-math",
+          "resourceGroupName": "rg-svhwb107-apim-lab",
+          "resourceId": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/components/svhwb124-metric-math",
+          "resourceName": "svhwb124-metric-math",
+          "resourceType": "Microsoft.Insights/components",
+          "severity": "2",
+          "subscriptionId": "10564893-ecc3-4a6d-b505-53bcbe89dd8e",
+          "timestamp": "2026-09-16T03:59:22.9179342Z"
+        },
+        "properties": null,
+        "status": "Activated",
+        "version": "2.0"
+      },
+      "essentials": {
+        "actionStatus": {
+          "isSuppressed": false
+        },
+        "alertRule": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/metricAlerts/svhwb124-foundry-error-rate",
+        "alertState": "New",
+        "description": "SVHWB-124 aligned Foundry: (404+429+5xx)/(all-401-403)>=20%, N>=5, rolling5m.",
+        "lastModifiedDateTime": "2026-09-16T03:59:39.6432568Z",
+        "lastModifiedUserName": "System",
+        "monitorCondition": "Fired",
+        "monitorService": "Platform",
+        "severity": "Sev2",
+        "signalType": "Metric",
+        "sourceCreatedId": "10564893-ecc3-4a6d-b505-53bcbe89dd8e_rg-svhwb107-apim-lab_Microsoft.Insights_metricAlerts_svhwb124-foundry-error-rate_-1227589929",
+        "startDateTime": "2026-09-16T03:59:39.6432568Z",
+        "targetResource": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourcegroups/rg-svhwb107-apim-lab/providers/microsoft.insights/components/svhwb124-metric-math",
+        "targetResourceGroup": "rg-svhwb107-apim-lab",
+        "targetResourceName": "svhwb124-metric-math",
+        "targetResourceType": "microsoft.insights/components"
+      }
+    }
+  },
+  {
+    "id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourcegroups/rg-svhwb107-apim-lab/providers/microsoft.insights/components/svhwb124-metric-math/providers/Microsoft.AlertsManagement/alerts/7708cc66-03fb-45e6-83db-5b0fbc4bf000",
+    "name": "svhwb124-foundry-error-rate",
+    "properties": {
+      "context": {
+        "context": {
+          "condition": {
+            "allOf": [
+              {
+                "dimensions": [],
+                "metricName": "EligibleSamples",
+                "metricNamespace": "Azure.ApplicationInsights",
+                "metricValue": 7.0,
+                "operator": "GreaterThanOrEqual",
+                "threshold": "5",
+                "timeAggregation": "Maximum",
+                "webTestName": null
+              }
+            ],
+            "staticThresholdFailingPeriods": {
+              "minFailingPeriodsToAlert": 0,
+              "numberOfEvaluationPeriods": 0
+            },
+            "windowEndTime": "2026-09-16T03:36:17.19Z",
+            "windowSize": "PT1M",
+            "windowStartTime": "2026-09-16T03:35:17.19Z"
+          },
+          "conditionType": "SingleResourceMultipleMetricCriteria",
+          "description": "SVHWB-124 aligned Foundry: (404+429+5xx)/(all-401-403)>=20%, N>=5, rolling5m.",
+          "id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/metricAlerts/svhwb124-foundry-error-rate",
+          "name": "svhwb124-foundry-error-rate",
+          "portalLink": "https://portal.azure.com/#resource/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/components/svhwb124-metric-math",
+          "resourceGroupName": "rg-svhwb107-apim-lab",
+          "resourceId": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/components/svhwb124-metric-math",
+          "resourceName": "svhwb124-metric-math",
+          "resourceType": "Microsoft.Insights/components",
+          "severity": "2",
+          "subscriptionId": "10564893-ecc3-4a6d-b505-53bcbe89dd8e",
+          "timestamp": "2026-09-16T03:38:17.1908606Z"
+        },
+        "properties": null,
+        "status": "Activated",
+        "version": "2.0"
+      },
+      "essentials": {
+        "actionStatus": {
+          "isSuppressed": false
+        },
+        "alertRule": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/rg-svhwb107-apim-lab/providers/Microsoft.Insights/metricAlerts/svhwb124-foundry-error-rate",
+        "alertState": "New",
+        "description": "SVHWB-124 aligned Foundry: (404+429+5xx)/(all-401-403)>=20%, N>=5, rolling5m.",
+        "lastModifiedDateTime": "2026-09-16T03:42:29.2990926Z",
+        "lastModifiedUserName": "System",
+        "monitorCondition": "Resolved",
+        "monitorConditionResolvedDateTime": "2026-09-16T03:42:29.7165431Z",
+        "monitorService": "Platform",
+        "severity": "Sev2",
+        "signalType": "Metric",
+        "sourceCreatedId": "10564893-ecc3-4a6d-b505-53bcbe89dd8e_rg-svhwb107-apim-lab_Microsoft.Insights_metricAlerts_svhwb124-foundry-error-rate_-1227589929",
+        "startDateTime": "2026-09-16T03:38:26.2773206Z",
+        "targetResource": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourcegroups/rg-svhwb107-apim-lab/providers/microsoft.insights/components/svhwb124-metric-math",
+        "targetResourceGroup": "rg-svhwb107-apim-lab",
+        "targetResourceName": "svhwb124-metric-math",
+        "targetResourceType": "microsoft.insights/components"
+      }
+    }
+  }
+]

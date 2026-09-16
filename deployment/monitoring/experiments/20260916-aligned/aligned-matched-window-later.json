@@ -1,0 +1,145 @@
+{
+  "retrieved_at": "2026-09-16T04:03:05.774385+00:00",
+  "source_response": {
+    "cost": 4,
+    "timespan": "2026-09-16T03:52:00Z/2026-09-16T03:57:00Z",
+    "interval": "PT1M",
+    "value": [
+      {
+        "id": "/subscriptions/10564893-ecc3-4a6d-b505-53bcbe89dd8e/resourceGroups/jump-server_group/providers/Microsoft.CognitiveServices/accounts/svhw-openai-eastus2/providers/Microsoft.Insights/metrics/AzureOpenAIRequests",
+        "type": "Microsoft.Insights/metrics",
+        "name": {
+          "value": "AzureOpenAIRequests",
+          "localizedValue": "Azure OpenAI Requests"
+        },
+        "displayDescription": "Number of calls made to the Azure OpenAI API over a period of time. Applies to PTU, PTU-Managed and Pay-as-you-go deployments. To breakdown API requests, you can add a filter or apply splitting by the following dimensions: ModelDeploymentName, ModelName, ModelVersion, StatusCode (successful, clienterrors, server errors), IsSpillover for spillover information, ServiceTier, StreamType (Streaming vs non-streaming requests) and operation.",
+        "unit": "Count",
+        "timeseries": [
+          {
+            "metadatavalues": [
+              {
+                "name": {
+                  "value": "apiname",
+                  "localizedValue": "apiname"
+                },
+                "value": "OpenAI"
+              },
+              {
+                "name": {
+                  "value": "modeldeploymentname",
+                  "localizedValue": "modeldeploymentname"
+                },
+                "value": "gpt-5.1"
+              },
+              {
+                "name": {
+                  "value": "operationname",
+                  "localizedValue": "operationname"
+                },
+                "value": "chatcompletions_create"
+              },
+              {
+                "name": {
+                  "value": "statuscode",
+                  "localizedValue": "statuscode"
+                },
+                "value": "200"
+              }
+            ],
+            "data": [
+              {
+                "timeStamp": "2026-09-16T03:52:00Z",
+                "total": 10
+              },
+              {
+                "timeStamp": "2026-09-16T03:53:00Z",
+                "total": 9
+              },
+              {
+                "timeStamp": "2026-09-16T03:54:00Z",
+                "total": 7
+              },
+              {
+                "timeStamp": "2026-09-16T03:55:00Z",
+                "total": 4
+              },
+              {
+                "timeStamp": "2026-09-16T03:56:00Z",
+                "total": 1
+              }
+            ]
+          },
+          {
+            "metadatavalues": [
+              {
+                "name": {
+                  "value": "apiname",
+                  "localizedValue": "apiname"
+                },
+                "value": "OpenAI"
+              },
+              {
+                "name": {
+                  "value": "modeldeploymentname",
+                  "localizedValue": "modeldeploymentname"
+                },
+                "value": "gpt-5.1"
+              },
+              {
+                "name": {
+                  "value": "operationname",
+                  "localizedValue": "operationname"
+                },
+                "value": "chatcompletions_create"
+              },
+              {
+                "name": {
+                  "value": "statuscode",
+                  "localizedValue": "statuscode"
+                },
+                "value": "404"
+              }
+            ],
+            "data": [
+              {
+                "timeStamp": "2026-09-16T03:52:00Z",
+                "total": 0
+              },
+              {
+                "timeStamp": "2026-09-16T03:53:00Z",
+                "total": 0
+              },
+              {
+                "timeStamp": "2026-09-16T03:54:00Z",
+                "total": 0
+              },
+              {
+                "timeStamp": "2026-09-16T03:55:00Z",
+                "total": 3
+              },
+              {
+                "timeStamp": "2026-09-16T03:56:00Z",
+                "total": 5
+              }
+            ]
+          }
+        ],
+        "errorCode": "Success"
+      }
+    ],
+    "namespace": "Microsoft.CognitiveServices/accounts",
+    "resourceregion": "eastus2"
+  },
+  "calculation": {
+    "window_start": "2026-09-16T03:52:00+00:00",
+    "window_end": "2026-09-16T03:57:00+00:00",
+    "by_status": {
+      "200": 31,
+      "404": 8
+    },
+    "eligible_samples": 39,
+    "errors": 8,
+    "error_rate_pct": 20.512820512820515,
+    "violation": 1
+  }
+}

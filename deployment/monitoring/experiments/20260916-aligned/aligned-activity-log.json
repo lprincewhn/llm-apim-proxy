@@ -1,0 +1,14 @@
+[
+  {
+    "correlation": "a37be09f-a002-47c5-b862-416de97c2485",
+    "operation": "Microsoft.CognitiveServices/accounts/deployments/delete",
+    "status": "Succeeded",
+    "time": "2026-09-16T03:38:55.4506473Z"
+  },
+  {
+    "correlation": "a37be09f-a002-47c5-b862-416de97c2485",
+    "operation": "Microsoft.CognitiveServices/accounts/deployments/delete",
+    "status": "Started",
+    "time": "2026-09-16T03:38:54.3100197Z"
+  }
+]
