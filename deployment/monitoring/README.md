@@ -170,7 +170,11 @@ python3 deployment/monitoring/deploy.py status
 python3 deployment/monitoring/deploy.py disable
 ```
 
-An activation error attempts to restore disabled defaults and surfaces failure.
+Failures while enabling the alert rules attempt to restore disabled defaults
+and surface failure. The preceding `switch_mode(True)` call is outside that
+recovery block: if its write succeeds but read-back fails, the switch may remain
+enabled. After any activation failure, inspect the actual switch and alert state;
+do not assume rollback.
 Disabling does not cancel a run already in progress. Inspect action **statuses**:
 
 ```bash
@@ -191,7 +195,12 @@ The [09:17 historical drill](drill-20260915.md) used the retired executor. It is
 not direct-topology acceptance. See [direct migration record](direct-migration-20260915.md)
 for the new APIM completions, direct workflow probes, real logs and retirement.
 
-Preserve `primary=sweden`, `enabled=[sweden]`, version 2 unless an operator
-explicitly changes it. Neither a successful probe nor deployment clears quarantine.
+The [2026-09-15/16 direct-topology drill](drill-20260916.md) subsequently
+demonstrated real 404-alert-driven failover. Its final record, reported at
+2026-09-16 00:08 UTC, has `primary=sweden`, `enabled=[sweden,eastus2]`, version 9,
+both alerts enabled and `switchEnabled=true`; East US 2 was manually restored
+as standby without failback. This supersedes the migration's version-2 snapshot,
+not later operator changes. It is not a live-status query.
+Neither a successful probe nor deployment clears quarantine.
 One short request or two probes do not prove N-1 capacity, production HA,
 the Java/Search chain or 8s/15s full-turn targets.

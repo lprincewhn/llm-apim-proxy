@@ -71,8 +71,14 @@ consumers are excluded. Exact actions taken are in the migration record.
 ## API contract and changed timeout behavior
 
 GET, POST, PUT, PATCH, DELETE, HEAD and OPTIONS accept arbitrary paths, protected
-by `api-key` containing an **APIM subscription key**; get its value through
-the authorized APIM interface. Credentials are never stored in source or output.
+by an **APIM subscription key**. Prefer the `api-key` header; the current API
+also accepts the `subscription-key` query parameter, which is removed before
+forwarding. Avoid credentials in URLs. Get keys through the authorized APIM
+interface; never store them in source or output.
+
+The lab policy shares a **30 calls per 60 seconds** rate limit across all paths
+and methods for each APIM subscription ID. A rejected call can return a gateway
+429 before reaching Foundry; not every 429 is a model-capacity error.
 
 Every request uses the current primary origin; only the target origin changes. No prefix is added,
 removed or inferred: `/v1/chat/completions` stays `/v1/chat/completions`,
@@ -137,7 +143,8 @@ The standard OpenAI SDK can use
 `base_url=https://apim-svhwb107-0915.azure-api.net/openai/v1/`,
 `default_headers={"api-key": APIM_SUBSCRIPTION_KEY}`, and
 `model="gpt-5.1"` for either upstream. Its Bearer Authorization
-is not the gateway credential: `api-key` is required and backend auth uses MI.
+is not the gateway credential: configure the recommended `api-key` header
+explicitly; backend auth uses MI.
 For curl, replace the native URL above with `/openai/v1/chat/completions` and
 include `"model":"gpt-5.1"` in the original JSON body. No api-version is
 required by that upstream v1 API.
@@ -151,6 +158,18 @@ Logs must distinguish backend responses from gateway failures; no prompt, token,
 API key, authorization header or response body logging is required.
 
 ## Operations and evidence
+
+### Latest direct failover record, 2026-09-16
+
+The [direct deletion drill](monitoring/drill-20260916.md) demonstrates a real
+404 alert, direct standby probes, ETag route update and subsequent standby
+responses. First observed 404 to first standby 200 was approximately 7m 25.8s;
+alert to that response was approximately 21.33s, not a guaranteed SLA.
+
+At the 00:08 UTC handoff, Sweden was primary, East US 2 was manually restored
+as enabled standby, route version was 9, both alerts were enabled and
+`switchEnabled=true`. This is a recorded snapshot, not live status.
+The earlier sections below preserve their historical observations.
 
 ### Unified deployment names, 2026-09-15
 
@@ -222,7 +241,8 @@ The historical 09:17 error-alert drill used the old topology. It establishes pri
 control logic behavior, not direct-model credentials or current log attribution.
 See [direct migration evidence](monitoring/direct-migration-20260915.md).
 
-Sweden remains primary and East US 2 quarantined until explicit operator recovery.
+At that earlier migration snapshot, Sweden was primary and East US 2 quarantined
+until explicit operator recovery; the latest recovery is recorded above.
 No enabled backup exists if `enabled=[sweden]`; successful direct probes alone do
 not change that. ETag-protected manual re-enablement should preserve the current
 primary and other route fields. Disable stops new alert dispatch, not an in-flight
