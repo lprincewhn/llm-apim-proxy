@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1430" viewBox="0 0 1000 1430" role="img" aria-labelledby="title description">
+  <title id="title">从日志到 APIM 后端切换</title>
+  <desc id="description">日志采集、日志聚合指标、告警、Action Group、Logic App、APIM 后端切换。</desc>
+  <rect width="1000" height="1430" fill="#ffffff" />
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#475569" />
+    </marker>
+  </defs>
+  <text x="500" y="72" fill="#1e293b" text-anchor="middle" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="32">
+    <tspan x="500" dy="0">从日志到 APIM 后端切换</tspan>
+  </text>
+  <rect x="80" y="140" width="840" height="150" rx="14" fill="#a5d8ff" stroke="#1e293b" stroke-width="2" />
+  <text x="500" y="194.0" fill="#1e293b" text-anchor="middle" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="24">
+    <tspan x="500" dy="0">1. 日志采集</tspan>
+    <tspan x="500" dy="30.0">APIM GatewayLogs → Log Analytics</tspan>
+    <tspan x="500" dy="30.0">记录后端 URL、状态码与 BackendTime</tspan>
+  </text>
+  <path d="M 500 295 L 500 323" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+  <rect x="80" y="330" width="840" height="150" rx="14" fill="#a5d8ff" stroke="#1e293b" stroke-width="2" />
+  <text x="500" y="384.0" fill="#1e293b" text-anchor="middle" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="24">
+    <tspan x="500" dy="0">2. 日志聚合指标（KQL）</tspan>
+    <tspan x="500" dy="30.0">筛选合格推理请求，排除 401／403</tspan>
+    <tspan x="500" dy="30.0">按后端汇总 5 分钟样本数、平均时延和错误率</tspan>
+  </text>
+  <path d="M 500 485 L 500 513" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+  <rect x="80" y="520" width="840" height="150" rx="14" fill="#ffd43b" stroke="#1e293b" stroke-width="2" />
+  <text x="500" y="559.0" fill="#1e293b" text-anchor="middle" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="24">
+    <tspan x="500" dy="0">3. Azure Monitor 日志查询告警</tspan>
+    <tspan x="500" dy="30.0">每分钟评估；至少 5 个合格样本</tspan>
+    <tspan x="500" dy="30.0">平均时延 ≥ 3200ms</tspan>
+    <tspan x="500" dy="30.0">或 404／429／5xx 错误率 ≥ 20%</tspan>
+  </text>
+  <path d="M 500 675 L 500 703" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+  <rect x="80" y="710" width="840" height="150" rx="14" fill="#a5d8ff" stroke="#1e293b" stroke-width="2" />
+  <text x="500" y="764.0" fill="#1e293b" text-anchor="middle" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="24">
+    <tspan x="500" dy="0">4. Action Group 分发</tspan>
+    <tspan x="500" dy="30.0">使用 Common Alert Schema</tspan>
+    <tspan x="500" dy="30.0">调用 Logic App</tspan>
+  </text>
+  <path d="M 500 865 L 500 893" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+  <rect x="80" y="900" width="840" height="150" rx="14" fill="#b2f2bb" stroke="#1e293b" stroke-width="2" />
+  <text x="500" y="939.0" fill="#1e293b" text-anchor="middle" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="24">
+    <tspan x="500" dy="0">5. Logic App 执行</tspan>
+    <tspan x="500" dy="30.0">校验告警、当前主后端、主备资格和 10 分钟冷却</tspan>
+    <tspan x="500" dy="30.0">直探备用两次：均返回 200／OK／正常结束</tspan>
+    <tspan x="500" dy="30.0">开关开启、告警仍有效且校验通过，才允许写路由</tspan>
+  </text>
+  <path d="M 500 1055 L 500 1083" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+  <rect x="80" y="1090" width="840" height="150" rx="14" fill="#b2f2bb" stroke="#1e293b" stroke-width="2" />
+  <text x="500" y="1129.0" fill="#1e293b" text-anchor="middle" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="24">
+    <tspan x="500" dy="0">6. APIM 后端切换</tspan>
+    <tspan x="500" dy="30.0">If-Match／ETag 条件更新 chat-route 并回读</tspan>
+    <tspan x="500" dy="30.0">配置传播后，新请求转向备用；原主后端隔离</tspan>
+    <tspan x="500" dy="30.0">不重试当前请求，不自动回切</tspan>
+  </text>
+  <text x="500" y="1320" fill="#1e293b" text-anchor="middle" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="20">
+    <tspan x="500" dy="0">“指标”是日志查询计算的统计值，不是 Foundry 原生指标。</tspan>
+    <tspan x="500" dy="25.0">资格校验或探测失败：不写路由；写后回读失败：核查实际状态。</tspan>
+    <tspan x="500" dy="25.0">异步切换仅影响配置生效后的新请求，不保证即时恢复。</tspan>
+  </text>
+</svg>
